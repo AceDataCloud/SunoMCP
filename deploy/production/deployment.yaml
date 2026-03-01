@@ -37,13 +37,13 @@ spec:
               memory: 128Mi
           livenessProbe:
             httpGet:
-              path: /mcp
+              path: /health
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 30
           readinessProbe:
             httpGet:
-              path: /mcp
+              path: /health
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10

@@ -148,7 +148,9 @@ Environment Variables:
 
             import uvicorn
             from starlette.applications import Starlette
-            from starlette.routing import Mount
+            from starlette.requests import Request
+            from starlette.responses import JSONResponse
+            from starlette.routing import Mount, Route
 
             from core.client import set_request_api_token
 
@@ -166,6 +168,9 @@ Environment Variables:
                             set_request_api_token(auth[7:])
                     await self.app(scope, receive, send)
 
+            async def health(_request: Request) -> JSONResponse:
+                return JSONResponse({"status": "ok"})
+
             @contextlib.asynccontextmanager
             async def lifespan(_app: Starlette):  # type: ignore[no-untyped-def]
                 async with mcp.session_manager.run():
@@ -176,7 +181,10 @@ Environment Variables:
             mcp.settings.streamable_http_path = "/mcp"
 
             app = Starlette(
-                routes=[Mount("/", app=mcp.streamable_http_app())],
+                routes=[
+                    Route("/health", health),
+                    Mount("/", app=mcp.streamable_http_app()),
+                ],
                 lifespan=lifespan,
             )
             app.add_middleware(BearerAuthMiddleware)
