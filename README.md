@@ -98,6 +98,61 @@ Or if using uv:
 }
 ```
 
+## Remote HTTP Mode (Hosted)
+
+AceDataCloud hosts a managed MCP server that you can connect to directly — **no local installation required**.
+
+**Endpoint**: `https://suno.mcp.acedata.cloud/mcp`
+
+All requests require a Bearer token in the `Authorization` header. Get your token from [AceDataCloud Platform](https://platform.acedata.cloud).
+
+### Claude Desktop (Remote)
+
+```json
+{
+  "mcpServers": {
+    "suno": {
+      "type": "streamable-http",
+      "url": "https://suno.mcp.acedata.cloud/mcp",
+      "headers": {
+        "Authorization": "Bearer your_api_token_here"
+      }
+    }
+  }
+}
+```
+
+### Cursor / VS Code
+
+In your MCP client settings, add:
+
+- **Type**: `streamable-http`
+- **URL**: `https://suno.mcp.acedata.cloud/mcp`
+- **Headers**: `Authorization: Bearer your_api_token_here`
+
+### cURL Test
+
+```bash
+# Health check (no auth required)
+curl https://suno.mcp.acedata.cloud/health
+
+# MCP initialize (requires Bearer token)
+curl -X POST https://suno.mcp.acedata.cloud/mcp \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -H "Authorization: Bearer your_api_token_here" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}'
+```
+
+### Self-Hosting with Docker
+
+```bash
+docker pull ghcr.io/acedatacloud/mcp-suno:latest
+docker run -p 8000:8000 ghcr.io/acedatacloud/mcp-suno:latest
+```
+
+Clients connect with their own Bearer token — the server extracts the token from each request's `Authorization` header and uses it for upstream API calls.
+
 ## Available Tools
 
 ### Music Generation
@@ -110,18 +165,42 @@ Or if using uv:
 | `cover_music` | Create a cover/remix version |
 | `concat_music` | Merge extended segments into complete audio |
 | `generate_with_persona` | Generate using a saved voice style |
+| `remaster_music` | Remaster an existing song to improve audio quality |
+| `stems_music` | Separate a song into individual stems (vocals/instruments) |
+| `replace_section` | Replace a specific time range with new generated content |
+| `upload_extend` | Extend uploaded audio with new AI-generated content |
+| `upload_cover` | Create an AI cover of uploaded audio |
+| `mashup_music` | Create a mashup by blending multiple songs together |
 
 ### Lyrics
 
 | Tool | Description |
 |------|-------------|
 | `generate_lyrics` | Generate song lyrics from a prompt |
+| `mashup_lyrics` | Generate mashup lyrics by combining two sets of lyrics |
+| `optimize_style` | Optimize a style description for better generation results |
+
+### Media Conversion
+
+| Tool | Description |
+|------|-------------|
+| `get_mp4` | Get an MP4 video version of a generated song |
+| `get_wav` | Get lossless WAV format of a generated song |
+| `get_midi` | Get MIDI data extracted from a generated song |
+| `get_timing` | Get timing and subtitle data for a generated song |
+| `extract_vocals` | Extract the vocal track from a generated song |
 
 ### Persona
 
 | Tool | Description |
 |------|-------------|
 | `create_persona` | Save a voice style for reuse |
+
+### Upload
+
+| Tool | Description |
+|------|-------------|
+| `upload_audio` | Upload an external audio file for use in subsequent operations |
 
 ### Tasks
 
@@ -282,6 +361,7 @@ MCPSuno/
 │   ├── audio_tools.py     # Audio generation tools
 │   ├── info_tools.py      # Information tools
 │   ├── lyrics_tools.py    # Lyrics generation tools
+│   ├── media_tools.py     # Media conversion tools
 │   ├── persona_tools.py   # Persona management tools
 │   └── task_tools.py      # Task query tools
 ├── tests/                  # Test suite
@@ -290,9 +370,16 @@ MCPSuno/
 │   ├── test_config.py
 │   ├── test_integration.py
 │   └── test_utils.py
+├── deploy/                 # Deployment configs
+│   └── production/
+│       ├── deployment.yaml
+│       ├── ingress.yaml
+│       └── service.yaml
 ├── .env.example           # Environment template
 ├── .gitignore
 ├── CHANGELOG.md
+├── Dockerfile             # Docker image for HTTP mode
+├── docker-compose.yaml    # Docker Compose config
 ├── LICENSE
 ├── main.py                # Entry point
 ├── pyproject.toml         # Project configuration
