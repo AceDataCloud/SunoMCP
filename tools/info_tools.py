@@ -30,7 +30,7 @@ async def suno_list_models() -> str:
 | chirp-v4-5      | V4.5    | 5000 chars   | 1000 chars  | 4 minutes    |
 | chirp-v4        | V4      | 3000 chars   | 200 chars   | 150 seconds  |
 | chirp-v3-5      | V3.5    | 3000 chars   | 200 chars   | 120 seconds  |
-| chirp-v3        | V3      | 3000 chars   | 200 chars   | 120 seconds  |
+| chirp-v3-0      | V3      | 3000 chars   | 200 chars   | 120 seconds  |
 
 Recommended: chirp-v4-5 for most use cases, chirp-v5 for best quality.
 
@@ -58,6 +58,24 @@ Music Generation:
 - suno_extend_music: Continue an existing song from a specific timestamp
 - suno_cover_music: Create a cover/remix version of a song
 - suno_concat_music: Merge extended song segments into complete audio
+- suno_remaster_music: Remaster a song to improve audio quality
+- suno_replace_section: Replace a specific time range with new content
+- suno_mashup_music: Blend multiple songs together musically
+
+Upload-based Operations (for your own music):
+- suno_upload_audio: Upload external audio for use in Suno
+- suno_upload_extend: Extend uploaded audio with new AI content
+- suno_upload_cover: Create an AI cover of uploaded audio
+
+Stems & Extraction:
+- suno_stems_music: Separate a song into vocal and instrumental stems
+- suno_extract_vocals: Extract only the vocal track from a song
+
+Media Conversion:
+- suno_get_mp4: Get MP4 video version of a song
+- suno_get_wav: Get lossless WAV format of a song
+- suno_get_midi: Get MIDI data from a song
+- suno_get_timing: Get word-level timing/subtitle data
 
 Persona (Voice Style):
 - suno_create_persona: Save a voice style for reuse
@@ -65,6 +83,8 @@ Persona (Voice Style):
 
 Lyrics:
 - suno_generate_lyrics: Generate song lyrics from a prompt
+- suno_optimize_style: Optimize a style description for better results
+- suno_mashup_lyrics: Combine two sets of lyrics into a mashup
 
 Task Management:
 - suno_get_task: Check status of a single generation
@@ -80,6 +100,9 @@ Workflow Examples:
 2. Custom song: suno_generate_lyrics → suno_generate_custom_music → suno_get_task
 3. Long song: suno_generate_music → suno_extend_music (repeat) → suno_concat_music
 4. Consistent voice: suno_generate_music → suno_create_persona → suno_generate_with_persona
+5. Your own music: suno_upload_audio → suno_upload_extend or suno_upload_cover
+6. Remix: suno_stems_music → use stems for further production
+7. Fix section: suno_replace_section → suno_get_task
 """
 
 

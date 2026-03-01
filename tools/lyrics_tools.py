@@ -6,7 +6,7 @@ from pydantic import Field
 
 from core.client import client
 from core.server import mcp
-from core.types import SunoModel
+from core.types import DEFAULT_LYRICS_MODEL, LyricsModel
 from core.utils import format_lyrics_result
 
 
@@ -19,11 +19,11 @@ async def suno_generate_lyrics(
         ),
     ],
     model: Annotated[
-        SunoModel,
+        LyricsModel,
         Field(
-            description="Model version for lyrics generation. Default is 'chirp-v3' which works well for most lyrics."
+            description="Model version for lyrics generation. 'default' works well for most lyrics. 'remi-v1' offers an alternative style."
         ),
-    ] = "chirp-v3",
+    ] = DEFAULT_LYRICS_MODEL,
 ) -> str:
     """Generate song lyrics from a text prompt.
 

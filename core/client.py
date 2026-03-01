@@ -146,6 +146,46 @@ class SunoClient:
         logger.info(f"👤 Creating persona: {kwargs.get('name', 'unnamed')}")
         return await self.request("/suno/persona", kwargs)
 
+    async def get_mp4(self, **kwargs: Any) -> dict[str, Any]:
+        """Get MP4 video for a song."""
+        logger.info(f"🎥 Getting MP4 for audio: {kwargs.get('audio_id', '')}")
+        return await self.request("/suno/mp4", kwargs)
+
+    async def get_timing(self, **kwargs: Any) -> dict[str, Any]:
+        """Get timing/subtitle data for a song."""
+        logger.info(f"⏱️ Getting timing for audio: {kwargs.get('audio_id', '')}")
+        return await self.request("/suno/timing", kwargs)
+
+    async def get_vox(self, **kwargs: Any) -> dict[str, Any]:
+        """Extract vocals from a song."""
+        logger.info(f"🎙️ Extracting vocals for audio: {kwargs.get('audio_id', '')}")
+        return await self.request("/suno/vox", kwargs)
+
+    async def get_wav(self, **kwargs: Any) -> dict[str, Any]:
+        """Get WAV format of a song."""
+        logger.info(f"🔊 Getting WAV for audio: {kwargs.get('audio_id', '')}")
+        return await self.request("/suno/wav", kwargs)
+
+    async def get_midi(self, **kwargs: Any) -> dict[str, Any]:
+        """Get MIDI data of a song."""
+        logger.info(f"🎹 Getting MIDI for audio: {kwargs.get('audio_id', '')}")
+        return await self.request("/suno/midi", kwargs)
+
+    async def get_style(self, **kwargs: Any) -> dict[str, Any]:
+        """Optimize a style prompt."""
+        logger.info(f"🎨 Getting style for prompt: {kwargs.get('prompt', '')[:50]}...")
+        return await self.request("/suno/style", kwargs)
+
+    async def mashup_lyrics(self, **kwargs: Any) -> dict[str, Any]:
+        """Generate mashup lyrics from two sets of lyrics."""
+        logger.info("🔀 Generating mashup lyrics")
+        return await self.request("/suno/mashup-lyrics", kwargs)
+
+    async def upload_audio(self, **kwargs: Any) -> dict[str, Any]:
+        """Upload audio from a URL."""
+        logger.info(f"📤 Uploading audio: {kwargs.get('audio_url', '')[:50]}...")
+        return await self.request("/suno/upload", kwargs)
+
     async def query_task(self, **kwargs: Any) -> dict[str, Any]:
         """Query task status using the tasks endpoint."""
         task_id = kwargs.get("id") or kwargs.get("ids", [])

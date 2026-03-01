@@ -366,3 +366,283 @@ async def suno_generate_with_persona(
         callback_url=callback_url,
     )
     return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_remaster_music(
+    audio_id: Annotated[
+        str,
+        Field(
+            description="ID of the audio to remaster. This is the 'id' field from a previous generation."
+        ),
+    ],
+    model: Annotated[
+        SunoModel,
+        Field(
+            description="Model version to use for remastering. Newer models produce better results."
+        ),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Remaster an existing song to improve audio quality.
+
+    Takes a previously generated song and applies audio remastering to enhance
+    clarity, dynamics, and overall sound quality.
+
+    Use this when:
+    - You want to improve the audio quality of a generated song
+    - You want a song generated with an older model to sound better
+    - You need a polished, production-ready version
+
+    Returns:
+        Task ID and the remastered audio information.
+    """
+    result = await client.generate_audio(
+        action="remaster",
+        audio_id=audio_id,
+        model=model,
+        callback_url=callback_url,
+    )
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_stems_music(
+    audio_id: Annotated[
+        str,
+        Field(description="ID of the audio to separate into stems."),
+    ],
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Separate a song into individual stems (vocals and instruments).
+
+    Splits the audio into separate tracks for vocals and instrumentals,
+    useful for remixing, karaoke, or isolating specific parts.
+
+    Use this when:
+    - You want to separate vocals from instrumentals
+    - You need individual stem tracks for mixing
+    - You want to create a karaoke version
+
+    Returns:
+        Task ID and stem separation results with individual track URLs.
+    """
+    result = await client.generate_audio(
+        action="stems",
+        audio_id=audio_id,
+        callback_url=callback_url,
+    )
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_replace_section(
+    audio_id: Annotated[
+        str,
+        Field(description="ID of the audio to replace a section in."),
+    ],
+    replace_section_start: Annotated[
+        float,
+        Field(description="Start time in seconds of the section to replace."),
+    ],
+    replace_section_end: Annotated[
+        float,
+        Field(description="End time in seconds of the section to replace."),
+    ],
+    lyric: Annotated[
+        str | None,
+        Field(
+            description="New lyrics for the replaced section. Use section markers like [Verse], [Chorus]."
+        ),
+    ] = None,
+    style: Annotated[
+        str,
+        Field(description="Music style for the replaced section."),
+    ] = "",
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Replace a specific time range in a song with new generated content.
+
+    Re-generates a portion of a song between the specified start and end times,
+    keeping the rest of the song unchanged. Great for fixing sections you don't like.
+
+    Use this when:
+    - A specific section of a song needs improvement
+    - You want to change lyrics in the middle of a song
+    - You want to replace a verse or chorus with something different
+
+    Returns:
+        Task ID and the updated audio information.
+    """
+    payload: dict = {
+        "action": "replace_section",
+        "audio_id": audio_id,
+        "replace_section_start": replace_section_start,
+        "replace_section_end": replace_section_end,
+        "model": model,
+        "callback_url": callback_url,
+    }
+
+    if lyric:
+        payload["lyric"] = lyric
+        payload["custom"] = True
+    if style:
+        payload["style"] = style
+
+    result = await client.generate_audio(**payload)
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_upload_extend(
+    audio_id: Annotated[
+        str,
+        Field(
+            description="ID of the uploaded audio to extend. Must be an audio uploaded via suno_upload_audio."
+        ),
+    ],
+    lyric: Annotated[
+        str,
+        Field(description="Lyrics for the extension section."),
+    ],
+    continue_at: Annotated[
+        float,
+        Field(description="Timestamp in seconds where to start the extension."),
+    ],
+    style: Annotated[
+        str,
+        Field(description="Music style for the extension."),
+    ] = "",
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Extend an uploaded audio (your own music) with new AI-generated content.
+
+    Similar to suno_extend_music but works with audio you uploaded via
+    suno_upload_audio. Allows you to add new sections to your own music.
+
+    Use this when:
+    - You uploaded your own music and want to extend it
+    - You want to add AI-generated sections to your existing recordings
+
+    Returns:
+        Task ID and the extended audio information.
+    """
+    payload: dict = {
+        "action": "upload_extend",
+        "audio_id": audio_id,
+        "lyric": lyric,
+        "continue_at": continue_at,
+        "custom": True,
+        "model": model,
+        "callback_url": callback_url,
+    }
+
+    if style:
+        payload["style"] = style
+
+    result = await client.generate_audio(**payload)
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_upload_cover(
+    audio_id: Annotated[
+        str,
+        Field(
+            description="ID of the uploaded audio to create a cover of. Must be an audio uploaded via suno_upload_audio."
+        ),
+    ],
+    style: Annotated[
+        str,
+        Field(description="Target music style for the cover."),
+    ] = "",
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Create an AI cover of an uploaded audio (your own music).
+
+    Similar to suno_cover_music but works with audio you uploaded via
+    suno_upload_audio. Re-arranges your music in a different style.
+
+    Use this when:
+    - You uploaded your own music and want a cover in a different style
+    - You want to hear your song re-interpreted by AI
+
+    Returns:
+        Task ID and the cover audio information.
+    """
+    payload: dict = {
+        "action": "upload_cover",
+        "audio_id": audio_id,
+        "model": model,
+        "callback_url": callback_url,
+    }
+
+    if style:
+        payload["style"] = style
+
+    result = await client.generate_audio(**payload)
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_mashup_music(
+    mashup_audio_ids: Annotated[
+        list[str],
+        Field(description="List of audio IDs to mashup together. Provide 2 or more song IDs."),
+    ],
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Create a musical mashup by blending multiple songs together.
+
+    Combines elements from multiple generated songs into a single cohesive
+    mashup track. Different from lyrics mashup - this blends the actual audio.
+
+    Use this when:
+    - You want to blend two or more songs together musically
+    - You're creating a DJ-style mashup
+    - You want to combine melodies from different songs
+
+    Returns:
+        Task ID and the mashup audio information.
+    """
+    result = await client.generate_audio(
+        action="mashup",
+        mashup_audio_ids=mashup_audio_ids,
+        model=model,
+        callback_url=callback_url,
+    )
+    return format_audio_result(result)
