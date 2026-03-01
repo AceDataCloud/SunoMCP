@@ -19,6 +19,6 @@ logging.getLogger("httpcore").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server
-mcp = FastMCP(settings.server_name)
+mcp = FastMCP(settings.server_name, host="0.0.0.0")
 
 logger.info(f"Initialized MCP server: {settings.server_name}")
