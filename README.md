@@ -159,64 +159,64 @@ Clients connect with their own Bearer token — the server extracts the token fr
 
 ### Music Generation
 
-| Tool | Description |
-|------|-------------|
-| `generate_music` | Generate music from a text prompt (Inspiration Mode) |
-| `generate_custom_music` | Generate with custom lyrics, title, and style |
-| `extend_music` | Extend an existing song from a timestamp |
-| `cover_music` | Create a cover/remix version |
-| `concat_music` | Merge extended segments into complete audio |
-| `generate_with_persona` | Generate using a saved voice style |
-| `remaster_music` | Remaster an existing song to improve audio quality |
-| `stems_music` | Separate a song into individual stems (vocals/instruments) |
-| `replace_section` | Replace a specific time range with new generated content |
-| `upload_extend` | Extend uploaded audio with new AI-generated content |
-| `upload_cover` | Create an AI cover of uploaded audio |
-| `mashup_music` | Create a mashup by blending multiple songs together |
+| Tool                    | Description                                                |
+| ----------------------- | ---------------------------------------------------------- |
+| `generate_music`        | Generate music from a text prompt (Inspiration Mode)       |
+| `generate_custom_music` | Generate with custom lyrics, title, and style              |
+| `extend_music`          | Extend an existing song from a timestamp                   |
+| `cover_music`           | Create a cover/remix version                               |
+| `concat_music`          | Merge extended segments into complete audio                |
+| `generate_with_persona` | Generate using a saved voice style                         |
+| `remaster_music`        | Remaster an existing song to improve audio quality         |
+| `stems_music`           | Separate a song into individual stems (vocals/instruments) |
+| `replace_section`       | Replace a specific time range with new generated content   |
+| `upload_extend`         | Extend uploaded audio with new AI-generated content        |
+| `upload_cover`          | Create an AI cover of uploaded audio                       |
+| `mashup_music`          | Create a mashup by blending multiple songs together        |
 
 ### Lyrics
 
-| Tool | Description |
-|------|-------------|
-| `generate_lyrics` | Generate song lyrics from a prompt |
-| `mashup_lyrics` | Generate mashup lyrics by combining two sets of lyrics |
-| `optimize_style` | Optimize a style description for better generation results |
+| Tool              | Description                                                |
+| ----------------- | ---------------------------------------------------------- |
+| `generate_lyrics` | Generate song lyrics from a prompt                         |
+| `mashup_lyrics`   | Generate mashup lyrics by combining two sets of lyrics     |
+| `optimize_style`  | Optimize a style description for better generation results |
 
 ### Media Conversion
 
-| Tool | Description |
-|------|-------------|
-| `get_mp4` | Get an MP4 video version of a generated song |
-| `get_wav` | Get lossless WAV format of a generated song |
-| `get_midi` | Get MIDI data extracted from a generated song |
-| `get_timing` | Get timing and subtitle data for a generated song |
-| `extract_vocals` | Extract the vocal track from a generated song |
+| Tool             | Description                                       |
+| ---------------- | ------------------------------------------------- |
+| `get_mp4`        | Get an MP4 video version of a generated song      |
+| `get_wav`        | Get lossless WAV format of a generated song       |
+| `get_midi`       | Get MIDI data extracted from a generated song     |
+| `get_timing`     | Get timing and subtitle data for a generated song |
+| `extract_vocals` | Extract the vocal track from a generated song     |
 
 ### Persona
 
-| Tool | Description |
-|------|-------------|
+| Tool             | Description                  |
+| ---------------- | ---------------------------- |
 | `create_persona` | Save a voice style for reuse |
 
 ### Upload
 
-| Tool | Description |
-|------|-------------|
+| Tool           | Description                                                    |
+| -------------- | -------------------------------------------------------------- |
 | `upload_audio` | Upload an external audio file for use in subsequent operations |
 
 ### Tasks
 
-| Tool | Description |
-|------|-------------|
-| `get_task` | Query a single task status |
+| Tool              | Description                  |
+| ----------------- | ---------------------------- |
+| `get_task`        | Query a single task status   |
 | `get_tasks_batch` | Query multiple tasks at once |
 
 ### Information
 
-| Tool | Description |
-|------|-------------|
-| `list_models` | List available Suno models |
-| `list_actions` | List available API actions |
+| Tool                     | Description                 |
+| ------------------------ | --------------------------- |
+| `list_models`            | List available Suno models  |
+| `list_actions`           | List available API actions  |
 | `get_lyric_format_guide` | Get lyrics formatting guide |
 
 ## Usage Examples
@@ -255,16 +255,17 @@ Claude: I'll extend the song with a bridge.
 
 ## Available Models
 
-| Model | Version | Max Duration | Features |
-|-------|---------|--------------|----------|
-| `chirp-v5` | V5 | 8 minutes | Latest, best quality |
-| `chirp-v4-5-plus` | V4.5+ | 8 minutes | Enhanced quality |
-| `chirp-v4-5` | V4.5 | 4 minutes | Vocal gender control |
-| `chirp-v4` | V4 | 150 seconds | Stable |
-| `chirp-v3-5` | V3.5 | 120 seconds | Fast |
-| `chirp-v3` | V3 | 120 seconds | Legacy |
+| Model             | Version | Max Duration | Features             |
+| ----------------- | ------- | ------------ | -------------------- |
+| `chirp-v5`        | V5      | 8 minutes    | Latest, best quality |
+| `chirp-v4-5-plus` | V4.5+   | 8 minutes    | Enhanced quality     |
+| `chirp-v4-5`      | V4.5    | 4 minutes    | Vocal gender control |
+| `chirp-v4`        | V4      | 150 seconds  | Stable               |
+| `chirp-v3-5`      | V3.5    | 120 seconds  | Fast                 |
+| `chirp-v3`        | V3      | 120 seconds  | Legacy               |
 
 **Vocal Gender Control** (v4.5+ only):
+
 - `f` - Female vocals
 - `m` - Male vocals
 
@@ -272,13 +273,13 @@ Claude: I'll extend the song with a bridge.
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `ACEDATACLOUD_API_TOKEN` | API token from AceDataCloud | **Required** |
-| `ACEDATACLOUD_API_BASE_URL` | API base URL | `https://api.acedata.cloud` |
-| `SUNO_DEFAULT_MODEL` | Default model for generation | `chirp-v4-5` |
-| `SUNO_REQUEST_TIMEOUT` | Request timeout in seconds | `1800` |
-| `LOG_LEVEL` | Logging level | `INFO` |
+| Variable                    | Description                  | Default                     |
+| --------------------------- | ---------------------------- | --------------------------- |
+| `ACEDATACLOUD_API_TOKEN`    | API token from AceDataCloud  | **Required**                |
+| `ACEDATACLOUD_API_BASE_URL` | API base URL                 | `https://api.acedata.cloud` |
+| `SUNO_DEFAULT_MODEL`        | Default model for generation | `chirp-v4-5`                |
+| `SUNO_REQUEST_TIMEOUT`      | Request timeout in seconds   | `1800`                      |
+| `LOG_LEVEL`                 | Logging level                | `INFO`                      |
 
 ### Command Line Options
 
