@@ -1,0 +1,22 @@
+name: Trigger Profile Update
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - .gitignore
+      - README.md
+      - CHANGELOG.md
+      - LICENSE
+      - ".github/ISSUE_TEMPLATE/**"
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch update-profile to Index repo
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.BOT_TOKEN }}
+          repository: AceDataCloud/Index
+          event-type: update-profile
