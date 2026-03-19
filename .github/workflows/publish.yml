@@ -138,6 +138,78 @@ jobs:
             --generate-notes \
             --repo '${{ github.repository }}' || echo "Release already exists, skipping"
 
+  publish-vscode:
+    name: Publish VS Code Extension
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: [build, publish-pypi]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Generate version
+        working-directory: vscode
+        run: |
+          YEAR=$(date +'%Y')
+          MMDD=$(date +'%-m%d')
+          export YEAR MMDD
+          export EXT_ID="acedatacloud.mcp-suno"
+          LATEST_BUILD=$(node -e "
+            const https = require('https');
+            const data = JSON.stringify({
+              filters: [{criteria: [{filterType: 7, value: process.env.EXT_ID}]}],
+              flags: 914
+            });
+            const req = https.request({
+              hostname: 'marketplace.visualstudio.com',
+              path: '/_apis/public/gallery/extensionquery',
+              method: 'POST',
+              headers: {'Content-Type':'application/json','Accept':'application/json;api-version=3.0-preview.1'}
+            }, res => {
+              let body = '';
+              res.on('data', d => body += d);
+              res.on('end', () => {
+                try {
+                  const r = JSON.parse(body);
+                  const exts = r.results?.[0]?.extensions || [];
+                  if (!exts.length) { console.log(0); return; }
+                  const vers = exts[0].versions?.map(v => v.version) || [];
+                  const todayPrefix = process.env.YEAR + '.' + process.env.MMDD + '.';
+                  const todayVers = vers.filter(v => v.startsWith(todayPrefix));
+                  if (!todayVers.length) { console.log(0); return; }
+                  const builds = todayVers.map(v => parseInt(v.split('.')[2] || 0));
+                  console.log(Math.max(...builds) + 1);
+                } catch(e) { console.log(0); }
+              });
+            });
+            req.on('error', () => console.log(0));
+            req.write(data);
+            req.end();
+          ")
+          VERSION="${YEAR}.${MMDD}.${LATEST_BUILD}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Publishing version $VERSION"
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.version = '$VERSION';
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+
+      - name: Package extension
+        working-directory: vscode
+        run: vsce package --no-git-tag-version
+
+      - name: Publish to VS Code Marketplace
+        working-directory: vscode
+        run: vsce publish --no-git-tag-version -p ${{ secrets.VSCE_PAT }}
+
   notify-vscode-extension:
     name: Notify VS Code Extension
     if: github.event_name == 'push'
@@ -149,6 +221,6 @@ jobs:
           curl -s -X POST \
             -H "Authorization: token ${{ secrets.VSCODE_MCP_DISPATCH_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/AceDataCloud/VSCodeMCPSuno/dispatches" \
+            "https://api.github.com/repos/AceDataCloud/VSCodeMCP/dispatches" \
             -d '{"event_type":"mcp-updated","client_payload":{"source":"${{ github.repository }}","version":"${{ needs.build.outputs.version }}"}}'
-          echo "Triggered VSCodeMCPSuno extension rebuild"
+          echo "Triggered VSCodeMCP extension rebuild"
