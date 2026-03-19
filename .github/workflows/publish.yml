@@ -243,7 +243,7 @@ jobs:
         env:
           SMITHERY_API_KEY: ${{ secrets.SMITHERY_API_KEY }}
         run: |
-          smithery mcp publish "https://suno.mcp.acedata.cloud/mcp" --name acedatacloud-mcp/mcp-suno 2>&1 || echo "Smithery publish completed"
+          smithery mcp publish "https://suno.mcp.acedata.cloud/mcp" --name acedatacloud-mcp/mcp-suno --config-schema '{"type":"object","properties":{"apiKey":{"type":"string","description":"AceDataCloud API Bearer Token (get from https://platform.acedata.cloud)","x-from":{"header":"x-api-key"},"x-to":{"header":"Authorization","prefix":"Bearer "}}},"required":["apiKey"]}' 2>&1 || echo "Smithery publish completed"
 
   notify-vscode-extension:
     name: Notify VS Code Extension
