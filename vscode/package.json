@@ -1,0 +1,49 @@
+{
+  "name": "mcp-suno",
+  "displayName": "Suno MCP",
+  "description": "AI Music Generation with Suno - Generate songs, lyrics, covers, and more via Ace Data Cloud API",
+  "version": "0.1.0",
+  "publisher": "acedatacloud",
+  "icon": "icon.png",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "categories": [
+    "AI",
+    "Chat"
+  ],
+  "keywords": [
+    "mcp",
+    "model context protocol",
+    "ai",
+    "copilot",
+    "ace data cloud",
+    "suno",
+    "music",
+    "ai music",
+    "song generation",
+    "lyrics"
+  ],
+  "homepage": "https://github.com/AceDataCloud/MCPSuno",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AceDataCloud/MCPSuno"
+  },
+  "bugs": {
+    "url": "https://github.com/AceDataCloud/MCPSuno/issues"
+  },
+  "contributes": {
+    "mcpServers": {
+      "suno": {
+        "command": "uvx",
+        "args": [
+          "mcp-suno"
+        ],
+        "env": {
+          "ACEDATACLOUD_API_TOKEN": ""
+        }
+      }
+    }
+  }
+}
