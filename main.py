@@ -191,45 +191,122 @@ Environment Variables:
 
             async def server_card(_request: Request) -> JSONResponse:
                 """MCP Server Card for Smithery and other registries."""
-                return JSONResponse({
-                    "serverInfo": {"name": "MCP Suno", "version": get_version()},
-                    "authentication": {"required": True, "schemes": ["bearer"]},
-                    "tools": [
-                        {"name": "suno_generate_music", "description": "Generate AI music from a text prompt"},
-                        {"name": "suno_generate_custom_music", "description": "Generate music with custom lyrics, title, and style"},
-                        {"name": "suno_extend_music", "description": "Extend an existing song from a timestamp"},
-                        {"name": "suno_cover_music", "description": "Create a cover/remix in a different style"},
-                        {"name": "suno_concat_music", "description": "Merge extended segments into complete audio"},
-                        {"name": "suno_generate_with_persona", "description": "Generate using a saved voice style"},
-                        {"name": "suno_remaster_music", "description": "Remaster a song to improve audio quality"},
-                        {"name": "suno_stems_music", "description": "Separate into vocal and instrument stems"},
-                        {"name": "suno_replace_section", "description": "Replace a time range with new content"},
-                        {"name": "suno_upload_extend", "description": "Extend uploaded audio with AI content"},
-                        {"name": "suno_upload_cover", "description": "Create an AI cover of uploaded audio"},
-                        {"name": "suno_mashup_music", "description": "Blend multiple songs into a mashup"},
-                        {"name": "suno_generate_lyrics", "description": "Generate structured lyrics from a prompt"},
-                        {"name": "suno_mashup_lyrics", "description": "Combine two lyrics into a mashup"},
-                        {"name": "suno_optimize_style", "description": "Optimize a style description for generation"},
-                        {"name": "suno_get_mp4", "description": "Get MP4 video of a generated song"},
-                        {"name": "suno_get_wav", "description": "Get lossless WAV format"},
-                        {"name": "suno_get_midi", "description": "Get MIDI data from a song"},
-                        {"name": "suno_get_timing", "description": "Get timing/subtitle data"},
-                        {"name": "suno_extract_vocals", "description": "Extract vocal track"},
-                        {"name": "suno_create_persona", "description": "Save a voice style for reuse"},
-                        {"name": "suno_upload_audio", "description": "Upload external audio for processing"},
-                        {"name": "suno_get_task", "description": "Query task status and result"},
-                        {"name": "suno_get_tasks_batch", "description": "Query multiple tasks at once"},
-                        {"name": "suno_list_models", "description": "List available Suno models"},
-                        {"name": "suno_list_actions", "description": "List available API actions"},
-                        {"name": "suno_get_lyric_format_guide", "description": "Get lyrics formatting guide"},
-                    ],
-                    "prompts": [
-                        {"name": "suno_music_generation_guide", "description": "Guide for music generation"},
-                        {"name": "suno_workflow_examples", "description": "Example workflows"},
-                        {"name": "suno_style_suggestions", "description": "Style suggestions for generation"},
-                    ],
-                    "resources": [],
-                })
+                return JSONResponse(
+                    {
+                        "serverInfo": {"name": "MCP Suno", "version": get_version()},
+                        "authentication": {"required": True, "schemes": ["bearer"]},
+                        "tools": [
+                            {
+                                "name": "suno_generate_music",
+                                "description": "Generate AI music from a text prompt",
+                            },
+                            {
+                                "name": "suno_generate_custom_music",
+                                "description": "Generate music with custom lyrics, title, and style",
+                            },
+                            {
+                                "name": "suno_extend_music",
+                                "description": "Extend an existing song from a timestamp",
+                            },
+                            {
+                                "name": "suno_cover_music",
+                                "description": "Create a cover/remix in a different style",
+                            },
+                            {
+                                "name": "suno_concat_music",
+                                "description": "Merge extended segments into complete audio",
+                            },
+                            {
+                                "name": "suno_generate_with_persona",
+                                "description": "Generate using a saved voice style",
+                            },
+                            {
+                                "name": "suno_remaster_music",
+                                "description": "Remaster a song to improve audio quality",
+                            },
+                            {
+                                "name": "suno_stems_music",
+                                "description": "Separate into vocal and instrument stems",
+                            },
+                            {
+                                "name": "suno_replace_section",
+                                "description": "Replace a time range with new content",
+                            },
+                            {
+                                "name": "suno_upload_extend",
+                                "description": "Extend uploaded audio with AI content",
+                            },
+                            {
+                                "name": "suno_upload_cover",
+                                "description": "Create an AI cover of uploaded audio",
+                            },
+                            {
+                                "name": "suno_mashup_music",
+                                "description": "Blend multiple songs into a mashup",
+                            },
+                            {
+                                "name": "suno_generate_lyrics",
+                                "description": "Generate structured lyrics from a prompt",
+                            },
+                            {
+                                "name": "suno_mashup_lyrics",
+                                "description": "Combine two lyrics into a mashup",
+                            },
+                            {
+                                "name": "suno_optimize_style",
+                                "description": "Optimize a style description for generation",
+                            },
+                            {
+                                "name": "suno_get_mp4",
+                                "description": "Get MP4 video of a generated song",
+                            },
+                            {"name": "suno_get_wav", "description": "Get lossless WAV format"},
+                            {"name": "suno_get_midi", "description": "Get MIDI data from a song"},
+                            {"name": "suno_get_timing", "description": "Get timing/subtitle data"},
+                            {"name": "suno_extract_vocals", "description": "Extract vocal track"},
+                            {
+                                "name": "suno_create_persona",
+                                "description": "Save a voice style for reuse",
+                            },
+                            {
+                                "name": "suno_upload_audio",
+                                "description": "Upload external audio for processing",
+                            },
+                            {
+                                "name": "suno_get_task",
+                                "description": "Query task status and result",
+                            },
+                            {
+                                "name": "suno_get_tasks_batch",
+                                "description": "Query multiple tasks at once",
+                            },
+                            {
+                                "name": "suno_list_models",
+                                "description": "List available Suno models",
+                            },
+                            {
+                                "name": "suno_list_actions",
+                                "description": "List available API actions",
+                            },
+                            {
+                                "name": "suno_get_lyric_format_guide",
+                                "description": "Get lyrics formatting guide",
+                            },
+                        ],
+                        "prompts": [
+                            {
+                                "name": "suno_music_generation_guide",
+                                "description": "Guide for music generation",
+                            },
+                            {"name": "suno_workflow_examples", "description": "Example workflows"},
+                            {
+                                "name": "suno_style_suggestions",
+                                "description": "Style suggestions for generation",
+                            },
+                        ],
+                        "resources": [],
+                    }
+                )
 
             @contextlib.asynccontextmanager
             async def lifespan(_app: Starlette):  # type: ignore[no-untyped-def]
