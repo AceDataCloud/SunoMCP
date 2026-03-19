@@ -74,4 +74,15 @@ or use HTTP mode for zero-install remote access.</p>
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
     </actions>
+
+    <change-notes><![CDATA[
+<h3>0.1.0</h3>
+<ul>
+    <li>Initial release</li>
+    <li>MCP server integration with JetBrains AI Assistant</li>
+    <li>STDIO and HTTP transport modes</li>
+    <li>Settings UI for API token management</li>
+    <li>One-click MCP config copy</li>
+</ul>
+]]></change-notes>
 </idea-plugin>
