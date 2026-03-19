@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.acedatacloud/mcp-suno",
+  "name": "io.github.AceDataCloud/mcp-suno",
   "description": "MCP server for Suno AI music generation, lyrics, and covers",
-  "version": "0.1.0",
+  "version": "2026.3.19.6",
   "repository": {
     "url": "https://github.com/AceDataCloud/MCPSuno",
     "source": "github"
@@ -10,7 +10,7 @@
   "packages": [
     {
       "identifier": "mcp-suno",
-      "version": "0.1.0",
+      "version": "2026.3.19.6",
       "transport": {
         "type": "stdio"
       },
