@@ -11,3 +11,4 @@ build/
 *.ipr
 out/
 .intellijPlatform/
+.kotlin/

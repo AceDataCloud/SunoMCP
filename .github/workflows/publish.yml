@@ -312,4 +312,9 @@ jobs:
         working-directory: jetbrains
         env:
           PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
-        run: ./gradlew publishPlugin
+        run: |
+          if [ -z "$PUBLISH_TOKEN" ]; then
+            echo "JETBRAINS_MARKETPLACE_TOKEN not set, skipping publish"
+            exit 0
+          fi
+          ./gradlew publishPlugin
