@@ -260,11 +260,11 @@ class AceDataCloudOAuthProvider:
     # --- Internal helpers ---
 
     async def _exchange_code_for_jwt(self, code: str) -> str | None:
-        """Exchange AceDataCloud auth code for JWT via legacy token endpoint."""
+        """Exchange AceDataCloud auth code for JWT via SSO token endpoint."""
         try:
             async with httpx.AsyncClient(timeout=30) as client:
                 response = await client.post(
-                    f"{settings.auth_base_url}/oauth2/v1/token",
+                    f"{settings.auth_base_url}/sso/v1/token",
                     json={"code": code},
                 )
                 if response.status_code == 200:
