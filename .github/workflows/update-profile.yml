@@ -17,6 +17,6 @@ jobs:
       - name: Dispatch update-profile to Index repo
         uses: peter-evans/repository-dispatch@v4
         with:
-          token: ${{ secrets.BOT_TOKEN }}
+          token: ${{ secrets.VSCODE_MCP_DISPATCH_TOKEN }}
           repository: AceDataCloud/Index
           event-type: update-profile

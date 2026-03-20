@@ -312,10 +312,11 @@ jobs:
       - name: Generate version
         id: jb_version
         run: |
-          # Use CalVer: YYYY.M.BUILD
+          # Use CalVer: YYYY.M.D.BUILD (match PyPI format)
           YEAR=$(date +'%Y')
           MONTH=$(date +'%-m')
-          VERSION_PREFIX="${YEAR}.${MONTH}"
+          DAY=$(date +'%-d')
+          VERSION_PREFIX="${YEAR}.${MONTH}.${DAY}"
           # Query JetBrains Marketplace for latest version today
           BUILD=$(python3 -c "
           import urllib.request, json
