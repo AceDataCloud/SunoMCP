@@ -52,8 +52,10 @@ class AceDataCloudOAuthProvider:
         return self._clients.get(client_id)
 
     async def register_client(self, client_info: OAuthClientInformationFull) -> None:
-        self._clients[client_info.client_id] = client_info
-        logger.info(f"Registered OAuth client: {client_info.client_id}")
+        client_id = client_info.client_id
+        assert client_id is not None
+        self._clients[client_id] = client_info
+        logger.info(f"Registered OAuth client: {client_id}")
 
     async def authorize(
         self, client: OAuthClientInformationFull, params: AuthorizationParams
@@ -166,10 +168,12 @@ class AceDataCloudOAuthProvider:
             raise ValueError("Authorization code not found or already used")
         _, api_token = data
 
+        client_id = client.client_id or ""
+
         # Store access token mapping
         self._access_tokens[api_token] = AccessToken(
             token=api_token,
-            client_id=client.client_id,
+            client_id=client_id,
             scopes=authorization_code.scopes,
             expires_at=None,  # API credential tokens don't expire by time
         )
@@ -178,11 +182,11 @@ class AceDataCloudOAuthProvider:
         refresh_token_str = secrets.token_urlsafe(48)
         self._refresh_tokens[refresh_token_str] = RefreshToken(
             token=refresh_token_str,
-            client_id=client.client_id,
+            client_id=client_id,
             scopes=authorization_code.scopes,
         )
 
-        logger.info(f"OAuth token exchange: issued access token for client {client.client_id}")
+        logger.info(f"OAuth token exchange: issued access token for client {client_id}")
         return OAuthToken(
             access_token=api_token,
             token_type="Bearer",
@@ -208,10 +212,11 @@ class AceDataCloudOAuthProvider:
 
         # The original access_token (API credential) is still valid
         # Just issue a new refresh token
+        client_id = client.client_id or ""
         new_refresh = secrets.token_urlsafe(48)
         self._refresh_tokens[new_refresh] = RefreshToken(
             token=new_refresh,
-            client_id=client.client_id,
+            client_id=client_id,
             scopes=scopes or refresh_token.scopes,
         )
 
@@ -264,7 +269,8 @@ class AceDataCloudOAuthProvider:
                 )
                 if response.status_code == 200:
                     data = response.json()
-                    return data.get("access_token")
+                    access_token: str | None = data.get("access_token")
+                    return access_token
                 logger.error(f"Auth code exchange failed: {response.status_code} {response.text}")
         except Exception:
             logger.exception("Auth code exchange error")
@@ -283,10 +289,10 @@ class AceDataCloudOAuthProvider:
                     results = data.get("results", data) if isinstance(data, dict) else data
                     if isinstance(results, list):
                         for cred in results:
-                            token = cred.get("token")
-                            if token:
+                            cred_token: str | None = cred.get("token")
+                            if cred_token:
                                 logger.info("Found user credential token")
-                                return token
+                                return cred_token
                 logger.warning(f"No credentials found: {response.status_code}")
         except Exception:
             logger.exception("Credential fetch error")

@@ -24,14 +24,15 @@ oauth_provider = None
 
 if settings.server_url:
     from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions, RevocationOptions
+    from pydantic import AnyHttpUrl
 
     from core.oauth import AceDataCloudOAuthProvider
 
     oauth_provider = AceDataCloudOAuthProvider()
     mcp_kwargs["auth_server_provider"] = oauth_provider
     mcp_kwargs["auth"] = AuthSettings(
-        issuer_url=settings.server_url,
-        resource_server_url=settings.server_url,
+        issuer_url=AnyHttpUrl(settings.server_url),
+        resource_server_url=AnyHttpUrl(settings.server_url),
         client_registration_options=ClientRegistrationOptions(enabled=True),
         revocation_options=RevocationOptions(enabled=True),
     )
