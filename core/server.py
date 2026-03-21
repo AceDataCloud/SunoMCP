@@ -3,6 +3,7 @@
 import logging
 
 from mcp.server.fastmcp import FastMCP
+from mcp.types import Icon
 
 from core.config import settings
 
@@ -39,6 +40,10 @@ if settings.server_url:
     logger.info(f"OAuth enabled: issuer_url={settings.server_url}")
 
 # Initialize FastMCP server
-mcp = FastMCP(settings.server_name, **mcp_kwargs)
+mcp = FastMCP(
+    settings.server_name,
+    icons=[Icon(src="https://cdn.acedata.cloud/l3ffw7.jpg")],
+    **mcp_kwargs,
+)
 
 logger.info(f"Initialized MCP server: {settings.server_name}")
