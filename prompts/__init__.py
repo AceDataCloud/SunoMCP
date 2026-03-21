@@ -60,9 +60,11 @@ When the user wants to generate music, choose the appropriate tool based on thei
 **Use when:**
 - Generation takes time and user wants to check if it's ready
 - User asks "is my song done?"
+- A generation tool returned only a task_id and you need the final audio URLs
 
 ## Important Notes:
-1. Music generation is async - always return the task_id to the user
+1. Music generation is async in MCP - generation tools should return quickly with a task_id
+2. After any generate/extend/cover/remaster/stems/media conversion call, use `suno_get_task` to poll for the final result
 2. Default model is chirp-v4-5 (good balance of quality and speed)
 3. For longest songs (8 min), use chirp-v5 or chirp-v4-5-plus
 4. Vocal gender only works on v4.5+ models
@@ -77,14 +79,14 @@ def suno_workflow_examples() -> str:
 ## Workflow 1: Quick Song Generation
 1. User: "Make me a rock song about freedom"
 2. Call `suno_generate_music(prompt="Rock song about freedom, electric guitars, powerful drums, anthemic")`
-3. Return task_id to user
-4. User can check status with `suno_get_task(task_id)`
+3. Return the task_id from the submission response
+4. Poll with `suno_get_task(task_id)` until the task finishes and audio URLs appear
 
 ## Workflow 2: Custom Song with User's Lyrics
 1. User provides lyrics
 2. Ask for title and style preferences if not provided
 3. Call `suno_generate_custom_music(lyric=user_lyrics, title="...", style="...")`
-4. Return task_id
+4. Poll with `suno_get_task(task_id)` for the completed audio
 
 ## Workflow 3: Creating a Long Song (>4 minutes)
 1. Generate initial song with `suno_generate_music`
@@ -102,6 +104,7 @@ def suno_workflow_examples() -> str:
 1. User has a song_id they want to remix
 2. User describes the new style
 3. Call `suno_cover_music(audio_id, prompt="jazz version", style="smooth jazz, saxophone")`
+4. Poll with `suno_get_task(task_id)` for the completed cover
 
 ## Tips:
 - Always be descriptive in prompts - include genre, mood, instruments, tempo

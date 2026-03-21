@@ -7,6 +7,7 @@ from pydantic import Field
 
 from core.client import client
 from core.server import mcp
+from core.utils import format_audio_result
 
 
 @mcp.tool()
@@ -32,7 +33,7 @@ async def suno_get_mp4(
         Task ID and MP4 video information.
     """
     result = await client.get_mp4(audio_id=audio_id)
-    return json.dumps(result, ensure_ascii=False, indent=2)
+    return format_audio_result(result)
 
 
 @mcp.tool()
@@ -100,7 +101,7 @@ async def suno_extract_vocals(
         payload["callback_url"] = callback_url
 
     result = await client.get_vox(**payload)
-    return json.dumps(result, ensure_ascii=False, indent=2)
+    return format_audio_result(result)
 
 
 @mcp.tool()
@@ -132,7 +133,7 @@ async def suno_get_wav(
         payload["callback_url"] = callback_url
 
     result = await client.get_wav(**payload)
-    return json.dumps(result, ensure_ascii=False, indent=2)
+    return format_audio_result(result)
 
 
 @mcp.tool()
@@ -164,4 +165,4 @@ async def suno_get_midi(
         payload["callback_url"] = callback_url
 
     result = await client.get_midi(**payload)
-    return json.dumps(result, ensure_ascii=False, indent=2)
+    return format_audio_result(result)

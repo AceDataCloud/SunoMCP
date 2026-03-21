@@ -25,6 +25,7 @@ class TestFormatAudioResult:
         assert data["data"][0]["duration"] == 120.5
         assert data["data"][0]["state"] == "succeeded"
         assert "audio_url" in data["data"][0]
+        assert data["mcp_async_submission"]["poll_tool"] == "suno_get_task"
 
     def test_format_error(self, mock_error_response):
         """Test formatting error response."""
@@ -73,6 +74,7 @@ class TestFormatTaskResult:
         assert data["request"]["action"] == "generate"
         assert data["response"]["success"] is True
         assert data["response"]["data"][0]["title"] == "Test Song"
+        assert data["mcp_task_polling"]["poll_tool"] == "suno_get_task"
 
     def test_format_error(self):
         """Test formatting error response."""

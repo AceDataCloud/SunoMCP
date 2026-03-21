@@ -37,6 +37,18 @@ class TestSunoClient:
         with pytest.raises(SunoAuthError, match="not configured"):
             client._get_headers()
 
+    def test_with_async_callback_injects_default_callback(self, client):
+        """Test async submission injects an internal callback when missing."""
+        payload = client._with_async_callback({"action": "generate"})
+        assert payload["callback_url"] == "https://api.acedata.cloud/health"
+
+    def test_with_async_callback_preserves_explicit_callback(self, client):
+        """Test async submission preserves a user-provided callback."""
+        payload = client._with_async_callback(
+            {"action": "generate", "callback_url": "https://example.com/webhook"}
+        )
+        assert payload["callback_url"] == "https://example.com/webhook"
+
     @pytest.mark.asyncio
     async def test_request_success(self, client, mock_audio_response):
         """Test successful API request."""
