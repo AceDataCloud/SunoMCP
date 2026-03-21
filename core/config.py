@@ -48,6 +48,9 @@ class Settings:
             "ACEDATACLOUD_PLATFORM_BASE_URL", "https://platform.acedata.cloud"
         )
     )
+    oauth_client_id: str = field(
+        default_factory=lambda: os.getenv("ACEDATACLOUD_OAUTH_CLIENT_ID", "")
+    )
 
     def validate(self) -> None:
         """Validate required settings."""
