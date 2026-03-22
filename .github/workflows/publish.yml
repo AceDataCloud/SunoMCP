@@ -295,6 +295,21 @@ jobs:
             -d '{"event_type":"mcp-updated","client_payload":{"source":"${{ github.repository }}","version":"${{ needs.build.outputs.version }}"}}'
           echo "Triggered VSCodeMCP extension rebuild"
 
+  notify-dify-plugin:
+    name: Notify Dify Plugin Update
+    if: github.event_name == 'push'
+    needs: [build, publish-pypi]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Dify plugin sync
+        run: |
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.VSCODE_MCP_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/AceDataCloud/Dify/dispatches" \
+            -d '{"event_type":"mcp-plugin-update","client_payload":{"mcp_name":"suno","source":"${{ github.repository }}","version":"${{ needs.build.outputs.version }}"}}'
+          echo "Triggered Dify plugin sync for suno"
+
   publish-jetbrains:
     name: Publish JetBrains Plugin
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
