@@ -107,13 +107,14 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          pip install "twine>=5.0.0,<6.0.0"
+          pip install "twine>=6.1.0,<7.0.0"
+          twine check dist/*
           twine upload dist/*
 
   create-release:
     name: Create GitHub Release
     if: github.event_name == 'push'
-    needs: [build, publish-pypi]
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -174,7 +175,7 @@ jobs:
   publish-vscode:
     name: Publish VS Code Extension
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    needs: [build, publish-pypi]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -298,7 +299,7 @@ jobs:
   notify-dify-plugin:
     name: Notify Dify Plugin Update
     if: github.event_name == 'push'
-    needs: [build, publish-pypi]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Dify plugin sync
@@ -313,7 +314,7 @@ jobs:
   publish-jetbrains:
     name: Publish JetBrains Plugin
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    needs: [build, publish-pypi]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
