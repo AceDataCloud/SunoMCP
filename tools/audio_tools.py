@@ -21,7 +21,7 @@ async def suno_generate_music(
     model: Annotated[
         SunoModel,
         Field(
-            description="Suno model version. 'chirp-v4-5' is recommended for most use cases. 'chirp-v5' offers best quality with 8-minute max duration. Older models (v3, v3-5, v4) have shorter duration limits."
+            description="Suno model version. 'chirp-v4-5' is recommended for most use cases. 'chirp-v5-5' offers best quality with 8-minute max duration. Older models (v3, v3-5, v4) have shorter duration limits."
         ),
     ] = DEFAULT_MODEL,
     instrumental: Annotated[
@@ -83,7 +83,7 @@ async def suno_generate_custom_music(
     model: Annotated[
         SunoModel,
         Field(
-            description="Suno model version. 'chirp-v4-5' or 'chirp-v5' recommended for best quality."
+            description="Suno model version. 'chirp-v4-5' or 'chirp-v5-5' recommended for best quality."
         ),
     ] = DEFAULT_MODEL,
     instrumental: Annotated[
