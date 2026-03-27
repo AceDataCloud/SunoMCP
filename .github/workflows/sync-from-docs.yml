@@ -83,7 +83,7 @@ jobs:
   wait-and-merge:
     needs: create-task
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - name: Wait for Copilot PR and merge
         env:
@@ -93,8 +93,8 @@ jobs:
           echo "Waiting for Copilot to process issue #$ISSUE_NUMBER..."
 
           # Poll for Copilot to finish (up to 15 min)
-          for i in $(seq 1 45); do
-            echo "Poll attempt $i/45..."
+          for i in $(seq 1 90); do
+            echo "Poll attempt $i/90..."
 
             # Check if Copilot closed the issue (no changes needed)
             ISSUE_STATE=$(gh issue view "$ISSUE_NUMBER" --repo "${{ github.repository }}" --json state --jq '.state')
@@ -139,6 +139,6 @@ jobs:
             sleep 20
           done
 
-          echo "⚠️ Timeout: No PR found after 15 minutes. Copilot may still be working."
+          echo "⚠️ Timeout: No PR found after 30 minutes. Copilot may still be working."
           echo "Check issue #$ISSUE_NUMBER for status."
           exit 1
