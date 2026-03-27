@@ -1,0 +1,57 @@
+name: Auto-merge bot PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    # Only auto-merge PRs created by the bot or Claude
+    if: |
+      github.event.pull_request.user.login == 'AceDataCloudDev' ||
+      github.event.pull_request.user.login == 'github-actions[bot]' ||
+      contains(github.event.pull_request.title, '[auto-sync]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for CI checks
+        env:
+          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          pr_number=${{ github.event.pull_request.number }}
+          echo "Waiting for CI checks on PR #$pr_number..."
+          max_attempts=30
+          for i in $(seq 1 $max_attempts); do
+            sleep 30
+            # Check if all required checks have passed
+            status=$(gh pr checks "$pr_number" --json name,state --jq '[.[] | select(.name != "auto-merge")] | if length == 0 then "pass" elif all(.state == "SUCCESS" or .state == "SKIPPED") then "pass" elif any(.state == "FAILURE") then "fail" else "pending" end' 2>/dev/null || echo "pending")
+            echo "Attempt $i/$max_attempts: status=$status"
+            if [ "$status" = "pass" ]; then
+              echo "All checks passed!"
+              break
+            elif [ "$status" = "fail" ]; then
+              echo "CI checks failed. Skipping auto-merge."
+              exit 0
+            fi
+          done
+
+      - name: Approve PR
+        env:
+          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          gh pr review ${{ github.event.pull_request.number }} --approve
+
+      - name: Enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          gh pr merge ${{ github.event.pull_request.number }} \
+            --auto --squash \
+            --subject "sync: auto-merge from Docs update [automated]"
