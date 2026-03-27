@@ -23,7 +23,7 @@ jobs:
 
       - name: Wait for CI checks
         env:
-          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         run: |
           pr_number=${{ github.event.pull_request.number }}
           echo "Waiting for CI checks on PR #$pr_number..."
@@ -44,13 +44,13 @@ jobs:
 
       - name: Approve PR
         env:
-          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         run: |
           gh pr review ${{ github.event.pull_request.number }} --approve
 
       - name: Enable auto-merge
         env:
-          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
         run: |
           gh pr merge ${{ github.event.pull_request.number }} \
             --auto --squash \

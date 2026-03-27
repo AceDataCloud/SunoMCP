@@ -29,8 +29,8 @@ jobs:
       - name: Run Claude Code
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          anthropic_api_key: ${{ secrets.CLAUDE_CODE_API_KEY }}
           github_token: ${{ secrets.BOT_GITHUB_TOKEN }}
         env:
-          ANTHROPIC_BASE_URL: https://api.acedata.cloud
+          ANTHROPIC_BASE_URL: ${{ vars.CLAUDE_CODE_API_BASE }}
           ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4-20250514
