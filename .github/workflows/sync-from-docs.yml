@@ -52,6 +52,7 @@ jobs:
         env:
           ANTHROPIC_BASE_URL: ${{ vars.CLAUDE_CODE_API_BASE || 'https://api.acedata.cloud' }}
           ANTHROPIC_AUTH_TOKEN: ${{ secrets.CLAUDE_CODE_API_KEY }}
+          ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4-6-20250627
 
       - name: Merge PR
         if: steps.claude.outputs.branch_name != ''
