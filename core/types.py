@@ -10,6 +10,7 @@ SunoModel = Literal[
     "chirp-v4-5",
     "chirp-v4-5-plus",
     "chirp-v5",
+    "chirp-v5-5",
 ]
 
 # Lyrics model versions (different from audio models)
