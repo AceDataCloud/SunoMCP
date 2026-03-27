@@ -12,7 +12,6 @@ async def suno_list_models() -> str:
     for your music generation.
 
     Model comparison:
-    - chirp-v5-5: Newest model with full pipeline support, 8-minute max duration
     - chirp-v5: High quality, 8-minute max duration
     - chirp-v4-5-plus: High quality with 8-minute duration
     - chirp-v4-5: Recommended balance of quality and speed, 4-minute duration
@@ -26,7 +25,6 @@ async def suno_list_models() -> str:
 
 | Model           | Version | Prompt Limit | Lyric Limit  | Style Limit | Max Duration |
 |-----------------|---------|--------------|--------------|-------------|--------------|
-| chirp-v5-5      | V5.5    | 200 chars    | 5000 chars   | 1000 chars  | 8 minutes    |
 | chirp-v5        | V5      | 200 chars    | 5000 chars   | 1000 chars  | 8 minutes    |
 | chirp-v4-5-plus | V4.5+   | 200 chars    | 5000 chars   | 1000 chars  | 8 minutes    |
 | chirp-v4-5      | V4.5    | 200 chars    | 5000 chars   | 1000 chars  | 4 minutes    |
@@ -34,12 +32,11 @@ async def suno_list_models() -> str:
 | chirp-v3-5      | V3.5    | 200 chars    | 3000 chars   | 200 chars   | 120 seconds  |
 | chirp-v3-0      | V3      | 200 chars    | 3000 chars   | 200 chars   | 120 seconds  |
 
-Recommended: chirp-v4-5 for most use cases, chirp-v5-5 for best quality.
+Recommended: chirp-v4-5 for most use cases, chirp-v5 for best quality.
 
 Features by Version:
 - V4.5+: Vocal gender control ('f' for female, 'm' for male)
 - V5: High quality model with 8-minute songs
-- V5.5: Newest model with full pipeline support
 """
 
 

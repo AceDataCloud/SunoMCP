@@ -396,7 +396,6 @@ Claude: I'll extend the song with a bridge.
 
 | Model             | Version | Max Duration | Features             |
 | ----------------- | ------- | ------------ | -------------------- |
-| `chirp-v5-5`      | V5.5    | 8 minutes    | Newest, full pipeline |
 | `chirp-v5`        | V5      | 8 minutes    | Latest, best quality |
 | `chirp-v4-5-plus` | V4.5+   | 8 minutes    | Enhanced quality     |
 | `chirp-v4-5`      | V4.5    | 4 minutes    | Vocal gender control |
