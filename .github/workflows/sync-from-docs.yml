@@ -66,8 +66,7 @@ jobs:
               agent_assignment: {
                 target_repo: $repo,
                 base_branch: "main",
-                custom_instructions: "Check out the AceDataCloud/Docs repo and read openapi/suno.json. Compare the model enum and endpoints against core/types.py and tools/. Fix any differences. Read CLAUDE.md for detailed sync rules. If everything is already in sync, close this issue with a comment saying so.",
-                model: "claude-opus-4-6"
+                custom_instructions: "Check out the AceDataCloud/Docs repo and read openapi/suno.json. Compare the model enum and endpoints against core/types.py and tools/. Fix any differences. Read CLAUDE.md for detailed sync rules. If everything is already in sync, close this issue with a comment saying so."
               }
             }' | gh api \
             --method POST \
