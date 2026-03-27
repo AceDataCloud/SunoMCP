@@ -798,7 +798,7 @@ wheels = [
 
 [[package]]
 name = "mcp-suno"
-version = "0.1.0"
+version = "2026.1.22.6"
 source = { editable = "." }
 dependencies = [
     { name = "httpx" },
