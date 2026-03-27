@@ -50,7 +50,7 @@ jobs:
             If everything is already in sync, make no changes.
         env:
           ANTHROPIC_BASE_URL: ${{ vars.CLAUDE_CODE_API_BASE || 'https://api.acedata.cloud' }}
-          ANTHROPIC_CUSTOM_HEADERS: '{"Authorization":"Bearer ${{ secrets.CLAUDE_CODE_API_KEY }}"}'
+          ANTHROPIC_AUTH_TOKEN: ${{ secrets.CLAUDE_CODE_API_KEY }}
           ANTHROPIC_DEFAULT_SONNET_MODEL: claude-sonnet-4-20250514
 
       - name: Merge PR
