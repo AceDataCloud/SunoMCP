@@ -1,0 +1,166 @@
+name: Sync from Docs
+
+on:
+  repository_dispatch:
+    types: [docs-updated]
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force sync even without detected changes"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  create-sync-issue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Checkout Docs repo
+        uses: actions/checkout@v4
+        with:
+          repository: AceDataCloud/Docs
+          path: _docs
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+
+      - name: Gather Docs changes
+        id: changes
+        run: |
+          cd _docs
+          # Get recent changes relevant to Suno
+          diff_info=$(git log -1 --pretty=format:"%h %s" 2>/dev/null || echo "unknown")
+          echo "commit_info=$diff_info" >> "$GITHUB_OUTPUT"
+
+          # Collect the current Suno-related docs content
+          echo "## Changed Docs Content" > /tmp/docs_context.md
+          echo "" >> /tmp/docs_context.md
+
+          # OpenAPI spec for suno
+          if [ -f openapi/suno.json ]; then
+            echo "### OpenAPI Spec (openapi/suno.json)" >> /tmp/docs_context.md
+            echo '```json' >> /tmp/docs_context.md
+            # Extract model enums and key fields
+            python3 -c "
+          import json
+          with open('openapi/suno.json') as f:
+              spec = json.load(f)
+          # Print paths
+          for path, methods in spec.get('paths', {}).items():
+              for method, op in methods.items():
+                  print(f'{method.upper()} {path}: {op.get(\"summary\", \"\")}')
+          # Print model enum if found
+          for path, methods in spec.get('paths', {}).items():
+              for method, op in methods.items():
+                  rb = op.get('requestBody', {})
+                  content = rb.get('content', {})
+                  for ct, mt in content.items():
+                      schema = mt.get('schema', {})
+                      props = schema.get('properties', {})
+                      if 'model' in props:
+                          print(f'Model enum: {props[\"model\"].get(\"enum\", [])}')
+          " 2>/dev/null || echo "(parse error)"
+            echo '```' >> /tmp/docs_context.md
+            echo "" >> /tmp/docs_context.md
+          fi
+
+          # Suno guide docs
+          if [ -d guides/suno ]; then
+            echo "### Integration Guides (guides/suno/)" >> /tmp/docs_context.md
+            for f in guides/suno/*.mdx; do
+              if [ -f "$f" ]; then
+                echo "- $(basename "$f")" >> /tmp/docs_context.md
+              fi
+            done
+            echo "" >> /tmp/docs_context.md
+          fi
+
+          # MCP doc
+          if [ -f mcp/suno.mdx ]; then
+            echo "### MCP Doc (mcp/suno.mdx)" >> /tmp/docs_context.md
+            echo '```' >> /tmp/docs_context.md
+            head -80 mcp/suno.mdx >> /tmp/docs_context.md
+            echo '```' >> /tmp/docs_context.md
+          fi
+
+          cd ..
+
+          # Get the diff between Docs latest and what we might have cached
+          docs_context=$(cat /tmp/docs_context.md)
+          # Truncate if too long
+          if [ ${#docs_context} -gt 8000 ]; then
+            docs_context="${docs_context:0:8000}...(truncated)"
+          fi
+          # Write to a file for the next step
+          echo "$docs_context" > /tmp/docs_context_final.md
+
+      - name: Check for existing open sync issue
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          existing=$(gh issue list --label "auto-sync" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "issue_number=$existing" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create sync issue
+        if: steps.existing.outputs.exists != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          docs_context=$(cat /tmp/docs_context_final.md)
+          commit_info="${{ steps.changes.outputs.commit_info }}"
+
+          body=$(cat <<'ISSUE_BODY'
+          @claude
+
+          The upstream **Docs** repository has been updated. Please review the changes below and update this MCP server accordingly.
+
+          ## What to Check
+
+          1. **Model versions** — Compare `core/types.py` (`SunoModel` Literal) against the OpenAPI spec's model enum. Add any missing models, remove any deprecated ones.
+          2. **Tool parameters** — Compare tool function signatures in `tools/` against the OpenAPI spec's request parameters. Add new parameters, update descriptions.
+          3. **Tool descriptions** — Update docstrings in `tools/*.py` to match the latest API descriptions from the guides.
+          4. **README.md** — Update features list, model table, and usage examples if new capabilities were added.
+          5. **Tests** — Add or update tests in `tests/` for any new functionality.
+
+          ## Instructions
+
+          - Only make changes if the Docs content shows new models, parameters, or capabilities not yet in this repo.
+          - If no changes are needed, close this issue with a comment explaining why.
+          - If changes are needed, create a PR with the updates.
+          - Keep changes minimal and focused — don't refactor unrelated code.
+          ISSUE_BODY
+          )
+
+          full_body=$(printf '%s\n\n## Docs Content\n\n%s' "$body" "$docs_context")
+
+          gh issue create \
+            --title "sync: update from Docs ($commit_info)" \
+            --label "auto-sync" \
+            --body "$full_body"
+
+      - name: Update existing issue
+        if: steps.existing.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          docs_context=$(cat /tmp/docs_context_final.md)
+          commit_info="${{ steps.changes.outputs.commit_info }}"
+
+          body=$(printf '@claude\n\nNew Docs update detected (%s). Please re-check and update if needed.\n\n%s' "$commit_info" "$docs_context")
+
+          gh issue comment "${{ steps.existing.outputs.issue_number }}" \
+            --body "$body"
