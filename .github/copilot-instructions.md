@@ -1,4 +1,4 @@
-# Copilot Instructions for MCPSuno
+# Copilot Instructions for SunoMCP
 
 ## Sync from Docs
 

@@ -493,7 +493,7 @@ twine upload dist/*
 ## Project Structure
 
 ```
-MCPSuno/
+SunoMCP/
 ├── core/                   # Core modules
 │   ├── __init__.py
 │   ├── client.py          # HTTP client for Suno API

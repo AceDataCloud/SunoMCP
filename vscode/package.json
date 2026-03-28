@@ -25,13 +25,13 @@
     "song generation",
     "lyrics"
   ],
-  "homepage": "https://github.com/AceDataCloud/MCPSuno",
+  "homepage": "https://github.com/AceDataCloud/SunoMCP",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AceDataCloud/MCPSuno"
+    "url": "https://github.com/AceDataCloud/SunoMCP"
   },
   "bugs": {
-    "url": "https://github.com/AceDataCloud/MCPSuno/issues"
+    "url": "https://github.com/AceDataCloud/SunoMCP/issues"
   },
   "contributes": {
     "mcpServers": {
