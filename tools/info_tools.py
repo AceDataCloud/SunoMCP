@@ -34,7 +34,7 @@ async def suno_list_models() -> str:
 | chirp-v3-5      | V3.5    | 200 chars    | 3000 chars   | 200 chars   | 120 seconds  |
 | chirp-v3-0      | V3      | 200 chars    | 3000 chars   | 200 chars   | 120 seconds  |
 
-Recommended: chirp-v4-5 for most use cases, chirp-v5-5 for best quality.
+Recommended: chirp-v5-5 for best quality, chirp-v4-5 for a reliable alternative.
 
 Features by Version:
 - V4.5+: Vocal gender control ('f' for female, 'm' for male)

@@ -13,7 +13,7 @@ def test_settings_default_values():
 
         settings = Settings()
         assert settings.api_base_url == "https://api.acedata.cloud"
-        assert settings.default_model == "chirp-v4-5"
+        assert settings.default_model == "chirp-v5-5"
         assert settings.request_timeout == 1800.0
         assert settings.server_name == "suno"
         assert settings.transport == "stdio"

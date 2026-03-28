@@ -20,7 +20,7 @@ LyricsModel = Literal["default", "remi-v1"]
 VocalGender = Literal["", "f", "m"]
 
 # Default model
-DEFAULT_MODEL: SunoModel = "chirp-v4-5"
+DEFAULT_MODEL: SunoModel = "chirp-v5-5"
 
 # Default lyrics model
 DEFAULT_LYRICS_MODEL: LyricsModel = "default"

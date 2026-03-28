@@ -23,7 +23,7 @@ class Settings:
 
     # Default Model
     default_model: str = field(
-        default_factory=lambda: os.getenv("SUNO_DEFAULT_MODEL", "chirp-v4-5")
+        default_factory=lambda: os.getenv("SUNO_DEFAULT_MODEL", "chirp-v5-5")
     )
 
     # Request Configuration

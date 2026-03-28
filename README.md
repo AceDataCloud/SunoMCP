@@ -402,7 +402,7 @@ Claude: I'll extend the song with a bridge.
 | `chirp-v4-5`      | V4.5    | 4 minutes    | Vocal gender control |
 | `chirp-v4`        | V4      | 150 seconds  | Stable               |
 | `chirp-v3-5`      | V3.5    | 120 seconds  | Fast                 |
-| `chirp-v3`        | V3      | 120 seconds  | Legacy               |
+| `chirp-v3-0`      | V3      | 120 seconds  | Legacy               |
 
 **Vocal Gender Control** (v4.5+ only):
 
@@ -419,7 +419,7 @@ Claude: I'll extend the song with a bridge.
 | `ACEDATACLOUD_API_BASE_URL` | API base URL                 | `https://api.acedata.cloud` |
 | `ACEDATACLOUD_OAUTH_CLIENT_ID`  | OAuth client ID (hosted mode) | —                           |
 | `ACEDATACLOUD_PLATFORM_BASE_URL` | Platform base URL            | `https://platform.acedata.cloud` |
-| `SUNO_DEFAULT_MODEL`        | Default model for generation | `chirp-v4-5`                |
+| `SUNO_DEFAULT_MODEL`        | Default model for generation | `chirp-v5-5`                |
 | `SUNO_REQUEST_TIMEOUT`      | Request timeout in seconds   | `1800`                      |
 | `LOG_LEVEL`                 | Logging level                | `INFO`                      |
 
