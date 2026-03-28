@@ -1,4 +1,4 @@
-# MCPSuno
+# SunoMCP
 
 MCP (Model Context Protocol) server for Suno AI music generation via AceDataCloud API.
 

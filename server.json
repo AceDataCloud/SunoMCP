@@ -4,7 +4,7 @@
   "description": "MCP server for Suno AI music generation, lyrics, and covers",
   "version": "2026.3.19.7",
   "repository": {
-    "url": "https://github.com/AceDataCloud/MCPSuno",
+    "url": "https://github.com/AceDataCloud/SunoMCP",
     "source": "github"
   },
   "packages": [
