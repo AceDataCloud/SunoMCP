@@ -17,7 +17,7 @@ jobs:
       issue_number: ${{ steps.create-issue.outputs.issue_number }}
     steps:
       - name: Checkout Docs
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: AceDataCloud/Docs
           path: _docs
