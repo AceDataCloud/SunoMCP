@@ -107,14 +107,14 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          pip install "twine>=6.1.0,<7.0.0"
+          pip install "twine>=6.0.0"
           twine check dist/*
           twine upload dist/*
 
   create-release:
     name: Create GitHub Release
     if: github.event_name == 'push'
-    needs: build
+    needs: [build, publish-pypi]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -139,7 +139,7 @@ jobs:
   publish-mcp-registry:
     name: Publish to MCP Registry
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    needs: [build, publish-pypi]
+    needs: [build]
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -175,7 +175,7 @@ jobs:
   publish-vscode:
     name: Publish VS Code Extension
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    needs: build
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -247,7 +247,7 @@ jobs:
   publish-smithery:
     name: Publish to Smithery
     if: github.event_name == 'push'
-    needs: [build, publish-pypi]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -281,25 +281,10 @@ jobs:
         run: |
           smithery mcp publish "https://suno.mcp.acedata.cloud/mcp" --name acedatacloud-mcp/mcp-suno --config-schema '{"type":"object","properties":{"apiKey":{"type":"string","description":"AceDataCloud API Bearer Token (get from https://platform.acedata.cloud)","x-from":{"header":"x-api-key"},"x-to":{"header":"Authorization","prefix":"Bearer "}}},"required":["apiKey"]}' 2>&1 || echo "Smithery publish completed"
 
-  notify-vscode-extension:
-    name: Notify VS Code Extension
-    if: github.event_name == 'push'
-    needs: [publish-pypi]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger VSCodeMCP rebuild
-        run: |
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.VSCODE_MCP_DISPATCH_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/AceDataCloud/VSCodeMCP/dispatches" \
-            -d '{"event_type":"mcp-updated","client_payload":{"source":"${{ github.repository }}","version":"${{ needs.build.outputs.version }}"}}'
-          echo "Triggered VSCodeMCP extension rebuild"
-
   notify-dify-plugin:
     name: Notify Dify Plugin Update
     if: github.event_name == 'push'
-    needs: build
+    needs: [build, publish-pypi]
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Dify plugin sync
@@ -314,7 +299,7 @@ jobs:
   publish-jetbrains:
     name: Publish JetBrains Plugin
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    needs: build
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
