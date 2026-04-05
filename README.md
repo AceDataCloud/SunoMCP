@@ -1,4 +1,4 @@
-# MCP Suno
+# SunoMCP
 
 <!-- mcp-name: io.github.AceDataCloud/mcp-suno -->
 
