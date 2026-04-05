@@ -354,4 +354,33 @@ jobs:
             echo "JETBRAINS_MARKETPLACE_TOKEN not set, skipping publish"
             exit 0
           fi
-          ./gradlew publishPlugin
+          OUTPUT=$(./gradlew publishPlugin 2>&1) && echo "$OUTPUT" || {
+            echo "$OUTPUT"
+            if echo "$OUTPUT" | grep -q "already contains version"; then
+              echo "Version already published, skipping"
+              exit 0
+            elif echo "$OUTPUT" | grep -q "Cannot find plugin"; then
+              echo "Plugin not yet registered, uploading via REST API..."
+              PLUGIN_ZIP=$(find build/distributions -name "*.zip" | head -1)
+              if [ -z "$PLUGIN_ZIP" ]; then
+                echo "ERROR: No plugin ZIP found in build/distributions/"
+                exit 1
+              fi
+              RESPONSE=$(curl -s -w "\n%{http_code}" \
+                -H "Authorization: Bearer $PUBLISH_TOKEN" \
+                -F "xmlId=com.acedatacloud.mcp.suno" \
+                -F "file=@$PLUGIN_ZIP" \
+                https://plugins.jetbrains.com/api/updates/upload)
+              HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+              BODY=$(echo "$RESPONSE" | head -n -1)
+              echo "Response ($HTTP_CODE): $BODY"
+              if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+                echo "Successfully uploaded plugin via REST API"
+                exit 0
+              else
+                echo "REST API upload failed with HTTP $HTTP_CODE"
+                exit 1
+              fi
+            fi
+            exit 1
+          }
