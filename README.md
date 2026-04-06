@@ -134,7 +134,7 @@ Add to your VS Code MCP config (`.vscode/mcp.json`):
 }
 ```
 
-Or install the [Ace Data Cloud MCP extension](https://marketplace.visualstudio.com/items?itemName=acedatacloud.acedatacloud-mcp) for VS Code, which bundles all 11 MCP servers with one-click setup.
+Or install the [Ace Data Cloud MCP extension](https://marketplace.visualstudio.com/items?itemName=acedatacloud.acedatacloud-mcp) for VS Code, which bundles all 15 MCP servers with one-click setup.
 
 #### JetBrains IDEs
 
@@ -472,8 +472,8 @@ Options:
 
 ```bash
 # Clone repository
-git clone https://github.com/AceDataCloud/mcp-suno.git
-cd mcp-suno
+git clone https://github.com/AceDataCloud/SunoMCP.git
+cd SunoMCP
 
 # Create virtual environment
 python -m venv .venv
