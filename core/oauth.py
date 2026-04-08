@@ -396,11 +396,13 @@ class AceDataCloudOAuthProvider:
             f"jwt_token={jwt_token[:32]}..."
         )
 
-        # Decode JWT for debugging
+        # Decode JWT to extract user_id (needed for filtering API queries)
         claims = self._decode_jwt_payload(jwt_token)
+        user_id: str | None = None
         if claims:
+            user_id = claims.get("user_id")
             logger.debug(
-                f"_get_user_credential JWT: user_id={claims.get('user_id')}, "
+                f"_get_user_credential JWT: user_id={user_id}, "
                 f"scope={claims.get('scope')}, "
                 f"permissions={claims.get('permissions')}, "
                 f"token_type={claims.get('token_type')}, "
@@ -413,8 +415,11 @@ class AceDataCloudOAuthProvider:
             async with httpx.AsyncClient(timeout=30) as client:
                 # Step 1: Check for existing credentials
                 creds_url = f"{settings.platform_base_url}/api/v1/credentials/"
-                logger.debug(f"Step 1: GET {creds_url}")
-                response = await client.get(creds_url, headers=headers)
+                creds_params: dict[str, str] = {}
+                if user_id:
+                    creds_params["user_id"] = user_id
+                logger.debug(f"Step 1: GET {creds_url} params={creds_params}")
+                response = await client.get(creds_url, headers=headers, params=creds_params)
                 logger.debug(
                     f"Step 1 response: status={response.status_code}, body={response.text[:1000]}"
                 )
@@ -459,12 +464,14 @@ class AceDataCloudOAuthProvider:
 
                 # Step 2a: Find or create a Global Usage application
                 apps_url = f"{settings.platform_base_url}/api/v1/applications/"
-                apps_params = {
+                apps_params: dict[str, str] = {
                     "limit": "10",
                     "ordering": "-created_at",
                     "type": "Usage",
                     "scope": "Global",
                 }
+                if user_id:
+                    apps_params["user_id"] = user_id
                 logger.debug(f"Step 2a: GET {apps_url} params={apps_params}")
                 app_resp = await client.get(apps_url, params=apps_params, headers=headers)
                 logger.debug(
