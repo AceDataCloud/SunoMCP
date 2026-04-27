@@ -53,7 +53,7 @@ async def suno_list_actions() -> str:
     Returns:
         Categorized list of all actions and their corresponding tools.
     """
-    # Last updated: 2026-04-05
+    # Last updated: 2026-04-27
     return """Available Suno Actions and Tools:
 
 Music Generation:
@@ -70,9 +70,13 @@ Upload-based Operations (for your own music):
 - suno_upload_audio: Upload external audio for use in Suno
 - suno_upload_extend: Extend uploaded audio with new AI content
 - suno_upload_cover: Create an AI cover of uploaded audio
+- suno_underpainting: Add AI-generated accompaniment to uploaded vocal audio
+- suno_overpainting: Add AI-generated vocals to uploaded instrumental audio
+- suno_samples_music: Add AI-generated samples to uploaded audio
 
 Stems & Extraction:
 - suno_stems_music: Separate a song into vocal and instrumental stems
+- suno_all_stems_music: Separate a song into all individual stems (vocals, bass, drums, etc.)
 - suno_extract_vocals: Extract only the vocal track from a song
 
 Media Conversion:
@@ -82,8 +86,12 @@ Media Conversion:
 - suno_get_timing: Get word-level timing/subtitle data
 
 Persona (Voice Style):
-- suno_create_persona: Save a voice style for reuse
+- suno_create_persona: Save a voice style from a Suno-generated audio for reuse
+- suno_create_voice: Create a voice persona from an external audio URL
+- suno_list_personas: List all saved voice personas for a user
+- suno_delete_persona: Delete a saved voice persona
 - suno_generate_with_persona: Generate with a saved voice style
+- suno_generate_with_persona_vox: Generate with a saved voice style using VOX consistency mode
 
 Lyrics:
 - suno_generate_lyrics: Generate song lyrics from a prompt
@@ -104,9 +112,13 @@ Workflow Examples:
 2. Custom song: suno_generate_lyrics → suno_generate_custom_music → suno_get_task
 3. Long song: suno_generate_music → suno_extend_music (repeat) → suno_concat_music
 4. Consistent voice: suno_generate_music → suno_create_persona → suno_generate_with_persona
-5. Your own music: suno_upload_audio → suno_upload_extend or suno_upload_cover
-6. Remix: suno_stems_music → use stems for further production
-7. Fix section: suno_replace_section → suno_get_task
+5. Custom voice from URL: suno_create_voice → suno_generate_with_persona
+6. Your own music: suno_upload_audio → suno_upload_extend or suno_upload_cover
+7. Add accompaniment: suno_upload_audio → suno_underpainting
+8. Add vocals: suno_upload_audio → suno_overpainting
+9. Full stems: suno_all_stems_music → use stems for further production
+10. Remix: suno_stems_music → use stems for further production
+11. Fix section: suno_replace_section → suno_get_task
 """
 
 

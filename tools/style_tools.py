@@ -94,3 +94,49 @@ async def suno_upload_audio(
     """
     result = await client.upload_audio(audio_url=audio_url)
     return json.dumps(result, ensure_ascii=False, indent=2)
+
+
+@mcp.tool()
+async def suno_create_voice(
+    audio_url: Annotated[
+        str,
+        Field(
+            description="Publicly accessible URL of the audio file to create a voice from. Must be MP3 or WAV format, at least 10 seconds long, containing clear vocals from a single speaker without background noise or music."
+        ),
+    ],
+    name: Annotated[
+        str,
+        Field(description="Name for the custom voice persona."),
+    ],
+    description: Annotated[
+        str | None,
+        Field(description="Description of the custom voice persona (optional)."),
+    ] = None,
+) -> str:
+    """Create a custom voice persona from an external audio URL.
+
+    Creates a voice persona directly from a publicly accessible audio URL
+    (MP3 or WAV format). The audio must contain clear vocals from a single
+    speaker and be at least 10 seconds long.
+
+    This is different from suno_create_persona which creates a persona from
+    a previously generated Suno audio. Use this to create a persona from
+    your own voice recordings or external audio files.
+
+    Use this when:
+    - You have an external audio file with clear vocals
+    - You want to create a voice persona from your own recordings
+    - You want to use a specific real-world voice as a persona
+
+    Returns:
+        Persona ID that can be used with suno_generate_with_persona tool.
+    """
+    payload: dict = {
+        "audio_url": audio_url,
+        "name": name,
+    }
+    if description:
+        payload["description"] = description
+
+    result = await client.create_voice(**payload)
+    return json.dumps(result, ensure_ascii=False, indent=2)

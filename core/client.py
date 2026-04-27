@@ -225,6 +225,57 @@ class SunoClient:
         logger.info(f"📤 Uploading audio: {kwargs.get('audio_url', '')[:50]}...")
         return await self.request("/suno/upload", kwargs)
 
+    async def create_voice(self, **kwargs: Any) -> dict[str, Any]:
+        """Create a voice persona from an audio URL."""
+        logger.info(f"🎤 Creating voice: {kwargs.get('name', 'unnamed')}")
+        return await self.request("/suno/voices", kwargs)
+
+    async def list_personas(self, **kwargs: Any) -> dict[str, Any]:
+        """List personas for a user."""
+        user_id = kwargs.get("user_id", "")
+        logger.info(f"📋 Listing personas for user: {user_id}")
+        url = f"{self.base_url}/suno/persona"
+        params = {k: v for k, v in kwargs.items() if v is not None}
+        async with httpx.AsyncClient() as http_client:
+            try:
+                response = await http_client.get(
+                    url,
+                    params=params,
+                    headers=self._get_headers(),
+                    timeout=self.timeout,
+                )
+                if response.status_code >= 400:
+                    self._handle_error_response(response)
+                return response.json()  # type: ignore[no-any-return]
+            except SunoError:
+                raise
+            except Exception as e:
+                logger.error(f"❌ Request error: {e}")
+                raise SunoAPIError(message=str(e)) from e
+
+    async def delete_persona(self, **kwargs: Any) -> dict[str, Any]:
+        """Delete a persona."""
+        persona_id = kwargs.get("persona_id", "")
+        logger.info(f"🗑️ Deleting persona: {persona_id}")
+        url = f"{self.base_url}/suno/persona"
+        params = {k: v for k, v in kwargs.items() if v is not None}
+        async with httpx.AsyncClient() as http_client:
+            try:
+                response = await http_client.delete(
+                    url,
+                    params=params,
+                    headers=self._get_headers(),
+                    timeout=self.timeout,
+                )
+                if response.status_code >= 400:
+                    self._handle_error_response(response)
+                return response.json()  # type: ignore[no-any-return]
+            except SunoError:
+                raise
+            except Exception as e:
+                logger.error(f"❌ Request error: {e}")
+                raise SunoAPIError(message=str(e)) from e
+
     async def query_task(self, **kwargs: Any) -> dict[str, Any]:
         """Query task status using the tasks endpoint."""
         task_id = kwargs.get("id") or kwargs.get("ids", [])

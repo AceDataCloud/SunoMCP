@@ -19,6 +19,9 @@ LyricsModel = Literal["default", "remi-v1"]
 # Vocal gender options (v4.5+ only)
 VocalGender = Literal["", "f", "m"]
 
+# Variation category options (v5+ only)
+VariationCategory = Literal["high", "normal", "subtle"]
+
 # Default model
 DEFAULT_MODEL: SunoModel = "chirp-v5-5"
 

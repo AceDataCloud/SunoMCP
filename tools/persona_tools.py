@@ -1,5 +1,6 @@
 """Persona management tools for Suno API."""
 
+import json
 from typing import Annotated
 
 from pydantic import Field
@@ -80,3 +81,70 @@ async def suno_create_persona(
 
     result = await client.create_persona(**payload)
     return format_persona_result(result)
+
+
+@mcp.tool()
+async def suno_list_personas(
+    user_id: Annotated[
+        str,
+        Field(description="The user ID to list personas for."),
+    ],
+    limit: Annotated[
+        int,
+        Field(description="Maximum number of personas to return. Default is 50."),
+    ] = 50,
+    offset: Annotated[
+        int,
+        Field(description="Number of personas to skip for pagination. Default is 0."),
+    ] = 0,
+) -> str:
+    """List all saved artist personas for a user.
+
+    Returns all personas previously created with suno_create_persona or
+    suno_create_voice for the given user.
+
+    Use this when:
+    - You want to see all available voice personas
+    - You need to find a persona ID to use in music generation
+    - You want to manage your saved vocal styles
+
+    Returns:
+        List of personas with their IDs, names, and descriptions.
+    """
+    result = await client.list_personas(
+        user_id=user_id,
+        limit=limit,
+        offset=offset,
+    )
+    return json.dumps(result, ensure_ascii=False, indent=2)
+
+
+@mcp.tool()
+async def suno_delete_persona(
+    persona_id: Annotated[
+        str,
+        Field(description="The persona ID to delete."),
+    ],
+    user_id: Annotated[
+        str | None,
+        Field(description="The user ID for ownership verification (optional)."),
+    ] = None,
+) -> str:
+    """Delete a saved artist persona.
+
+    Permanently removes a previously created persona. This action cannot be undone.
+
+    Use this when:
+    - You want to remove an unused voice persona
+    - You need to clean up old personas
+    - You want to delete a persona you no longer need
+
+    Returns:
+        Confirmation of the deletion.
+    """
+    payload: dict = {"persona_id": persona_id}
+    if user_id:
+        payload["user_id"] = user_id
+
+    result = await client.delete_persona(**payload)
+    return json.dumps(result, ensure_ascii=False, indent=2)

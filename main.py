@@ -123,8 +123,16 @@ Environment Variables:
     safe_print("    - suno_cover_music")
     safe_print("    - suno_concat_music")
     safe_print("    - suno_generate_with_persona")
+    safe_print("    - suno_generate_with_persona_vox")
     safe_print("    - suno_generate_lyrics")
     safe_print("    - suno_create_persona")
+    safe_print("    - suno_create_voice")
+    safe_print("    - suno_list_personas")
+    safe_print("    - suno_delete_persona")
+    safe_print("    - suno_all_stems_music")
+    safe_print("    - suno_underpainting")
+    safe_print("    - suno_overpainting")
+    safe_print("    - suno_samples_music")
     safe_print("    - suno_get_task")
     safe_print("    - suno_get_tasks_batch")
     safe_print("    - suno_list_models")
@@ -192,12 +200,20 @@ Environment Variables:
                                 "description": "Generate using a saved voice style",
                             },
                             {
+                                "name": "suno_generate_with_persona_vox",
+                                "description": "Generate using a saved voice style with VOX consistency",
+                            },
+                            {
                                 "name": "suno_remaster_music",
                                 "description": "Remaster a song to improve audio quality",
                             },
                             {
                                 "name": "suno_stems_music",
                                 "description": "Separate into vocal and instrument stems",
+                            },
+                            {
+                                "name": "suno_all_stems_music",
+                                "description": "Separate into all individual stems",
                             },
                             {
                                 "name": "suno_replace_section",
@@ -210,6 +226,18 @@ Environment Variables:
                             {
                                 "name": "suno_upload_cover",
                                 "description": "Create an AI cover of uploaded audio",
+                            },
+                            {
+                                "name": "suno_underpainting",
+                                "description": "Add AI accompaniment to uploaded vocal audio",
+                            },
+                            {
+                                "name": "suno_overpainting",
+                                "description": "Add AI vocals to uploaded instrumental audio",
+                            },
+                            {
+                                "name": "suno_samples_music",
+                                "description": "Add AI-generated samples to uploaded audio",
                             },
                             {
                                 "name": "suno_mashup_music",
@@ -237,7 +265,19 @@ Environment Variables:
                             {"name": "suno_extract_vocals", "description": "Extract vocal track"},
                             {
                                 "name": "suno_create_persona",
-                                "description": "Save a voice style for reuse",
+                                "description": "Save a voice style from Suno audio for reuse",
+                            },
+                            {
+                                "name": "suno_create_voice",
+                                "description": "Create a voice persona from an external audio URL",
+                            },
+                            {
+                                "name": "suno_list_personas",
+                                "description": "List all saved voice personas for a user",
+                            },
+                            {
+                                "name": "suno_delete_persona",
+                                "description": "Delete a saved voice persona",
                             },
                             {
                                 "name": "suno_upload_audio",

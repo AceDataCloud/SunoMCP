@@ -6,7 +6,7 @@ from pydantic import Field
 
 from core.client import client
 from core.server import mcp
-from core.types import DEFAULT_MODEL, SunoModel, VocalGender
+from core.types import DEFAULT_MODEL, SunoModel, VariationCategory, VocalGender
 from core.utils import format_audio_result
 
 
@@ -30,6 +30,12 @@ async def suno_generate_music(
             description="If true, generate instrumental music without vocals. Default is false (with vocals)."
         ),
     ] = False,
+    variation_category: Annotated[
+        VariationCategory | None,
+        Field(
+            description="Variation intensity for v5+ models. 'high' for maximum variation, 'normal' for balanced, 'subtle' for minimal changes. Only supported in chirp-v5 and above."
+        ),
+    ] = None,
     callback_url: Annotated[
         str | None,
         Field(
@@ -52,13 +58,18 @@ async def suno_generate_music(
     Returns:
         Task ID and generated audio information including URLs, title, lyrics, and duration.
     """
-    result = await client.generate_audio(
-        action="generate",
-        prompt=prompt,
-        model=model,
-        instrumental=instrumental,
-        callback_url=callback_url,
-    )
+    payload: dict = {
+        "action": "generate",
+        "prompt": prompt,
+        "model": model,
+        "instrumental": instrumental,
+        "callback_url": callback_url,
+    }
+
+    if variation_category:
+        payload["variation_category"] = variation_category
+
+    result = await client.generate_audio(**payload)
     return format_audio_result(result)
 
 
@@ -104,6 +115,24 @@ async def suno_generate_custom_music(
             description="Preferred vocal gender. 'f' for female, 'm' for male, empty string for AI to decide. Only works with v4.5+ models."
         ),
     ] = "",
+    variation_category: Annotated[
+        VariationCategory | None,
+        Field(
+            description="Variation intensity for v5+ models. 'high' for maximum variation, 'normal' for balanced, 'subtle' for minimal changes. Only supported in chirp-v5 and above."
+        ),
+    ] = None,
+    weirdness: Annotated[
+        float | None,
+        Field(
+            description="Advanced parameter for custom mode. Controls how unusual/experimental the generation is."
+        ),
+    ] = None,
+    style_influence: Annotated[
+        float | None,
+        Field(
+            description="Advanced parameter for custom mode. Controls how strongly the style prompt influences the generation."
+        ),
+    ] = None,
     callback_url: Annotated[
         str | None,
         Field(
@@ -143,6 +172,12 @@ async def suno_generate_custom_music(
         payload["style_negative"] = style_negative
     if vocal_gender and vocal_gender in ("f", "m"):
         payload["vocal_gender"] = vocal_gender
+    if variation_category:
+        payload["variation_category"] = variation_category
+    if weirdness is not None:
+        payload["weirdness"] = weirdness
+    if style_influence is not None:
+        payload["style_influence"] = style_influence
 
     result = await client.generate_audio(**payload)
     return format_audio_result(result)
@@ -645,4 +680,254 @@ async def suno_mashup_music(
         model=model,
         callback_url=callback_url,
     )
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_all_stems_music(
+    audio_id: Annotated[
+        str,
+        Field(description="ID of the audio to separate into all individual stems."),
+    ],
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Separate a song into all individual stems (vocals, bass, drums, other instruments).
+
+    Splits the audio into multiple separate tracks for all components,
+    providing more granular stem separation than suno_stems_music.
+
+    Use this when:
+    - You need full multi-track stem separation
+    - You want individual instrument tracks for remixing
+    - You need bass, drums, and other instrument tracks separately
+
+    Returns:
+        Task ID and all stem separation results with individual track URLs.
+    """
+    result = await client.generate_audio(
+        action="all_stems",
+        audio_id=audio_id,
+        callback_url=callback_url,
+    )
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_generate_with_persona_vox(
+    audio_id: Annotated[
+        str,
+        Field(description="ID of a reference audio to base the generation on."),
+    ],
+    persona_id: Annotated[
+        str,
+        Field(
+            description="ID of the persona to use for the VOX generation. Get this from suno_create_persona or suno_create_voice tool."
+        ),
+    ],
+    prompt: Annotated[
+        str,
+        Field(
+            description="Description of the music to generate. The persona's voice will be applied to this new song."
+        ),
+    ],
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Generate music using a saved artist persona with VOX-specific consistency.
+
+    Similar to suno_generate_with_persona but uses the artist_consistency_vox action,
+    which is optimized for vocal consistency with a persona.
+
+    Use this when:
+    - You want multiple songs with the same vocal style using VOX mode
+    - You need stricter vocal consistency than suno_generate_with_persona provides
+    - You're creating content with a specific voice persona
+
+    First create a persona with suno_create_persona or suno_create_voice, then use its ID here.
+
+    Returns:
+        Task ID and generated audio information with the persona's voice applied.
+    """
+    result = await client.generate_audio(
+        action="artist_consistency_vox",
+        audio_id=audio_id,
+        persona_id=persona_id,
+        prompt=prompt,
+        model=model,
+        callback_url=callback_url,
+    )
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_underpainting(
+    audio_id: Annotated[
+        str,
+        Field(
+            description="ID of the uploaded audio to add accompaniment to. Must be uploaded via suno_upload_audio."
+        ),
+    ],
+    underpainting_start: Annotated[
+        float,
+        Field(description="Start time in seconds for adding accompaniment. Default is 0."),
+    ] = 0.0,
+    underpainting_end: Annotated[
+        float | None,
+        Field(
+            description="End time in seconds for adding accompaniment. Must be less than total song duration."
+        ),
+    ] = None,
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Add AI-generated accompaniment/instrumental background to uploaded audio.
+
+    Takes your uploaded vocal track and adds an AI-generated instrumental
+    accompaniment beneath it (underpainting = adding music under vocals).
+
+    Use this when:
+    - You have a vocal recording and want to add music behind it
+    - You want to give an acapella track a full musical arrangement
+    - You need to add instrumental backing to existing vocals
+
+    Returns:
+        Task ID and the audio with accompaniment added.
+    """
+    payload: dict = {
+        "action": "underpainting",
+        "audio_id": audio_id,
+        "underpainting_start": underpainting_start,
+        "model": model,
+        "callback_url": callback_url,
+    }
+
+    if underpainting_end is not None:
+        payload["underpainting_end"] = underpainting_end
+
+    result = await client.generate_audio(**payload)
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_overpainting(
+    audio_id: Annotated[
+        str,
+        Field(
+            description="ID of the uploaded audio to add vocals to. Must be uploaded via suno_upload_audio."
+        ),
+    ],
+    overpainting_start: Annotated[
+        float,
+        Field(description="Start time in seconds for adding vocals. Default is 0."),
+    ] = 0.0,
+    overpainting_end: Annotated[
+        float | None,
+        Field(
+            description="End time in seconds for adding vocals. Must be less than total song duration."
+        ),
+    ] = None,
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Add AI-generated vocals to uploaded instrumental audio.
+
+    Takes your uploaded instrumental track and adds AI-generated vocals
+    on top of it (overpainting = painting vocals over the music).
+
+    Use this when:
+    - You have an instrumental track and want to add vocals
+    - You want to give background music a singing voice
+    - You need to add vocal melody to existing music
+
+    Returns:
+        Task ID and the audio with vocals added.
+    """
+    payload: dict = {
+        "action": "overpainting",
+        "audio_id": audio_id,
+        "overpainting_start": overpainting_start,
+        "model": model,
+        "callback_url": callback_url,
+    }
+
+    if overpainting_end is not None:
+        payload["overpainting_end"] = overpainting_end
+
+    result = await client.generate_audio(**payload)
+    return format_audio_result(result)
+
+
+@mcp.tool()
+async def suno_samples_music(
+    audio_id: Annotated[
+        str,
+        Field(
+            description="ID of the uploaded audio to add samples to. Must be uploaded via suno_upload_audio."
+        ),
+    ],
+    samples_start: Annotated[
+        float,
+        Field(description="Start time in seconds for adding samples. Default is 0."),
+    ] = 0.0,
+    samples_end: Annotated[
+        float | None,
+        Field(
+            description="End time in seconds for adding samples. Must be less than total song duration."
+        ),
+    ] = None,
+    model: Annotated[
+        SunoModel,
+        Field(description="Model version to use."),
+    ] = DEFAULT_MODEL,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Add AI-generated samples to uploaded audio.
+
+    Takes your uploaded audio and adds AI-generated musical samples
+    within the specified time range.
+
+    Use this when:
+    - You want to add sample loops or motifs to existing music
+    - You need to enhance a track with additional musical elements
+    - You want to add AI-generated samples to a specific section
+
+    Returns:
+        Task ID and the audio with samples added.
+    """
+    payload: dict = {
+        "action": "samples",
+        "audio_id": audio_id,
+        "samples_start": samples_start,
+        "model": model,
+        "callback_url": callback_url,
+    }
+
+    if samples_end is not None:
+        payload["samples_end"] = samples_end
+
+    result = await client.generate_audio(**payload)
     return format_audio_result(result)
