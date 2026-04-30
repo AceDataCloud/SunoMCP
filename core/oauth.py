@@ -37,6 +37,12 @@ from starlette.responses import JSONResponse, RedirectResponse
 from core.client import set_request_api_token
 from core.config import settings
 
+MCP_ACCESS_SCOPE = "mcp:access"
+
+
+def _normalize_scopes(scopes: list[str] | None) -> list[str]:
+    return scopes or [MCP_ACCESS_SCOPE]
+
 
 class AceDataCloudOAuthProvider:
     """OAuth provider that delegates authentication to AceDataCloud platform.
@@ -80,7 +86,7 @@ class AceDataCloudOAuthProvider:
             "state": params.state,
             "code_challenge": params.code_challenge,
             "redirect_uri_provided_explicitly": params.redirect_uri_provided_explicitly,
-            "scopes": params.scopes,
+            "scopes": _normalize_scopes(params.scopes),
             "resource": params.resource,
             "auth_code_verifier": code_verifier,
         }
@@ -165,7 +171,7 @@ class AceDataCloudOAuthProvider:
             auth_code_str = secrets.token_urlsafe(48)
             auth_code = AuthorizationCode(
                 code=auth_code_str,
-                scopes=pending.get("scopes") or [],
+                scopes=_normalize_scopes(pending.get("scopes")),
                 expires_at=time.time() + 600,  # 10 minutes
                 client_id=pending["client_id"],
                 code_challenge=pending["code_challenge"],
@@ -218,7 +224,7 @@ class AceDataCloudOAuthProvider:
         self._access_tokens[api_token] = AccessToken(
             token=api_token,
             client_id=client_id,
-            scopes=authorization_code.scopes,
+            scopes=_normalize_scopes(authorization_code.scopes),
             expires_at=None,  # API credential tokens don't expire by time
         )
 
@@ -227,13 +233,14 @@ class AceDataCloudOAuthProvider:
         self._refresh_tokens[refresh_token_str] = RefreshToken(
             token=refresh_token_str,
             client_id=client_id,
-            scopes=authorization_code.scopes,
+            scopes=_normalize_scopes(authorization_code.scopes),
         )
 
         logger.info(f"OAuth token exchange: issued access token for client {client_id}")
         return OAuthToken(
             access_token=api_token,
             token_type="Bearer",
+            scope=" ".join(_normalize_scopes(authorization_code.scopes)),
             refresh_token=refresh_token_str,
         )
 
@@ -261,7 +268,7 @@ class AceDataCloudOAuthProvider:
         self._refresh_tokens[new_refresh] = RefreshToken(
             token=new_refresh,
             client_id=client_id,
-            scopes=scopes or refresh_token.scopes,
+            scopes=_normalize_scopes(scopes or refresh_token.scopes),
         )
 
         # Find the access token for this client
@@ -270,6 +277,7 @@ class AceDataCloudOAuthProvider:
                 return OAuthToken(
                     access_token=token,
                     token_type="Bearer",
+                    scope=" ".join(_normalize_scopes(scopes or refresh_token.scopes)),
                     refresh_token=new_refresh,
                 )
 
@@ -292,7 +300,7 @@ class AceDataCloudOAuthProvider:
 
         # Accept direct API credential tokens (for VS Code, Cursor, etc.)
         set_request_api_token(token)
-        return AccessToken(token=token, client_id="direct", scopes=[])
+        return AccessToken(token=token, client_id="direct", scopes=[MCP_ACCESS_SCOPE])
 
     async def revoke_token(self, token: AccessToken | RefreshToken) -> None:
         if isinstance(token, AccessToken):

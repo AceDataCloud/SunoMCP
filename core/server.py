@@ -34,8 +34,13 @@ if settings.server_url:
     mcp_kwargs["auth"] = AuthSettings(
         issuer_url=AnyHttpUrl(settings.server_url),
         resource_server_url=AnyHttpUrl(settings.server_url),
-        client_registration_options=ClientRegistrationOptions(enabled=True),
+        client_registration_options=ClientRegistrationOptions(
+            enabled=True,
+            valid_scopes=["mcp:access"],
+            default_scopes=["mcp:access"],
+        ),
         revocation_options=RevocationOptions(enabled=True),
+        required_scopes=["mcp:access"],
     )
     logger.info(f"OAuth enabled: issuer_url={settings.server_url}")
 
