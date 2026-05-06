@@ -1,6 +1,6 @@
 """Audio generation tools for Suno API."""
 
-from typing import Annotated
+from typing import Annotated, Any
 
 from pydantic import Field
 
@@ -78,13 +78,13 @@ async def suno_generate_custom_music(
     lyric: Annotated[
         str,
         Field(
-            description="Song lyrics with section markers. Use [Verse], [Chorus], [Pre-Chorus], [Bridge], [Outro], [Intro] to structure the song. Example:\n[Verse 1]\nWalking down the empty street\nRain is falling at my feet\n\n[Chorus]\nBut I keep moving on\nUntil the break of dawn"
+            description="Song lyrics with section markers. Use [Verse], [Chorus], [Pre-Chorus], [Bridge], [Outro], [Intro] to structure the song. Example:\n[Verse 1]\nWalking down the empty street\nRain is falling at my feet\n\n[Chorus]\nBut I keep moving on\nUntil the break of dawn. Leave empty when using lyric_prompt to auto-generate lyrics."
         ),
-    ],
+    ] = "",
     title: Annotated[
         str,
         Field(description="Title of the song. Keep it concise and memorable."),
-    ],
+    ] = "",
     style: Annotated[
         str,
         Field(
@@ -103,6 +103,12 @@ async def suno_generate_custom_music(
             description="If true, generate instrumental version (lyrics will be ignored). Default is false."
         ),
     ] = False,
+    lyric_prompt: Annotated[
+        dict[str, Any] | None,
+        Field(
+            description="Prompt for auto-generating lyrics. Only used when custom is true and lyric is empty. Provide a dict with the lyric generation parameters (e.g. {'prompt': 'A song about winter'})."
+        ),
+    ] = None,
     style_negative: Annotated[
         str,
         Field(
@@ -150,13 +156,14 @@ async def suno_generate_custom_music(
     - You want precise control over the music style
     - You need a specific song title
     - You want to specify vocal gender (v4.5+ models)
+    - You want the API to auto-generate lyrics from a prompt (use lyric_prompt)
 
     For quick generation without writing lyrics, use suno_generate_music instead.
 
     Returns:
         Task ID and generated audio information including URLs, title, lyrics, and duration.
     """
-    payload = {
+    payload: dict[str, Any] = {
         "action": "generate",
         "custom": True,
         "lyric": lyric,
@@ -166,6 +173,8 @@ async def suno_generate_custom_music(
         "callback_url": callback_url,
     }
 
+    if lyric_prompt is not None:
+        payload["lyric_prompt"] = lyric_prompt
     if style:
         payload["style"] = style
     if style_negative:
@@ -276,6 +285,12 @@ async def suno_cover_music(
         SunoModel,
         Field(description="Model version to use for the cover."),
     ] = DEFAULT_MODEL,
+    audio_weight: Annotated[
+        float | None,
+        Field(
+            description="Advanced parameter for cover operations. Controls how much the original audio influences the cover generation."
+        ),
+    ] = None,
     callback_url: Annotated[
         str | None,
         Field(
@@ -307,6 +322,8 @@ async def suno_cover_music(
         payload["prompt"] = prompt
     if style:
         payload["style"] = style
+    if audio_weight is not None:
+        payload["audio_weight"] = audio_weight
 
     result = await client.generate_audio(**payload)
     return format_audio_result(result)
@@ -615,6 +632,12 @@ async def suno_upload_cover(
         SunoModel,
         Field(description="Model version to use."),
     ] = DEFAULT_MODEL,
+    audio_weight: Annotated[
+        float | None,
+        Field(
+            description="Advanced parameter for cover operations. Controls how much the original audio influences the cover generation."
+        ),
+    ] = None,
     callback_url: Annotated[
         str | None,
         Field(description="Webhook callback URL for asynchronous notifications."),
@@ -641,6 +664,8 @@ async def suno_upload_cover(
 
     if style:
         payload["style"] = style
+    if audio_weight is not None:
+        payload["audio_weight"] = audio_weight
 
     result = await client.generate_audio(**payload)
     return format_audio_result(result)
