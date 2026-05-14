@@ -158,7 +158,7 @@ Environment Variables:
             from starlette.applications import Starlette
             from starlette.requests import Request
             from starlette.responses import JSONResponse, RedirectResponse
-            from starlette.routing import Mount, Route
+            from starlette.routing import BaseRoute, Mount, Route
 
             from core.server import oauth_provider
 
@@ -329,7 +329,7 @@ Environment Variables:
             mcp.settings.streamable_http_path = "/mcp"
 
             # Build routes
-            routes: list[Route | Mount] = [
+            routes: list[BaseRoute] = [
                 Route("/health", health),
                 Route("/favicon.ico", favicon),
                 Route("/.well-known/mcp/server-card.json", server_card),
@@ -339,6 +339,11 @@ Environment Variables:
             if oauth_provider:
                 routes.append(Route("/oauth/callback", oauth_provider.handle_callback))
 
+            # Mount legacy SSE transport (/sse + /messages) alongside Streamable HTTP (/mcp)
+            # so SSE-only clients (e.g. OOBE Synapse SDK) and modern Streamable HTTP
+            # clients are both supported on the same endpoint.
+            for sse_route in mcp.sse_app().routes:
+                routes.append(sse_route)
             routes.append(Mount("/", app=mcp.streamable_http_app()))
 
             app = Starlette(routes=routes, lifespan=lifespan)

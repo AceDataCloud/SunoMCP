@@ -311,7 +311,7 @@ async def suno_cover_music(
     Returns:
         Task ID and the cover audio information.
     """
-    payload = {
+    payload: dict = {
         "action": "cover",
         "audio_id": audio_id,
         "model": model,
