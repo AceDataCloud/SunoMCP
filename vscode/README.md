@@ -2,7 +2,7 @@
 
 AI music generation with Suno — songs, lyrics, covers, stems, and more.
 
-[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/acedatacloud.mcp-suno?label=VS%20Code)](https://marketplace.visualstudio.com/items?itemName=acedatacloud.mcp-suno) [![PyPI](https://img.shields.io/pypi/v/mcp-suno.svg?label=PyPI)](https://pypi.org/project/mcp-suno/) [![Hosted MCP](https://img.shields.io/badge/hosted-mcp-blue)](https://suno.mcp.acedata.cloud/mcp)
+[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visualstudiocode&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=acedatacloud.mcp-suno) [![PyPI](https://img.shields.io/pypi/v/mcp-suno.svg?label=PyPI)](https://pypi.org/project/mcp-suno/) [![Hosted MCP](https://img.shields.io/badge/hosted-mcp-blue)](https://suno.mcp.acedata.cloud/mcp)
 
 Connect VS Code's AI agents to Suno through Ace Data Cloud. Generate songs from text prompts, write custom lyrics with full musical control, extend tracks, remix or cover, separate stems, export MP4/WAV/MIDI — all from chat.
 

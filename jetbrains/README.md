@@ -7,7 +7,7 @@ This plugin helps you set up the MCP Suno server with JetBrains AI Assistant.
 Once configured, AI Assistant can generate songs, lyrics, covers, remixes, and more
 using Suno AI — all powered by [Ace Data Cloud](https://platform.acedata.cloud).
 
-**27 AI Music Tools** — Generate, extend, cover, remix, mashup, stems, lyrics, and more.
+**35 AI Music Tools** — Generate, extend, cover, remix, mashup, stems, lyrics, and more.
 <!-- Plugin description end -->
 
 ## Quick Start
