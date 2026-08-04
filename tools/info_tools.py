@@ -22,27 +22,31 @@ async def suno_list_models() -> str:
     Returns:
         Table of all models with their version, limits, and features.
     """
-    # Last updated: 2026-04-05
+    # Last updated: 2026-08-04
     return """Available Suno Models:
 
-| Model           | Version | Prompt Limit | Lyric Limit  | Style Limit | Max Duration |
-|-----------------|---------|--------------|--------------|-------------|--------------|
-| chirp-v5-5      | V5.5    | 200 chars    | 5000 chars   | 1000 chars  | 8 minutes    |
-| chirp-v5        | V5      | 200 chars    | 5000 chars   | 1000 chars  | 8 minutes    |
-| chirp-v4-5-plus | V4.5+   | 200 chars    | 5000 chars   | 1000 chars  | 8 minutes    |
-| chirp-v4-5      | V4.5    | 200 chars    | 5000 chars   | 1000 chars  | 4 minutes    |
-| chirp-v4        | V4      | 200 chars    | 3000 chars   | 200 chars   | 150 seconds  |
-| chirp-v3-5      | V3.5    | 200 chars    | 3000 chars   | 200 chars   | 120 seconds  |
-| chirp-v3-0      | V3      | 200 chars    | 3000 chars   | 200 chars   | 120 seconds  |
+| Model           | Version | Prompt Limit | Lyric Limit  | Title Limit | Style Limit | Max Duration |
+|-----------------|---------|--------------|--------------|-------------|-------------|--------------|
+| chirp-v5-5      | V5.5    | 500 chars    | 5000 chars   | 100 chars   | 1000 chars  | 8 minutes    |
+| chirp-v5        | V5      | 500 chars    | 5000 chars   | 100 chars   | 1000 chars  | 8 minutes    |
+| chirp-v4-5-plus | V4.5+   | 500 chars    | 5000 chars   | 100 chars   | 1000 chars  | 8 minutes    |
+| chirp-v4-5      | V4.5    | 500 chars    | 5000 chars   | 100 chars   | 1000 chars  | 4 minutes    |
+| chirp-v4        | V4      | 500 chars    | 3000 chars   | 80 chars    | 200 chars   | 150 seconds  |
+| chirp-v3-5      | V3.5    | 500 chars    | 3000 chars   | 80 chars    | 200 chars   | 120 seconds  |
+| chirp-v3-0      | V3      | 500 chars    | 3000 chars   | 80 chars    | 200 chars   | 120 seconds  |
+
+Prompt limit applies to inspiration mode (custom=false) and is 500 chars for every
+model. Lyric, title and style limits apply to custom mode (custom=true).
 
 Recommended: chirp-v5-5 for best quality, chirp-v4-5 for a reliable alternative.
 
 Features by Version:
 - V4.5+: Vocal gender control ('f' for female, 'm' for male)
 - V5/V5.5: High quality model with 8-minute songs
-- Explicit track length via the `duration` parameter (seconds, typically 10-360,
-  best supported on newer models in custom mode). "Max Duration" above is the
-  model ceiling for an unguided generation; `duration` is a target you request.
+- Explicit track length via the `duration` parameter (integer seconds, 10-360).
+  Only supported for the `generate` action in custom mode on chirp-v5-5; other
+  combinations return a 400 error. "Max Duration" above is the model ceiling for
+  an unguided generation; `duration` is a target you request.
 """
 
 
@@ -136,7 +140,7 @@ async def suno_get_lyric_format_guide() -> str:
     Returns:
         Complete guide with section markers, examples, and tips.
     """
-    # Last updated: 2026-04-05
+    # Last updated: 2026-08-04
     return """Lyric Format Guide for Suno:
 
 Section Markers (use square brackets):

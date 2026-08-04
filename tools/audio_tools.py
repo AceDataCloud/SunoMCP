@@ -142,7 +142,7 @@ async def suno_generate_custom_music(
     duration: Annotated[
         int | None,
         Field(
-            description="Target length of the generated track in seconds, typically between 10 and 360. Support varies by model - newer models such as chirp-v5-5 handle it best, and unsupported combinations may ignore it or return an error. The finished track lands near this value but is not guaranteed to match it exactly."
+            description="Target length of the generated track in seconds, an integer between 10 and 360. Only takes effect for the 'generate' action in custom mode with model 'chirp-v5-5'; other combinations return a 400 error. The finished track lands near this value but is not guaranteed to match it exactly."
         ),
     ] = None,
     callback_url: Annotated[
