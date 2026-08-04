@@ -40,6 +40,9 @@ Recommended: chirp-v5-5 for best quality, chirp-v4-5 for a reliable alternative.
 Features by Version:
 - V4.5+: Vocal gender control ('f' for female, 'm' for male)
 - V5/V5.5: High quality model with 8-minute songs
+- Explicit track length via the `duration` parameter (seconds, typically 10-360,
+  best supported on newer models in custom mode). "Max Duration" above is the
+  model ceiling for an unguided generation; `duration` is a target you request.
 """
 
 

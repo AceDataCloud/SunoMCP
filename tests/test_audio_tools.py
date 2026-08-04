@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from tools.audio_tools import suno_generate_inspo
+from tools.audio_tools import suno_generate_custom_music, suno_generate_inspo
 
 
 class TestInspoTool:
@@ -49,3 +49,57 @@ class TestInspoTool:
         assert "audio_weight" not in payload
         assert "style" not in payload
         assert "prompt" not in payload
+
+
+class TestCustomDuration:
+    """Tests for the duration parameter on custom generation."""
+
+    @pytest.mark.asyncio
+    async def test_duration_is_forwarded(self, mock_audio_response):
+        """A requested duration should reach the API payload."""
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_generate_custom_music(
+                lyric="[Verse]\nhello",
+                title="Duration Demo",
+                model="chirp-v5-5",
+                duration=330,
+            )
+
+        payload = mock_generate.await_args.kwargs
+        assert payload["action"] == "generate"
+        assert payload["custom"] is True
+        assert payload["duration"] == 330
+
+    @pytest.mark.asyncio
+    async def test_duration_omitted_when_unset(self, mock_audio_response):
+        """Leaving duration unset must not send the key at all."""
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_generate_custom_music(
+                lyric="[Verse]\nhello",
+                title="No Duration",
+                model="chirp-v5-5",
+            )
+
+        assert "duration" not in mock_generate.await_args.kwargs
+
+    @pytest.mark.asyncio
+    async def test_duration_is_not_range_or_model_gated(self, mock_audio_response):
+        """Any value on any model is forwarded as-is; the API owns the rules."""
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_generate_custom_music(
+                lyric="[Verse]\nhello",
+                title="Long Take",
+                model="chirp-v4",
+                duration=900,
+            )
+
+        assert mock_generate.await_args.kwargs["duration"] == 900
