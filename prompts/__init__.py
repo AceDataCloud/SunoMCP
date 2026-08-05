@@ -109,7 +109,7 @@ def suno_workflow_examples() -> str:
 
 ## Tips:
 - Always be descriptive in prompts - include genre, mood, instruments, tempo
-- Use style_negative to exclude unwanted elements
+- Use negative_tags to exclude unwanted elements
 - For v4.5+ models, offer vocal_gender option for custom songs
 """
 
@@ -153,7 +153,7 @@ Good prompts include:
 
 ## Style Negative Examples
 
-Use style_negative to exclude:
+Use negative_tags to exclude:
 - "autotune, robotic" - for natural vocals
 - "heavy metal, screaming" - for softer songs
 - "electronic, synth" - for acoustic sound

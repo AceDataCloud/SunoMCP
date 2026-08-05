@@ -109,10 +109,10 @@ async def suno_generate_custom_music(
             description="Prompt for auto-generating lyrics. Only used when custom is true and lyric is empty. Provide a dict with the lyric generation parameters (e.g. {'prompt': 'A song about winter'})."
         ),
     ] = None,
-    style_negative: Annotated[
+    negative_tags: Annotated[
         str,
         Field(
-            description="Styles to explicitly exclude from the generation. Examples: 'heavy metal, screaming', 'autotune, electronic'"
+            description="Styles or genres to explicitly exclude from custom generation. Examples: 'heavy metal, screaming', 'autotune, electronic'"
         ),
     ] = "",
     vocal_gender: Annotated[
@@ -184,8 +184,8 @@ async def suno_generate_custom_music(
         payload["lyric_prompt"] = lyric_prompt
     if style:
         payload["style"] = style
-    if style_negative:
-        payload["style_negative"] = style_negative
+    if negative_tags:
+        payload["negative_tags"] = negative_tags
     if vocal_gender and vocal_gender in ("f", "m"):
         payload["vocal_gender"] = vocal_gender
     if variation_category:

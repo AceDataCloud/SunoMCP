@@ -51,6 +51,35 @@ class TestInspoTool:
         assert "prompt" not in payload
 
 
+class TestCustomNegativeTags:
+    """Tests for excluded styles on custom generation."""
+
+    @pytest.mark.asyncio
+    async def test_negative_tags_are_forwarded(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_generate_custom_music(
+                lyric="[Verse]\nhello",
+                negative_tags="metal, distortion",
+            )
+
+        payload = mock_generate.await_args.kwargs
+        assert payload["negative_tags"] == "metal, distortion"
+        assert "style_negative" not in payload
+
+    @pytest.mark.asyncio
+    async def test_empty_negative_tags_are_omitted(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_generate_custom_music(lyric="[Verse]\nhello")
+
+        assert "negative_tags" not in mock_generate.await_args.kwargs
+
+
 class TestCustomDuration:
     """Tests for the duration parameter on custom generation."""
 
