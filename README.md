@@ -1,5 +1,7 @@
 # SunoMCP
 
+[![MCP Toplist](https://mcptoplist.com/badge/io.github.AceDataCloud%2Fmcp-suno.svg)](https://mcptoplist.com/server/io.github.AceDataCloud%2Fmcp-suno)
+
 <!-- mcp-name: io.github.AceDataCloud/mcp-suno -->
 
 [![PyPI version](https://img.shields.io/pypi/v/mcp-suno.svg)](https://pypi.org/project/mcp-suno/)
