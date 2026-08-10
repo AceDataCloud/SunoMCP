@@ -60,7 +60,7 @@ Examples:
 
 Environment Variables:
   ACEDATACLOUD_API_TOKEN          API token from AceDataCloud (required)
-  SUNO_DEFAULT_MODEL         Default model (default: chirp-v4-5)
+  SUNO_DEFAULT_MODEL         Default model (default: chirp-v5-5)
   SUNO_REQUEST_TIMEOUT       Request timeout in seconds (default: 1800)
   LOG_LEVEL                  Logging level (default: INFO)
         """,

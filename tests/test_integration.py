@@ -89,7 +89,7 @@ class TestLyricsTools:
 
         result = await suno_generate_lyrics(
             prompt="A short song about testing software",
-            model="chirp-v3",
+            model="default",
         )
 
         print("\n=== Generate Lyrics Result ===")
@@ -218,7 +218,7 @@ class TestClientDirectly:
 
         result = await client.generate_lyrics(
             prompt="A song about code",
-            model="chirp-v3",
+            model="remi-v1",
         )
 
         print("\n=== Client Lyrics Result ===")

@@ -65,6 +65,29 @@ class TestSunoClient:
             assert result == mock_audio_response
 
     @pytest.mark.asyncio
+    @pytest.mark.parametrize("model", ["default", "remi-v1"])
+    async def test_generate_lyrics_payload_contract(self, client, mock_lyrics_response, model):
+        """Lyrics requests should use the dedicated endpoint contract."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_lyrics_response
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = mock_response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            await client.generate_lyrics(prompt="A song about code", model=model)
+
+        mock_instance.post.assert_awaited_once()
+        request = mock_instance.post.await_args
+        assert request.args[0] == "https://api.test.com/suno/lyrics"
+        payload = request.kwargs["json"]
+        assert isinstance(payload["prompt"], str)
+        assert payload["model"] in {"default", "remi-v1"}
+        assert "action" not in payload
+
+    @pytest.mark.asyncio
     async def test_request_auth_error_401(self, client):
         """Test 401 response raises auth error."""
         mock_response = MagicMock()
