@@ -38,7 +38,7 @@ Generate AI music, lyrics, and manage audio projects directly from Claude, VS Co
 | `suno_upload_extend` | Extend an uploaded audio (your own music) with new AI-generated content. |
 | `suno_upload_cover` | Create an AI cover of an uploaded audio (your own music). |
 | `suno_mashup_music` | Blend exactly two songs using a required creative-direction prompt. |
-| `suno_all_stems_music` | Return full stem separation; two same-named 12-stem sets may be returned. |
+| `suno_all_stems_music` | Return two distinct 12-stem candidate sets, labeled `stem_set` 1 and 2 in task results. |
 | `suno_generate_lyrics` | Generate song lyrics from a text prompt. |
 | `suno_get_mp4` | Get an MP4 video version of a generated song. |
 | `suno_get_timing` | Get timing and subtitle data for a generated song. |

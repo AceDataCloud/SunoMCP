@@ -103,6 +103,54 @@ class TestFormatTaskResult:
         assert guidance["terminal_state_reached"] is True
         assert guidance["recommended_action"] == "stop"
 
+    def test_all_stems_labels_two_distinct_candidate_sets(self):
+        names = [
+            "Vocals",
+            "Backing Vocals",
+            "Drums",
+            "Bass",
+            "Guitar",
+            "Keyboard",
+            "Percussion",
+            "Strings",
+            "Synth",
+            "FX",
+            "Brass",
+            "Woodwinds",
+        ]
+        items = [
+            {"id": f"set-{set_number}-{name}", "title": f"Song ({name})"}
+            for set_number in (1, 2)
+            for name in names
+        ]
+        data = json.loads(
+            format_task_result(
+                {
+                    "id": "all-stems-task",
+                    "request": {"action": "all_stems"},
+                    "response": {"success": True, "data": items},
+                }
+            )
+        )
+
+        labeled = data["response"]["data"]
+        assert [item["stem_set"] for item in labeled[:12]] == [1] * 12
+        assert [item["stem_set"] for item in labeled[12:]] == [2] * 12
+        assert [item["id"] for item in labeled] == [item["id"] for item in items]
+
+    def test_all_stems_does_not_guess_when_shape_changes(self):
+        items = [{"id": str(index), "title": f"Song ({index})"} for index in range(24)]
+        data = json.loads(
+            format_task_result(
+                {
+                    "id": "all-stems-task",
+                    "request": {"action": "all_stems"},
+                    "response": {"success": True, "data": items},
+                }
+            )
+        )
+        assert all("stem_set" not in item for item in data["response"]["data"])
+
     def test_response_error_without_state_is_terminal(self):
         result = format_task_result(
             {

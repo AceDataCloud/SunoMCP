@@ -34,6 +34,31 @@ def _with_submission_guidance(
     return payload
 
 
+def _label_all_stem_sets(data: dict[str, Any]) -> dict[str, Any]:
+    """Label the two distinct 12-stem candidates returned by all_stems."""
+    payload = dict(data)
+    if payload.get("request", {}).get("action") != "all_stems":
+        return payload
+
+    response = payload.get("response")
+    if not isinstance(response, dict):
+        return payload
+    items = response.get("data")
+    if not isinstance(items, list) or len(items) != 24:
+        return payload
+
+    def stem_name(item: Any) -> str:
+        title = str(item.get("title", "")) if isinstance(item, dict) else ""
+        return title.rsplit(" (", 1)[-1].removesuffix(")")
+
+    if [stem_name(item) for item in items[:12]] != [stem_name(item) for item in items[12:]]:
+        return payload
+
+    labeled = [dict(item, stem_set=index // 12 + 1) for index, item in enumerate(items)]
+    payload["response"] = dict(response, data=labeled)
+    return payload
+
+
 def _with_task_guidance(
     data: dict[str, Any], poll_tool: str, batch_poll_tool: str | None = None
 ) -> dict[str, Any]:
@@ -137,7 +162,7 @@ def format_task_result(data: dict[str, Any]) -> str:
         JSON string representation of the result
     """
     return json.dumps(
-        _with_task_guidance(data, "suno_get_task", "suno_get_tasks_batch"),
+        _with_task_guidance(_label_all_stem_sets(data), "suno_get_task", "suno_get_tasks_batch"),
         ensure_ascii=False,
         indent=2,
     )
