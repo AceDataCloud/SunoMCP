@@ -4,7 +4,12 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from tools.audio_tools import suno_generate_custom_music, suno_generate_inspo
+from tools.audio_tools import (
+    suno_generate_custom_music,
+    suno_generate_inspo,
+    suno_mashup_music,
+    suno_remaster_music,
+)
 
 
 class TestInspoTool:
@@ -49,6 +54,52 @@ class TestInspoTool:
         assert "audio_weight" not in payload
         assert "style" not in payload
         assert "prompt" not in payload
+
+
+class TestRemasterTool:
+    @pytest.mark.asyncio
+    async def test_remaster_forwards_variation_category(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_remaster_music(
+                audio_id="audio-1",
+                variation_category="subtle",
+                model="chirp-v5-5",
+            )
+
+        assert mock_generate.await_args.kwargs == {
+            "action": "remaster",
+            "audio_id": "audio-1",
+            "variation_category": "subtle",
+            "model": "chirp-v5-5",
+            "callback_url": None,
+        }
+
+
+class TestMashupTool:
+    @pytest.mark.asyncio
+    async def test_mashup_forwards_creative_direction(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_mashup_music(
+                mashup_audio_ids=["audio-1", "audio-2"],
+                prompt="Blend both melodies into one arrangement",
+                style="warm acoustic pop",
+                title="Merged Currents",
+                instrumental=True,
+            )
+
+        payload = mock_generate.await_args.kwargs
+        assert payload["action"] == "mashup"
+        assert payload["mashup_audio_ids"] == ["audio-1", "audio-2"]
+        assert payload["prompt"] == "Blend both melodies into one arrangement"
+        assert payload["style"] == "warm acoustic pop"
+        assert payload["title"] == "Merged Currents"
+        assert payload["instrumental"] is True
 
 
 class TestCustomNegativeTags:

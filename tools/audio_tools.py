@@ -437,10 +437,16 @@ async def suno_remaster_music(
             description="ID of the audio to remaster. This is the 'id' field from a previous generation."
         ),
     ],
+    variation_category: Annotated[
+        VariationCategory,
+        Field(
+            description="Required remaster variation intensity. Use 'high' for maximum variation, 'normal' for balanced, or 'subtle' for minimal changes."
+        ),
+    ],
     model: Annotated[
         SunoModel,
         Field(
-            description="Model version to use for remastering. Newer models produce better results."
+            description="Model version to use for remastering. Supported choices are chirp-v4-5-plus, chirp-v5, and chirp-v5-5."
         ),
     ] = DEFAULT_MODEL,
     callback_url: Annotated[
@@ -464,6 +470,7 @@ async def suno_remaster_music(
     result = await client.generate_audio(
         action="remaster",
         audio_id=audio_id,
+        variation_category=variation_category,
         model=model,
         callback_url=callback_url,
     )
@@ -684,8 +691,30 @@ async def suno_upload_cover(
 async def suno_mashup_music(
     mashup_audio_ids: Annotated[
         list[str],
-        Field(description="List of audio IDs to mashup together. Provide 2 or more song IDs."),
+        Field(
+            min_length=2,
+            max_length=2,
+            description="Exactly two audio IDs to mash up together.",
+        ),
     ],
+    prompt: Annotated[
+        str,
+        Field(
+            description="Required creative direction for blending the tracks, such as the desired arrangement, mood, and balance between sources."
+        ),
+    ],
+    style: Annotated[
+        str,
+        Field(description="Optional target music style for the mashup."),
+    ] = "",
+    title: Annotated[
+        str,
+        Field(description="Optional title for the mashup."),
+    ] = "",
+    instrumental: Annotated[
+        bool,
+        Field(description="If true, generate an instrumental mashup without vocals."),
+    ] = False,
     model: Annotated[
         SunoModel,
         Field(description="Model version to use."),
@@ -708,12 +737,20 @@ async def suno_mashup_music(
     Returns:
         Task ID and the mashup audio information.
     """
-    result = await client.generate_audio(
-        action="mashup",
-        mashup_audio_ids=mashup_audio_ids,
-        model=model,
-        callback_url=callback_url,
-    )
+    payload: dict[str, Any] = {
+        "action": "mashup",
+        "mashup_audio_ids": mashup_audio_ids,
+        "prompt": prompt,
+        "instrumental": instrumental,
+        "model": model,
+        "callback_url": callback_url,
+    }
+    if style:
+        payload["style"] = style
+    if title:
+        payload["title"] = title
+
+    result = await client.generate_audio(**payload)
     return format_audio_result(result)
 
 
@@ -731,7 +768,9 @@ async def suno_all_stems_music(
     """Separate a song into all individual stems (vocals, bass, drums, other instruments).
 
     Splits the audio into multiple separate tracks for all components,
-    providing more granular stem separation than suno_stems_music.
+    providing more granular stem separation than suno_stems_music. The service may
+    return two same-named sets of 12 stems without metadata that distinguishes the sets;
+    both sets are preserved so no audio is silently discarded.
 
     Use this when:
     - You need full multi-track stem separation

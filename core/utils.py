@@ -47,6 +47,7 @@ def _with_task_guidance(
     state = payload.get("state", "")
     response = payload.get("response", {})
     success = response.get("success", False) if isinstance(response, dict) else False
+    response_failed = isinstance(response, dict) and response.get("success") is False
 
     if state == "complete" and success:
         payload["mcp_task_polling"] = {
@@ -60,12 +61,18 @@ def _with_task_guidance(
             "note": "Task is complete. The audio URLs are final and ready to present to the user.",
         }
     else:
-        is_failed = str(state).lower() in {"failed", "error", "cancelled", "canceled"}
+        is_failed = response_failed or str(state).lower() in {
+            "failed",
+            "error",
+            "cancelled",
+            "canceled",
+        }
+        effective_state = state or ("failed" if is_failed else "pending")
         payload["mcp_task_polling"] = {
             "task_id": task_id,
             "poll_tool": poll_tool,
             "batch_poll_tool": batch_poll_tool,
-            "state": state,
+            "state": effective_state,
             "is_complete": False,
             "is_failed": is_failed,
             "should_poll": not is_failed,
@@ -74,13 +81,15 @@ def _with_task_guidance(
             "polling_interval_seconds": 15,
             "max_poll_attempts": 100,
             "next_step": (
-                f'Task is NOT complete yet (state: "{state}"). '
-                f'IMPORTANT: Only state="complete" with success=true means the task is finished. '
-                f"Ignore any intermediate audio_url values — "
-                f"these are streaming previews, NOT final results. "
-                f'Wait 15 seconds, then call {poll_tool}(task_id="{task_id}") again. '
-                f"Media generation typically takes 1-5 minutes. "
-                f"Keep polling for up to 100 attempts. Do NOT stop early."
+                "Task failed. Inspect response.error for details and do not poll again."
+                if is_failed
+                else (
+                    f'Task is NOT complete yet (state: "{effective_state}"). '
+                    f'IMPORTANT: Only state="complete" with success=true means the task is finished. '
+                    f"Ignore any intermediate audio_url values — these are streaming previews, NOT final results. "
+                    f'Wait 15 seconds, then call {poll_tool}(task_id="{task_id}") again. '
+                    f"Media generation typically takes 1-5 minutes. Keep polling for up to 100 attempts."
+                )
             ),
         }
     return payload

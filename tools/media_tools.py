@@ -67,13 +67,19 @@ async def suno_extract_vocals(
         Field(description="The song ID to extract vocals from."),
     ],
     vocal_start: Annotated[
-        float | None,
-        Field(description="Start time in seconds for the vocal extraction range."),
-    ] = None,
+        float,
+        Field(
+            ge=0,
+            description="Required extraction start time in seconds. The selected range must be shorter than 30 seconds.",
+        ),
+    ],
     vocal_end: Annotated[
-        float | None,
-        Field(description="End time in seconds for the vocal extraction range."),
-    ] = None,
+        float,
+        Field(
+            gt=0,
+            description="Required extraction end time in seconds. It must be greater than vocal_start, with a range shorter than 30 seconds.",
+        ),
+    ],
     callback_url: Annotated[
         str | None,
         Field(description="Webhook callback URL for asynchronous notifications."),
@@ -92,11 +98,16 @@ async def suno_extract_vocals(
     Returns:
         Task ID and extracted vocal audio information.
     """
-    payload: dict = {"audio_id": audio_id}
-    if vocal_start is not None:
-        payload["vocal_start"] = vocal_start
-    if vocal_end is not None:
-        payload["vocal_end"] = vocal_end
+    if vocal_start >= vocal_end or vocal_end - vocal_start >= 30:
+        raise ValueError(
+            "vocal_end must be greater than vocal_start and the range must be shorter than 30 seconds"
+        )
+
+    payload: dict = {
+        "audio_id": audio_id,
+        "vocal_start": vocal_start,
+        "vocal_end": vocal_end,
+    }
     if callback_url:
         payload["callback_url"] = callback_url
 

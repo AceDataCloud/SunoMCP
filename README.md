@@ -32,16 +32,17 @@ Generate AI music, lyrics, and manage audio projects directly from Claude, VS Co
 | `suno_cover_music` | Create a cover or remix version of an existing song in a different style. |
 | `suno_concat_music` | Concatenate extended song segments into a single complete audio file. |
 | `suno_generate_with_persona` | Generate music using a saved artist persona for consistent vocal style. |
-| `suno_remaster_music` | Remaster an existing song to improve audio quality. |
+| `suno_remaster_music` | Remaster an existing song; v5/v5.5 require a variation category. |
 | `suno_stems_music` | Separate a song into individual stems (vocals and instruments). |
 | `suno_replace_section` | Replace a specific time range in a song with new generated content. |
 | `suno_upload_extend` | Extend an uploaded audio (your own music) with new AI-generated content. |
 | `suno_upload_cover` | Create an AI cover of an uploaded audio (your own music). |
-| `suno_mashup_music` | Create a musical mashup by blending multiple songs together. |
+| `suno_mashup_music` | Blend exactly two songs using a required creative-direction prompt. |
+| `suno_all_stems_music` | Return full stem separation; two same-named 12-stem sets may be returned. |
 | `suno_generate_lyrics` | Generate song lyrics from a text prompt. |
 | `suno_get_mp4` | Get an MP4 video version of a generated song. |
 | `suno_get_timing` | Get timing and subtitle data for a generated song. |
-| `suno_extract_vocals` | Extract the vocal track from a generated song (stem separation). |
+| `suno_extract_vocals` | Extract a required vocal interval shorter than 30 seconds. |
 | `suno_get_wav` | Get the lossless WAV format of a generated song. |
 | `suno_get_midi` | Get MIDI data extracted from a generated song. |
 | `suno_create_persona` | Create a new artist persona from an existing audio's vocal style. |

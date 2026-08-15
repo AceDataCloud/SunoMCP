@@ -83,6 +83,25 @@ class TestFormatTaskResult:
         data = json.loads(result)
         assert data["error"]["code"] == "not_found"
 
+    def test_response_error_without_state_is_terminal(self):
+        result = format_task_result(
+            {
+                "id": "failed-task",
+                "state": "",
+                "response": {
+                    "success": False,
+                    "error": {"code": "bad_request", "message": "prompt is required"},
+                },
+            }
+        )
+        data = json.loads(result)
+        guidance = data["mcp_task_polling"]
+        assert guidance["state"] == "failed"
+        assert guidance["is_failed"] is True
+        assert guidance["should_poll"] is False
+        assert guidance["terminal_state_reached"] is True
+        assert guidance["recommended_action"] == "stop"
+
 
 class TestFormatPersonaResult:
     """Tests for format_persona_result function."""

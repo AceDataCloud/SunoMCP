@@ -52,7 +52,13 @@ async def suno_get_task(
     # don't burn through poll attempts in seconds.
     response = result.get("response", {})
     is_complete = response.get("success", False)
-    if not is_complete:
+    is_failed = response.get("success") is False or str(result.get("state", "")).lower() in {
+        "failed",
+        "error",
+        "cancelled",
+        "canceled",
+    }
+    if not is_complete and not is_failed:
         await asyncio.sleep(5)
     return format_task_result(result)
 
@@ -94,12 +100,19 @@ async def suno_get_tasks_batch(
 
     for item in result.get("items", []):
         response_info = item.get("response", {})
-        state = item.get("state", "unknown")
+        state = item.get("state", "")
         success = response_info.get("success", False)
+        is_failed = response_info.get("success") is False or str(state).lower() in {
+            "failed",
+            "error",
+            "cancelled",
+            "canceled",
+        }
+        effective_state = state or ("failed" if is_failed else "pending")
         lines.extend(
             [
                 f"=== Task: {item.get('id', 'N/A')} ===",
-                f"State: {state}",
+                f"State: {effective_state}",
                 f"Created At: {item.get('created_at', 'N/A')}",
                 f"Success: {success}",
             ]
@@ -110,11 +123,11 @@ async def suno_get_tasks_batch(
                 lines.append(
                     f"  - {audio.get('title', 'Untitled')}: {audio.get('audio_url', 'N/A')}"
                 )
-        elif state == "failed":
+        elif is_failed:
             lines.append(f"  Error: {response_info.get('error', 'Unknown error')}")
         else:
             lines.append(
-                f"  ⏳ Still {state} — keep polling. Any audio_url values are intermediate previews."
+                f"  ⏳ Still {effective_state} — keep polling. Any audio_url values are intermediate previews."
             )
 
         lines.append("")
