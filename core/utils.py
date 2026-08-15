@@ -49,10 +49,10 @@ def _with_task_guidance(
     success = response.get("success", False) if isinstance(response, dict) else False
     response_failed = isinstance(response, dict) and response.get("success") is False
 
-    if state == "complete" and success:
+    if success:
         payload["mcp_task_polling"] = {
             "task_id": task_id,
-            "state": state,
+            "state": "complete",
             "is_complete": True,
             "is_failed": False,
             "should_poll": False,

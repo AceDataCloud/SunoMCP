@@ -74,7 +74,8 @@ class TestFormatTaskResult:
         assert data["request"]["action"] == "generate"
         assert data["response"]["success"] is True
         assert data["response"]["data"][0]["title"] == "Test Song"
-        assert data["mcp_task_polling"]["poll_tool"] == "suno_get_task"
+        assert data["mcp_task_polling"]["state"] == "complete"
+        assert data["mcp_task_polling"]["should_poll"] is False
 
     def test_format_error(self):
         """Test formatting error response."""
@@ -82,6 +83,25 @@ class TestFormatTaskResult:
         result = format_task_result(error_response)
         data = json.loads(result)
         assert data["error"]["code"] == "not_found"
+
+    def test_response_success_without_state_is_terminal(self):
+        result = format_task_result(
+            {
+                "id": "complete-task",
+                "state": "",
+                "response": {
+                    "success": True,
+                    "data": [{"id": "audio-1", "audio_url": "https://example.com/a.mp3"}],
+                },
+            }
+        )
+        data = json.loads(result)
+        guidance = data["mcp_task_polling"]
+        assert guidance["state"] == "complete"
+        assert guidance["is_complete"] is True
+        assert guidance["should_poll"] is False
+        assert guidance["terminal_state_reached"] is True
+        assert guidance["recommended_action"] == "stop"
 
     def test_response_error_without_state_is_terminal(self):
         result = format_task_result(

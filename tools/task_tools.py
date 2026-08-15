@@ -32,14 +32,12 @@ async def suno_get_task(
     Task states:
     - 'pending': Generation is still in progress — KEEP POLLING
     - 'processing': Generation is being processed — KEEP POLLING
-    - 'complete': Generation finished successfully — this is the ONLY state that means done
+    - 'complete': Generation finished successfully
     - 'failed': Generation failed (check error message)
 
-    CRITICAL: During the 'pending' state, the response may already contain intermediate
-    audio_url values (e.g. URLs from audiopipe.suno.ai). These are STREAMING PREVIEW URLs,
-    NOT final results. You MUST check the 'state' field — only present the results to the
-    user when state is 'complete' and success is true. Do NOT stop polling just because
-    audio_url is non-empty.
+    The API may omit its top-level state. The MCP normalizes response.success=true to
+    complete and response.success=false to failed; responses without a success field
+    remain pending.
 
     Returns:
         Task status and generated audio information including URLs, title, lyrics, and task timing metadata.
@@ -80,9 +78,8 @@ async def suno_get_tasks_batch(
     - You want to get status of several songs at once
     - You're tracking a batch of generations
 
-    CRITICAL: Same as suno_get_task — only consider a task complete when its state
-    is 'complete' and success is true. Intermediate audio_url values during 'pending'
-    state are streaming previews, NOT final results.
+    The MCP treats response.success=true as complete and response.success=false as
+    failed when the API omits its top-level state.
 
     Returns:
         Status and audio information for all queried tasks.
@@ -102,13 +99,16 @@ async def suno_get_tasks_batch(
         response_info = item.get("response", {})
         state = item.get("state", "")
         success = response_info.get("success", False)
+        is_complete = response_info.get("success") is True
         is_failed = response_info.get("success") is False or str(state).lower() in {
             "failed",
             "error",
             "cancelled",
             "canceled",
         }
-        effective_state = state or ("failed" if is_failed else "pending")
+        effective_state = (
+            "complete" if is_complete else state or ("failed" if is_failed else "pending")
+        )
         lines.extend(
             [
                 f"=== Task: {item.get('id', 'N/A')} ===",
@@ -118,7 +118,7 @@ async def suno_get_tasks_batch(
             ]
         )
 
-        if state == "complete" and success:
+        if is_complete:
             for audio in response_info.get("data", []):
                 lines.append(
                     f"  - {audio.get('title', 'Untitled')}: {audio.get('audio_url', 'N/A')}"
