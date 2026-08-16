@@ -105,9 +105,9 @@ async def suno_create_voice(
         ),
     ],
     name: Annotated[
-        str,
-        Field(description="Name for the custom voice persona."),
-    ],
+        str | None,
+        Field(description="Optional name for the custom voice persona."),
+    ] = None,
     description: Annotated[
         str | None,
         Field(description="Description of the custom voice persona (optional)."),
@@ -133,8 +133,9 @@ async def suno_create_voice(
     """
     payload: dict = {
         "audio_url": audio_url,
-        "name": name,
     }
+    if name:
+        payload["name"] = name
     if description:
         payload["description"] = description
 
