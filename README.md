@@ -60,7 +60,7 @@ Generate AI music, lyrics, and manage audio projects directly from Claude, VS Co
 ### 1. Get Your API Token
 
 1. Sign up at [AceDataCloud Platform](https://platform.acedata.cloud)
-2. Go to the [API documentation page](https://platform.acedata.cloud/documents/4da95d9d-7722-4a72-857d-bf6be86036e9)
+2. Go to the [API documentation page](https://platform.acedata.cloud/documents/suno-audios)
 3. Click **"Acquire"** to get your API token
 4. Copy the token for use below
 
@@ -566,12 +566,12 @@ SunoMCP/
 
 ## API Reference
 
-This server wraps the [AceDataCloud Suno API](https://platform.acedata.cloud/documents/4da95d9d-7722-4a72-857d-bf6be86036e9):
+This server wraps the [AceDataCloud Suno API](https://platform.acedata.cloud/documents/suno-audios):
 
-- [Suno Audios API](https://platform.acedata.cloud/documents/4da95d9d-7722-4a72-857d-bf6be86036e9) - Music generation
-- [Suno Lyrics API](https://platform.acedata.cloud/documents/514d82dc-f7ab-4638-9f21-8b9275916b08) - Lyrics generation
-- [Suno Tasks API](https://platform.acedata.cloud/documents/b0dd9823-0e01-4c75-af83-5a6e2e05bfed) - Task queries
-- [Suno Persona API](https://platform.acedata.cloud/documents/78bb6c62-6ce0-490f-a7df-e89d80ec0583) - Persona management
+- [Suno Audios API](https://platform.acedata.cloud/documents/suno-audios) - Music generation
+- [Suno Lyrics API](https://platform.acedata.cloud/documents/suno-lyrics) - Lyrics generation
+- [Suno Tasks API](https://platform.acedata.cloud/documents/suno-tasks) - Task queries
+- [Suno Persona API](https://platform.acedata.cloud/documents/suno-persona) - Persona management
 
 ## Contributing
 
@@ -582,6 +582,11 @@ Contributions are welcome! Please:
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing`)
 5. Open a Pull Request
+
+## Documentation
+
+<!-- canonical-documentation -->
+[Documentation](https://platform.acedata.cloud/documents/suno-mcp)
 
 ## License
 

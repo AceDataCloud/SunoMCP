@@ -89,7 +89,7 @@ For screenshots, token setup, project-level and user-level `mcp.json`, and Copil
 
 ## Pricing
 
-From $0.05 per song. New users get free trial credit at sign-up. See full pricing at [https://docs.acedata.cloud](https://docs.acedata.cloud).
+From $0.05 per song. New users get free trial credit at sign-up. See full pricing at [https://platform.acedata.cloud/documents/suno-mcp](https://platform.acedata.cloud/documents/suno-mcp).
 
 ---
 
@@ -161,7 +161,7 @@ version, install [`uv`](https://docs.astral.sh/uv/) and use:
 - **PyPI package:** [`mcp-suno`](https://pypi.org/project/mcp-suno/)
 - **Source repository:** https://github.com/AceDataCloud/SunoMCP
 - **Ace Data Cloud platform:** https://platform.acedata.cloud
-- **MCP documentation:** https://docs.acedata.cloud
+- **MCP documentation:** https://platform.acedata.cloud/documents/suno-mcp
 
 ## License
 

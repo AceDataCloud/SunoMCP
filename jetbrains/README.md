@@ -56,7 +56,7 @@ Connects to the hosted MCP server at `suno.mcp.acedata.cloud`. No local install 
 ## Links
 
 - [Ace Data Cloud Platform](https://platform.acedata.cloud)
-- [API Documentation](https://docs.acedata.cloud)
+- [Documentation](https://platform.acedata.cloud/documents/suno-mcp)
 - [PyPI Package](https://pypi.org/project/mcp-suno/)
 - [Source Code](https://github.com/AceDataCloud/SunoMCP)
 

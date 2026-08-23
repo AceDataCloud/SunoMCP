@@ -68,7 +68,7 @@ mcp-suno = "main:main"
 
 [project.urls]
 Homepage = "https://github.com/AceDataCloud/mcp-suno"
-Documentation = "https://platform.acedata.cloud/documents/4da95d9d-7722-4a72-857d-bf6be86036e9"
+Documentation = "https://platform.acedata.cloud/documents/suno-mcp"
 Repository = "https://github.com/AceDataCloud/mcp-suno"
 Issues = "https://github.com/AceDataCloud/mcp-suno/issues"
 Changelog = "https://github.com/AceDataCloud/mcp-suno/blob/main/CHANGELOG.md"
