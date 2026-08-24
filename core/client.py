@@ -182,7 +182,7 @@ class SunoClient:
     async def get_mp4(self, **kwargs: Any) -> dict[str, Any]:
         """Get MP4 video for a song."""
         logger.info(f"🎥 Getting MP4 for audio: {kwargs.get('audio_id', '')}")
-        return await self.request("/suno/mp4", self._with_async_callback(kwargs))
+        return await self.request("/suno/mp4", kwargs)
 
     async def get_timing(self, **kwargs: Any) -> dict[str, Any]:
         """Get timing/subtitle data for a song."""
