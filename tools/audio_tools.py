@@ -104,9 +104,9 @@ async def suno_generate_custom_music(
         ),
     ] = False,
     lyric_prompt: Annotated[
-        dict[str, Any] | None,
+        str | None,
         Field(
-            description="Prompt for auto-generating lyrics. Only used when custom is true and lyric is empty. Provide a dict with the lyric generation parameters (e.g. {'prompt': 'A song about winter'})."
+            description="Prompt text for auto-generating lyrics. Only used when custom is true and lyric is empty."
         ),
     ] = None,
     negative_tags: Annotated[

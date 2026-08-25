@@ -131,6 +131,30 @@ class TestCustomNegativeTags:
         assert "negative_tags" not in mock_generate.await_args.kwargs
 
 
+class TestCustomLyricPrompt:
+    """Tests for auto-lyrics prompt on custom generation."""
+
+    @pytest.mark.asyncio
+    async def test_lyric_prompt_string_is_forwarded(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_generate_custom_music(lyric="", lyric_prompt="A song about winter")
+
+        assert mock_generate.await_args.kwargs["lyric_prompt"] == "A song about winter"
+
+    @pytest.mark.asyncio
+    async def test_empty_lyric_prompt_is_forwarded(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_generate_custom_music(lyric="", lyric_prompt="")
+
+        assert mock_generate.await_args.kwargs["lyric_prompt"] == ""
+
+
 class TestCustomDuration:
     """Tests for the duration parameter on custom generation."""
 
