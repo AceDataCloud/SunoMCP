@@ -88,6 +88,24 @@ class TestSunoClient:
         assert "action" not in payload
 
     @pytest.mark.asyncio
+    async def test_get_mp3_uses_mp3_endpoint(self, client, mock_audio_response):
+        """MP3 requests should target /suno/mp3 and default to async mode."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_audio_response
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = mock_response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            await client.get_mp3(audio_id="audio-1")
+
+        request = mock_instance.post.await_args
+        assert request.args[0] == "https://api.test.com/suno/mp3"
+        assert request.kwargs["json"] == {"audio_id": "audio-1", "async": True}
+
+    @pytest.mark.asyncio
     async def test_request_auth_error_401(self, client):
         """Test 401 response raises auth error."""
         mock_response = MagicMock()

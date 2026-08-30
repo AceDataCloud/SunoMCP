@@ -89,6 +89,7 @@ Stems & Extraction:
 Media Conversion:
 - suno_get_mp4: Get MP4 video version of a song
 - suno_get_wav: Get lossless WAV format of a song
+- suno_get_mp3: Get compressed MP3 format of a song
 - suno_get_midi: Get MIDI data from a song
 - suno_get_timing: Get word-level timing/subtitle data
 

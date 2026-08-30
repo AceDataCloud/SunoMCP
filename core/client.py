@@ -199,6 +199,11 @@ class SunoClient:
         logger.info(f"🔊 Getting WAV for audio: {kwargs.get('audio_id', '')}")
         return await self.request("/suno/wav", self._with_async_callback(kwargs))
 
+    async def get_mp3(self, **kwargs: Any) -> dict[str, Any]:
+        """Get MP3 format of a song."""
+        logger.info(f"🎧 Getting MP3 for audio: {kwargs.get('audio_id', '')}")
+        return await self.request("/suno/mp3", self._with_async_callback(kwargs))
+
     async def get_midi(self, **kwargs: Any) -> dict[str, Any]:
         """Get MIDI data of a song."""
         logger.info(f"🎹 Getting MIDI for audio: {kwargs.get('audio_id', '')}")

@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from tools.media_tools import suno_extract_vocals
+from tools.media_tools import suno_extract_vocals, suno_get_mp3
 
 
 class TestExtractVocalsTool:
@@ -35,3 +35,29 @@ class TestExtractVocalsTool:
                 vocal_start=start,
                 vocal_end=end,
             )
+
+
+class TestGetMp3Tool:
+    @pytest.mark.asyncio
+    async def test_forwards_audio_id_without_callback(self, mock_audio_response):
+        with patch(
+            "tools.media_tools.client.get_mp3",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_mp3:
+            await suno_get_mp3(audio_id="audio-1")
+
+        assert mock_mp3.await_args.kwargs == {"audio_id": "audio-1"}
+
+    @pytest.mark.asyncio
+    async def test_forwards_callback_when_provided(self, mock_audio_response):
+        callback = "https://example.com/callback"
+        with patch(
+            "tools.media_tools.client.get_mp3",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_mp3:
+            await suno_get_mp3(audio_id="audio-1", callback_url=callback)
+
+        assert mock_mp3.await_args.kwargs == {
+            "audio_id": "audio-1",
+            "callback_url": callback,
+        }

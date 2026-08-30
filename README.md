@@ -44,6 +44,7 @@ Generate AI music, lyrics, and manage audio projects directly from Claude, VS Co
 | `suno_get_timing` | Get timing and subtitle data for a generated song. |
 | `suno_extract_vocals` | Extract a required vocal interval shorter than 30 seconds. |
 | `suno_get_wav` | Get the lossless WAV format of a generated song. |
+| `suno_get_mp3` | Get the compressed MP3 format of a generated song. |
 | `suno_get_midi` | Get MIDI data extracted from a generated song. |
 | `suno_create_persona` | Create a new artist persona from an existing audio's vocal style. |
 | `suno_optimize_style` | Optimize a music style description for better generation results. |
@@ -360,6 +361,7 @@ Clients connect with their own Bearer token — the server extracts the token fr
 | ---------------- | ------------------------------------------------- |
 | `get_mp4`        | Get an MP4 video version of a generated song      |
 | `get_wav`        | Get lossless WAV format of a generated song       |
+| `get_mp3`        | Get compressed MP3 format of a generated song     |
 | `get_midi`       | Get MIDI data extracted from a generated song     |
 | `get_timing`     | Get timing and subtitle data for a generated song |
 | `extract_vocals` | Extract the vocal track from a generated song     |

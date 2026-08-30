@@ -148,6 +148,38 @@ async def suno_get_wav(
 
 
 @mcp.tool()
+async def suno_get_mp3(
+    audio_id: Annotated[
+        str,
+        Field(description="The song ID to get the MP3 format for."),
+    ],
+    callback_url: Annotated[
+        str | None,
+        Field(description="Webhook callback URL for asynchronous notifications."),
+    ] = None,
+) -> str:
+    """Get the MP3 format of a generated song.
+
+    Converts the song to MP3 format, which is compact and widely supported
+    across playback devices and platforms.
+
+    Use this when:
+    - You need a compressed and portable audio format
+    - You want to share songs easily across platforms
+    - You prefer smaller file sizes than WAV
+
+    Returns:
+        Task ID and MP3 audio information.
+    """
+    payload: dict = {"audio_id": audio_id}
+    if callback_url:
+        payload["callback_url"] = callback_url
+
+    result = await client.get_mp3(**payload)
+    return format_audio_result(result)
+
+
+@mcp.tool()
 async def suno_get_midi(
     audio_id: Annotated[
         str,
