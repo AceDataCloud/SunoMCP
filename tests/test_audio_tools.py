@@ -9,6 +9,7 @@ from tools.audio_tools import (
     suno_generate_inspo,
     suno_mashup_music,
     suno_remaster_music,
+    suno_replace_section,
 )
 
 
@@ -207,3 +208,34 @@ class TestCustomDuration:
             )
 
         assert mock_generate.await_args.kwargs["duration"] == 900
+
+
+class TestReplaceSectionResultMode:
+    @pytest.mark.asyncio
+    async def test_explicit_result_mode_is_forwarded(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_replace_section(
+                audio_id="audio-1",
+                replace_section_start=10,
+                replace_section_end=20,
+                result_mode="candidates",
+            )
+
+        assert mock_generate.await_args.kwargs["replace_section_result_mode"] == "candidates"
+
+    @pytest.mark.asyncio
+    async def test_default_result_mode_requests_two_full_songs(self, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await suno_replace_section(
+                audio_id="audio-1",
+                replace_section_start=10,
+                replace_section_end=20,
+            )
+
+        assert mock_generate.await_args.kwargs["replace_section_result_mode"] == "full_song"

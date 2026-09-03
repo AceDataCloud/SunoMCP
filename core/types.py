@@ -22,6 +22,9 @@ VocalGender = Literal["", "f", "m"]
 # Variation category options (v5+ only)
 VariationCategory = Literal["high", "normal", "subtle"]
 
+# Replace-section response shape
+ReplaceSectionResultMode = Literal["candidates", "full_song"]
+
 # Default model
 DEFAULT_MODEL: SunoModel = "chirp-v5-5"
 
