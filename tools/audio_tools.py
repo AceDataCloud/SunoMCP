@@ -550,6 +550,7 @@ async def suno_replace_section(
     result_mode: Annotated[
         ReplaceSectionResultMode,
         Field(
+            alias="replace_section_result_mode",
             description=(
                 "Result shape: full_song returns two complete songs, one from each replacement candidate; "
                 "candidates returns the two unmerged replacement clips."

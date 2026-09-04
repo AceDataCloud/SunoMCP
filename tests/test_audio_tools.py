@@ -1,8 +1,10 @@
 """Unit tests for audio tools (mocked client, no network)."""
 
+import inspect
 from unittest.mock import AsyncMock, patch
 
 import pytest
+from pydantic.fields import FieldInfo
 
 from tools.audio_tools import (
     suno_generate_custom_music,
@@ -211,6 +213,16 @@ class TestCustomDuration:
 
 
 class TestReplaceSectionResultMode:
+    def test_schema_uses_openapi_parameter_name(self):
+        parameter = inspect.signature(suno_replace_section).parameters["result_mode"]
+        field = next(
+            metadata
+            for metadata in parameter.annotation.__metadata__
+            if isinstance(metadata, FieldInfo)
+        )
+
+        assert field.alias == "replace_section_result_mode"
+
     @pytest.mark.asyncio
     async def test_explicit_result_mode_is_forwarded(self, mock_audio_response):
         with patch(
