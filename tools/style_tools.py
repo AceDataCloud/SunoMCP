@@ -1,7 +1,7 @@
 """Style and mashup tools for Suno API."""
 
 import json
-from typing import Annotated
+from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
@@ -72,27 +72,40 @@ async def suno_upload_audio(
     audio_url: Annotated[
         str,
         Field(
-            description="Public URL of the audio file to upload. The URL must be directly accessible (CDN link, cloud storage URL, etc.)."
+            description="Public URL of the audio file. Enhanced mode requires HTTPS and audio you own or are authorized to use."
         ),
     ],
+    mode: Annotated[
+        Literal["standard", "enhanced"],
+        Field(
+            description="Upload mode. standard preserves normal upload behavior; enhanced handles some authorized audio that standard mode cannot process, costs 1.87 Credits on success, and runs asynchronously."
+        ),
+    ] = "standard",
+    name: Annotated[
+        str | None,
+        Field(description="Audio name, required for enhanced mode and limited to 100 characters."),
+    ] = None,
+    callback_url: Annotated[
+        str | None,
+        Field(description="Optional HTTPS webhook URL for the enhanced upload result."),
+    ] = None,
 ) -> str:
-    """Upload an external audio file to Suno for use in subsequent operations.
+    """Upload external audio for use in subsequent operations.
 
-    Uploads audio from a URL so it can be used with actions like upload_extend
-    and upload_cover, which allow you to extend or create covers of your own music.
-
-    Use this when:
-    - You have your own music you want to extend/cover with Suno
-    - You want to use an external audio as a base for Suno operations
-    - You need to import audio into Suno's system
-
-    After uploading, use the returned audio_id with suno_upload_extend or
-    suno_upload_cover actions.
-
-    Returns:
-        Upload result with audio ID for use in subsequent operations.
+    Use standard mode for normal uploads. Use enhanced mode only when standard
+    upload cannot process authorized audio; it returns a task_id for suno_get_task.
+    Enhanced audio IDs support Cover, Samples, and Mashup.
     """
-    result = await client.upload_audio(audio_url=audio_url)
+    if mode == "enhanced" and not name:
+        raise ValueError("name is required when mode=enhanced")
+    payload: dict[str, Any] = {"audio_url": audio_url}
+    if mode == "enhanced":
+        payload["mode"] = mode
+    if name:
+        payload["name"] = name
+    if callback_url:
+        payload["callback_url"] = callback_url
+    result = await client.upload_audio(**payload)
     return json.dumps(result, ensure_ascii=False, indent=2)
 
 

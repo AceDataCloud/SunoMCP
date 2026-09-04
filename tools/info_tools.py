@@ -74,7 +74,7 @@ Music Generation:
 - suno_mashup_music: Blend multiple songs together musically
 
 Upload-based Operations (for your own music):
-- suno_upload_audio: Upload external audio for use in Suno
+- suno_upload_audio: Upload external audio in standard or enhanced mode
 - suno_upload_extend: Extend uploaded audio with new AI content
 - suno_upload_cover: Create an AI cover of uploaded audio
 - suno_underpainting: Add AI-generated accompaniment to uploaded vocal audio

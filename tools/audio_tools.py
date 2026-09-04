@@ -554,7 +554,7 @@ async def suno_replace_section(
             description=(
                 "Result shape: full_song returns two complete songs, one from each replacement candidate; "
                 "candidates returns the two unmerged replacement clips."
-            )
+            ),
         ),
     ] = "full_song",
 ) -> str:
