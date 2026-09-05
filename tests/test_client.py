@@ -106,6 +106,36 @@ class TestSunoClient:
         assert request.kwargs["json"] == {"audio_id": "audio-1", "async": True}
 
     @pytest.mark.asyncio
+    async def test_custom_models_uses_endpoint_and_idempotency_header(
+        self, client, mock_audio_response
+    ):
+        """Custom model requests should target /suno/custom-models."""
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = mock_audio_response
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = mock_response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            await client.custom_models(
+                idempotency_key="retry-key",
+                action="create",
+                name="My Model",
+                audio_urls=["https://example.com/song.mp3"],
+            )
+
+        request = mock_instance.post.await_args
+        assert request.args[0] == "https://api.test.com/suno/custom-models"
+        assert request.kwargs["json"] == {
+            "action": "create",
+            "name": "My Model",
+            "audio_urls": ["https://example.com/song.mp3"],
+        }
+        assert request.kwargs["headers"]["Idempotency-Key"] == "retry-key"
+
+    @pytest.mark.asyncio
     async def test_request_auth_error_401(self, client):
         """Test 401 response raises auth error."""
         mock_response = MagicMock()

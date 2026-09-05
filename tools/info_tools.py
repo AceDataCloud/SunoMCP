@@ -101,6 +101,13 @@ Persona (Voice Style):
 - suno_generate_with_persona: Generate with a saved voice style
 - suno_generate_with_persona_vox: Generate with a saved voice style using VOX consistency mode
 
+Custom Music Models:
+- suno_create_custom_model: Create a reusable custom music model from 6 to 24 audios
+- suno_get_custom_model: Retrieve one custom music model
+- suno_list_custom_models: List custom music models
+- suno_generate_with_custom_model: Generate a song with a ready custom music model
+- suno_delete_custom_model: Archive a custom music model
+
 Lyrics:
 - suno_generate_lyrics: Generate song lyrics from a prompt
 - suno_optimize_style: Optimize a style description for better results

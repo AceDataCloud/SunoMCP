@@ -93,6 +93,7 @@ class SunoClient:
         endpoint: str,
         payload: dict[str, Any],
         timeout: float | None = None,
+        extra_headers: dict[str, str] | None = None,
     ) -> dict[str, Any]:
         """Make a POST request to the Suno API.
 
@@ -100,6 +101,7 @@ class SunoClient:
             endpoint: API endpoint path (e.g., "/suno/audios")
             payload: Request body as dictionary
             timeout: Optional timeout override
+            extra_headers: Optional headers to merge into the request
 
         Returns:
             API response as dictionary
@@ -116,12 +118,16 @@ class SunoClient:
         logger.debug(f"Request payload: {json.dumps(payload, ensure_ascii=False, indent=2)}")
         logger.debug(f"Timeout: {request_timeout}s")
 
+        headers = self._get_headers()
+        if extra_headers:
+            headers.update(extra_headers)
+
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.post(
                     url,
                     json=payload,
-                    headers=self._get_headers(),
+                    headers=headers,
                     timeout=request_timeout,
                 )
 
@@ -228,6 +234,16 @@ class SunoClient:
         """Create a voice persona from an audio URL."""
         logger.info(f"🎤 Creating voice: {kwargs.get('name', 'unnamed')}")
         return await self.request("/suno/voices", kwargs)
+
+    async def custom_models(
+        self,
+        idempotency_key: str | None = None,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Manage and use Suno custom music models."""
+        logger.info(f"🎛️ Custom model action: {kwargs.get('action', '')}")
+        headers = {"Idempotency-Key": idempotency_key} if idempotency_key else None
+        return await self.request("/suno/custom-models", kwargs, extra_headers=headers)
 
     async def list_personas(self, **kwargs: Any) -> dict[str, Any]:
         """List personas for a user."""

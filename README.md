@@ -20,6 +20,7 @@ Generate AI music, lyrics, and manage audio projects directly from Claude, VS Co
 - **Cover/Remix** - Create cover versions with different styles
 - **Lyrics Generation** - Generate structured lyrics from descriptions
 - **Persona Management** - Save and reuse voice styles
+- **Custom Music Models** - Create and reuse app-owned custom music models
 - **Task Tracking** - Monitor generation progress and retrieve results
 
 ## Tool Reference
@@ -47,6 +48,11 @@ Generate AI music, lyrics, and manage audio projects directly from Claude, VS Co
 | `suno_get_mp3` | Get the compressed MP3 format of a generated song. |
 | `suno_get_midi` | Get MIDI data extracted from a generated song. |
 | `suno_create_persona` | Create a new artist persona from an existing audio's vocal style. |
+| `suno_create_custom_model` | Create a reusable custom music model from 6 to 24 authorized audio URLs. |
+| `suno_get_custom_model` | Retrieve one custom music model by ID. |
+| `suno_list_custom_models` | List custom music models for the current Suno application. |
+| `suno_generate_with_custom_model` | Generate a song using a ready custom music model. |
+| `suno_delete_custom_model` | Archive a custom music model so it can no longer be used. |
 | `suno_optimize_style` | Optimize a music style description for better generation results. |
 | `suno_mashup_lyrics` | Generate mashup lyrics by combining two sets of lyrics. |
 | `suno_upload_audio` | Upload external audio in standard or enhanced mode for subsequent operations. |
@@ -543,6 +549,7 @@ SunoMCP/
 │   ├── lyrics_tools.py    # Lyrics generation tools
 │   ├── media_tools.py     # Media conversion tools
 │   ├── persona_tools.py   # Persona management tools
+│   ├── custom_model_tools.py # Custom music model tools
 │   └── task_tools.py      # Task query tools
 ├── tests/                  # Test suite
 │   ├── conftest.py
