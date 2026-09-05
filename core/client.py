@@ -84,7 +84,7 @@ class SunoClient:
 
         logger.error(f"API error {status} [{code}]: {message}")
 
-        if status in (401, 403):
+        if status == 401:
             raise SunoAuthError(message)
         raise SunoAPIError(message=message, code=code, status_code=status)
 

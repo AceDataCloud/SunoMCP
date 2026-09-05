@@ -156,6 +156,31 @@ class TestSunoClient:
                 await client.request("/suno/audios", {})
 
     @pytest.mark.asyncio
+    async def test_request_forbidden_error_403(self, client):
+        """Test 403 response raises API error with the response code."""
+        mock_response = MagicMock()
+        mock_response.status_code = 403
+        mock_response.json.return_value = {
+            "error": {
+                "code": "used_up",
+                "message": "Your balance is not sufficient for current request.",
+            }
+        }
+        mock_response.headers = {"content-type": "application/json"}
+        mock_response.text = "Forbidden"
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = mock_response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            with pytest.raises(SunoAPIError, match="not sufficient") as exc_info:
+                await client.request("/suno/audios", {})
+
+            assert exc_info.value.code == "used_up"
+            assert exc_info.value.status_code == 403
+
+    @pytest.mark.asyncio
     async def test_request_timeout(self, client):
         """Test timeout raises timeout error."""
         with patch("httpx.AsyncClient") as mock_client:
