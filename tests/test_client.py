@@ -132,6 +132,7 @@ class TestSunoClient:
             "action": "create",
             "name": "My Model",
             "audio_urls": ["https://example.com/song.mp3"],
+            "async": True,
         }
         assert request.kwargs["headers"]["Idempotency-Key"] == "retry-key"
 

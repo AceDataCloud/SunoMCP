@@ -5,8 +5,8 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from tools.custom_model_tools import (
+    suno_archive_custom_model,
     suno_create_custom_model,
-    suno_delete_custom_model,
     suno_generate_with_custom_model,
     suno_get_custom_model,
     suno_list_custom_models,
@@ -100,12 +100,12 @@ class TestCustomModelTools:
         }
 
     @pytest.mark.asyncio
-    async def test_delete_custom_model_uses_delete_action(self):
+    async def test_archive_custom_model_uses_delete_action(self):
         with patch(
             "tools.custom_model_tools.client.custom_models",
             new=AsyncMock(return_value={"success": True}),
         ) as mock_custom_models:
-            await suno_delete_custom_model(model_id="model-1")
+            await suno_archive_custom_model(model_id="model-1")
 
         assert mock_custom_models.await_args.kwargs == {
             "action": "delete",

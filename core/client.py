@@ -243,7 +243,12 @@ class SunoClient:
         """Manage and use Suno custom music models."""
         logger.info(f"🎛️ Custom model action: {kwargs.get('action', '')}")
         headers = {"Idempotency-Key": idempotency_key} if idempotency_key else None
-        return await self.request("/suno/custom-models", kwargs, extra_headers=headers)
+        payload = (
+            self._with_async_callback(kwargs)
+            if kwargs.get("action") in {"create", "generate"}
+            else kwargs
+        )
+        return await self.request("/suno/custom-models", payload, extra_headers=headers)
 
     async def list_personas(self, **kwargs: Any) -> dict[str, Any]:
         """List personas for a user."""
