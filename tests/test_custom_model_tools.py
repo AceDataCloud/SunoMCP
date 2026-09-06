@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
+from core.server import mcp
 from tools.custom_model_tools import (
     suno_archive_custom_model,
     suno_create_custom_model,
@@ -62,6 +63,23 @@ class TestCustomModelTools:
             "action": "retrieve",
             "id": "model-1",
         }
+
+    @pytest.mark.asyncio
+    async def test_fastmcp_dispatch_maps_public_custom_model_id(self) -> None:
+        tools = {tool.name: tool for tool in await mcp.list_tools()}
+        properties = tools["suno_get_custom_model"].inputSchema["properties"]
+
+        assert "id" in properties
+        assert "model_id" not in properties
+
+        with patch(
+            "tools.custom_model_tools.client.custom_models",
+            new=AsyncMock(return_value={"id": "model-1"}),
+        ) as mock_custom_models:
+            result = await mcp.call_tool("suno_get_custom_model", {"id": "model-1"})
+
+        assert result
+        mock_custom_models.assert_awaited_once_with(action="retrieve", id="model-1")
 
     @pytest.mark.asyncio
     async def test_list_custom_models_forwards_pagination_and_status(self):

@@ -1,11 +1,10 @@
 """Unit tests for audio tools (mocked client, no network)."""
 
-import inspect
 from unittest.mock import AsyncMock, patch
 
 import pytest
-from pydantic.fields import FieldInfo
 
+from core.server import mcp
 from tools.audio_tools import (
     suno_generate_custom_music,
     suno_generate_inspo,
@@ -213,15 +212,32 @@ class TestCustomDuration:
 
 
 class TestReplaceSectionResultMode:
-    def test_schema_uses_openapi_parameter_name(self):
-        parameter = inspect.signature(suno_replace_section).parameters["result_mode"]
-        field = next(
-            metadata
-            for metadata in parameter.annotation.__metadata__
-            if isinstance(metadata, FieldInfo)
-        )
+    @pytest.mark.asyncio
+    async def test_fastmcp_dispatch_maps_openapi_parameter_name(
+        self, mock_audio_response: dict[str, object]
+    ) -> None:
+        tools = {tool.name: tool for tool in await mcp.list_tools()}
+        properties = tools["suno_replace_section"].inputSchema["properties"]
 
-        assert field.alias == "replace_section_result_mode"
+        assert "replace_section_result_mode" in properties
+        assert "result_mode" not in properties
+
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            result = await mcp.call_tool(
+                "suno_replace_section",
+                {
+                    "audio_id": "audio-1",
+                    "replace_section_start": 10,
+                    "replace_section_end": 20,
+                    "replace_section_result_mode": "candidates",
+                },
+            )
+
+        assert result
+        assert mock_generate.await_args.kwargs["replace_section_result_mode"] == "candidates"
 
     @pytest.mark.asyncio
     async def test_explicit_result_mode_is_forwarded(self, mock_audio_response):

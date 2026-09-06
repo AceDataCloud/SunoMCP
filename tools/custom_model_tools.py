@@ -53,7 +53,7 @@ async def suno_create_custom_model(
 async def suno_get_custom_model(
     model_id: Annotated[
         str,
-        Field(description="ID of the custom music model to retrieve.", alias="id"),
+        Field(description="ID of the custom music model to retrieve.", validation_alias="id"),
     ],
 ) -> str:
     """Retrieve a single custom music model by ID."""
@@ -93,7 +93,7 @@ async def suno_list_custom_models(
 async def suno_generate_with_custom_model(
     model_id: Annotated[
         str,
-        Field(description="Ready custom music model ID to generate with.", alias="id"),
+        Field(description="Ready custom music model ID to generate with.", validation_alias="id"),
     ],
     title: Annotated[
         str,
@@ -127,7 +127,7 @@ async def suno_generate_with_custom_model(
 async def suno_archive_custom_model(
     model_id: Annotated[
         str,
-        Field(description="ID of the custom music model to archive.", alias="id"),
+        Field(description="ID of the custom music model to archive.", validation_alias="id"),
     ],
 ) -> str:
     """Archive a custom music model so it can no longer be used.
