@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/acedatacloud-sunomcp-badge.png)](https://mseep.ai/app/acedatacloud-sunomcp)
+
 # SunoMCP
 
 <!-- mcp-name: io.github.AceDataCloud/mcp-suno -->
