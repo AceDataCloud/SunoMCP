@@ -4,6 +4,9 @@ from typing import Literal
 
 # Suno model versions
 SunoModel = Literal[
+    "chirp-v6",
+    "chirp-v6-wild",
+    "chirp-v6-mini",
     "chirp-v3-0",
     "chirp-v3-5",
     "chirp-v4",

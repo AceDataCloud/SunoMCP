@@ -114,6 +114,9 @@ class TestInfoTools:
         print("\n=== List Models Result ===")
         print(result)
 
+        assert "chirp-v6" in result
+        assert "chirp-v6-wild" in result
+        assert "chirp-v6-mini" in result
         assert "chirp-v5-5" in result
         assert "chirp-v5" in result
         assert "chirp-v4-5" in result

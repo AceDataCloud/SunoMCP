@@ -66,7 +66,7 @@ When the user wants to generate music, choose the appropriate tool based on thei
 1. Music generation is async in MCP - generation tools should return quickly with a task_id
 2. After any generate/extend/cover/remaster/stems/media conversion call, use `suno_get_task` to poll for the final result
 3. **CRITICAL POLLING RULE:** You MUST check the `state` field in the response — only `state: "complete"` with `success: true` means the task is done. During the `pending` state, the API may return intermediate `audio_url` values (e.g. audiopipe.suno.ai streaming URLs). These are NOT final results. Do NOT stop polling just because `audio_url` is non-empty — always check `state` first.
-4. Default model is chirp-v5-5 (good balance of quality and speed)
+4. Default model remains chirp-v5-5; select a v6 model explicitly when needed
 5. For longest songs (8 min), use chirp-v5 or chirp-v4-5-plus
 6. Vocal gender only works on v4.5+ models
 """
