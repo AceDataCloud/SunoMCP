@@ -1,3 +1,5 @@
+# Generated from shared/oauth.py by scripts/sync_oauth.py; do not edit.
+
 """OAuth 2.1 provider for AceDataCloud MCP servers.
 
 Implements the MCP SDK's OAuthAuthorizationServerProvider interface,
