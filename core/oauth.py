@@ -111,12 +111,15 @@ class AceDataCloudOAuthProvider:
 
         callback_url = f"{settings.server_url}/oauth/callback"
 
-        # Only need profile + platform to fetch the user's durable credential.
+        # Request only the permissions used to look up or create the durable API credential.
         auth_params = {
             "client_id": settings.oauth_client_id,
             "redirect_uri": callback_url,
             "response_type": "code",
-            "scope": "profile platform",
+            "scope": (
+                "profile:read applications:read applications:write "
+                "credentials:read credentials:write"
+            ),
             "state": mcp_state,
             "code_challenge": auth_code_challenge,
             "code_challenge_method": "S256",
