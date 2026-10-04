@@ -281,21 +281,6 @@ jobs:
         run: |
           smithery mcp publish "https://suno.mcp.acedata.cloud/mcp" --name acedatacloud-mcp/mcp-suno --config-schema '{"type":"object","properties":{"apiKey":{"type":"string","description":"AceDataCloud API Bearer Token (get from https://platform.acedata.cloud)","x-from":{"header":"x-api-key"},"x-to":{"header":"Authorization","prefix":"Bearer "}}},"required":["apiKey"]}' 2>&1 || echo "Smithery publish completed"
 
-  notify-dify-plugin:
-    name: Notify Dify Plugin Update
-    if: github.event_name == 'push'
-    needs: [build, publish-pypi]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Dify plugin sync
-        run: |
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.VSCODE_MCP_DISPATCH_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/AceDataCloud/Dify/dispatches" \
-            -d '{"event_type":"mcp-plugin-update","client_payload":{"mcp_name":"suno","source":"${{ github.repository }}","version":"${{ needs.build.outputs.version }}"}}'
-          echo "Triggered Dify plugin sync for suno"
-
   publish-jetbrains:
     name: Publish JetBrains Plugin
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -310,31 +295,33 @@ jobs:
           distribution: "temurin"
           java-version: "21"
 
-      - name: Generate version
+      - name: Check marketplace status and set package version
         id: jb_version
+        env:
+          PUBLISH_VERSION: ${{ needs.build.outputs.version }}
+          PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
         run: |
-          # Use CalVer: YYYY.M.D.BUILD (match PyPI format)
-          YEAR=$(date +'%Y')
-          MONTH=$(date +'%-m')
-          DAY=$(date +'%-d')
-          VERSION_PREFIX="${YEAR}.${MONTH}.${DAY}"
-          # Query JetBrains Marketplace for latest version today
-          BUILD=$(python3 -c "
-          import urllib.request, json
+          python3 - <<'PYCODE'
+          import json, os, urllib.error, urllib.parse, urllib.request, xml.etree.ElementTree as ET
+          xml_id = ET.parse("jetbrains/src/main/resources/META-INF/plugin.xml").getroot().findtext("id")
+          query = urllib.parse.urlencode({"family": "intellij", "xmlId": xml_id})
+          token = os.environ["PUBLISH_TOKEN"]
+          if not token:
+              raise SystemExit("JETBRAINS_MARKETPLACE_TOKEN is required")
+          headers = {"Accept": "application/json", "Authorization": "Bearer " + token}
+          request = urllib.request.Request("https://plugins.jetbrains.com/api/plugins?" + query, headers=headers)
           try:
-              url = 'https://plugins.jetbrains.com/api/plugins/com.acedatacloud.mcp.suno/updates?channel=&size=5'
-              req = urllib.request.Request(url, headers={'Accept': 'application/json'})
-              resp = urllib.request.urlopen(req, timeout=10)
-              updates = json.loads(resp.read())
-              prefix = '${VERSION_PREFIX}.'
-              builds = [int(u['version'].split('.')[-1]) for u in updates if u['version'].startswith(prefix)]
-              print(max(builds) + 1 if builds else 0)
-          except:
-              print(0)
-          ")
-          VERSION="${VERSION_PREFIX}.${BUILD}"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Publishing JetBrains plugin version $VERSION"
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  plugin = json.load(response)
+          except urllib.error.HTTPError as error:
+              if error.code != 404:
+                  raise
+              plugin = {}
+          if plugin.get("isBlocked"):
+              raise SystemExit(f"JetBrains blocked {xml_id} (plugin {plugin['id']}); resolve the marketplace review before publishing.")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"version={os.environ['PUBLISH_VERSION']}\nplugin_id={plugin.get('id', '')}\n")
+          PYCODE
 
       - name: Update plugin version
         working-directory: jetbrains
@@ -351,8 +338,8 @@ jobs:
           PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
         run: |
           if [ -z "$PUBLISH_TOKEN" ]; then
-            echo "JETBRAINS_MARKETPLACE_TOKEN not set, skipping publish"
-            exit 0
+            echo "::error::JETBRAINS_MARKETPLACE_TOKEN is required"
+            exit 1
           fi
           OUTPUT=$(./gradlew publishPlugin 2>&1) && echo "$OUTPUT" || {
             echo "$OUTPUT"
@@ -386,6 +373,40 @@ jobs:
             fi
             exit 1
           }
+
+      - name: Verify uploaded version and report approval status
+        env:
+          PLUGIN_ID: ${{ steps.jb_version.outputs.plugin_id }}
+          PUBLISH_VERSION: ${{ steps.jb_version.outputs.version }}
+          PUBLISH_TOKEN: ${{ secrets.JETBRAINS_MARKETPLACE_TOKEN }}
+        run: |
+          python3 - <<'PYCODE'
+          import json, os, time, urllib.parse, urllib.request, xml.etree.ElementTree as ET
+          headers = {"Accept": "application/json", "Authorization": "Bearer " + os.environ["PUBLISH_TOKEN"]}
+          plugin_id = os.environ["PLUGIN_ID"]
+          if not plugin_id:
+              xml_id = ET.parse("jetbrains/src/main/resources/META-INF/plugin.xml").getroot().findtext("id")
+              query = urllib.parse.urlencode({"family": "intellij", "xmlId": xml_id})
+              with urllib.request.urlopen(urllib.request.Request("https://plugins.jetbrains.com/api/plugins?" + query, headers=headers), timeout=30) as response:
+                  plugin_id = json.load(response)["id"]
+          url = f"https://plugins.jetbrains.com/api/plugins/{plugin_id}/updates?channel=&size=20"
+          match = None
+          for attempt in range(6):
+              with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as response:
+                  updates = json.load(response)
+              match = next((item for item in updates if item["version"] == os.environ["PUBLISH_VERSION"]), None)
+              if match:
+                  break
+              if attempt < 5:
+                  time.sleep(5)
+          if match is None:
+              raise SystemExit("Uploaded JetBrains version could not be read back")
+          status = "approved" if match.get("approve") else "awaiting JetBrains approval"
+          if not match.get("approve"):
+              print(f"::warning::Version {os.environ['PUBLISH_VERSION']} is uploaded but {status}; it is not publicly installable yet.")
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              summary.write(f"JetBrains {os.environ['PUBLISH_VERSION']}: **{status}**.\n")
+          PYCODE
 
   publish-dockerhub:
     name: Publish to Docker Hub
