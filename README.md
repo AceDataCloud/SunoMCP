@@ -126,13 +126,13 @@ Add to your MCP config (`.cursor/mcp.json` or `.windsurf/mcp.json`):
 
 #### VS Code (Copilot)
 
-Add to your VS Code MCP config (`.vscode/mcp.json`):
+Run **MCP: Open User Configuration** from the command palette and merge this entry into `servers`, preserving existing settings. This applies to the current VS Code Profile. Replace `YOUR_API_TOKEN` locally; keep this token-bearing file private and out of version control.
 
 ```json
 {
   "servers": {
     "suno": {
-      "type": "streamable-http",
+      "type": "http",
       "url": "https://suno.mcp.acedata.cloud/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_API_TOKEN"
@@ -141,6 +141,8 @@ Add to your VS Code MCP config (`.vscode/mcp.json`):
   }
 }
 ```
+
+Run **MCP: List Servers**, select and start the server, review the trust prompt, and confirm tools are loaded in Agent mode.
 
 Or install the [Ace Data Cloud MCP extension](https://marketplace.visualstudio.com/items?itemName=acedatacloud.acedatacloud-mcp) for VS Code, which registers the hosted MCP servers with one-click setup.
 
@@ -166,46 +168,53 @@ Or install the [Ace Data Cloud MCP extension](https://marketplace.visualstudio.c
 
 #### Claude Code
 
-Claude Code supports MCP servers natively:
+Set the API token in the terminal that will launch Claude Code:
 
 ```bash
-claude mcp add suno --transport http https://suno.mcp.acedata.cloud/mcp \
-  -h "Authorization: Bearer YOUR_API_TOKEN"
+export ACEDATACLOUD_API_TOKEN='YOUR_API_TOKEN'
+claude mcp add suno --scope user --transport http https://suno.mcp.acedata.cloud/mcp \
+  --header 'Authorization: Bearer ${ACEDATACLOUD_API_TOKEN}'
 ```
 
-Or add to your project's `.mcp.json`:
+For a project instead, merge this entry into the root `.mcp.json`, preserving existing settings:
 
 ```json
 {
   "mcpServers": {
     "suno": {
-      "type": "streamable-http",
+      "type": "http",
       "url": "https://suno.mcp.acedata.cloud/mcp",
       "headers": {
-        "Authorization": "Bearer YOUR_API_TOKEN"
+        "Authorization": "Bearer ${ACEDATACLOUD_API_TOKEN}"
       }
     }
   }
 }
 ```
+
+On Windows PowerShell, set `$env:ACEDATACLOUD_API_TOKEN = 'YOUR_API_TOKEN'` instead of `export`. Start `claude` from that same terminal; new terminals and desktop launches must also have access to the variable. Run `/mcp` in the session to confirm connection and loaded tools, and review the approval prompt for project servers. Never commit a real token.
 
 #### Cline
 
-Add to Cline's MCP settings (`.cline/mcp_settings.json`):
+Open **MCP Servers → Configure → Configure MCP Servers** in Cline, or edit `~/.cline/mcp.json` for Cline CLI. Merge this entry into `mcpServers`, preserving existing settings. Replace `YOUR_API_TOKEN` locally; this user configuration contains the token, so do not commit or share it.
 
 ```json
 {
   "mcpServers": {
     "suno": {
-      "type": "streamable-http",
+      "type": "streamableHttp",
       "url": "https://suno.mcp.acedata.cloud/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_API_TOKEN"
-      }
+      },
+      "disabled": false,
+      "autoApprove": []
     }
   }
 }
 ```
+
+Keep `autoApprove` empty, confirm the server is connected and tools are loaded, and review permissions on the first tool call.
 
 #### Amazon Q Developer
 
