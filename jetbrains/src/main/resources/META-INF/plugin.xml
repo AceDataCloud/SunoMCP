@@ -9,7 +9,7 @@
 
 <p>This plugin helps you set up the MCP Suno server with JetBrains AI Assistant.
 Once configured, AI Assistant can generate songs, lyrics, covers, remixes, and more
-using Suno AI — all powered by <a href="https://platform.acedata.cloud">Ace Data Cloud</a>.</p>
+using Suno AI — all powered by <a href="https://platform.acedata.cloud?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_platform">Ace Data Cloud</a>.</p>
 
 <h3>Features</h3>
 <ul>
@@ -35,12 +35,19 @@ using Suno AI — all powered by <a href="https://platform.acedata.cloud">Ace Da
 <ol>
     <li>Install this plugin</li>
     <li>Open <b>Settings → Tools → Suno MCP</b></li>
-    <li>Enter your <a href="https://platform.acedata.cloud">Ace Data Cloud</a> API token</li>
+    <li>Enter your <a href="https://platform.acedata.cloud?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_platform">Ace Data Cloud</a> API token</li>
     <li>Click <b>Copy Config</b> and paste into <b>Settings → Tools → AI Assistant → MCP</b></li>
 </ol>
 
 <p>Requires <a href="https://github.com/astral-sh/uv">uv</a> (Python package runner) for STDIO mode,
 or use HTTP mode for zero-install remote access.</p>
+<!-- BEGIN TOKEN ONBOARDING -->
+<h3>Get your Ace Data Cloud API key</h3>
+<ol><li>Open <a href="https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_api_key">Ace Data Cloud → Applications</a>. Sign in, or register an account first.</li><li>Find <b>General application</b>. If it has not been created, choose <b>Initialize General Application</b>. A general key can use the services available to your account; a dedicated application&#x27;s key is limited to its service. Check the required service/model access and <a href="https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_models">current pricing</a>.</li><li>Copy the <b>API Key</b> from the application card, or open <b>Keys / Manage Keys → Create</b> to create a separate key for this integration. Give it a recognizable name so you can revoke or rotate it independently.</li><li>When creating a key, review <b>Expiration Time</b>, <b>Set Usage Limitation</b>, and <b>Allowed APIs</b>. Enable only the restrictions you need, allow the operations you will call, then click <b>Create</b> and copy the token from the key list. Task lookup does not grant permission to submit a generation. Confirm the application&#x27;s balance can cover your first request; any trial allowance is whatever your account currently displays.</li><li>Copy only the token value, without quotation marks, spaces, or <code>Bearer </code>. An API Key / API Token field expects this raw value; only a manually configured HTTP <code>Authorization</code> header needs the <code>Bearer </code> prefix. A <code>platform-...</code> account-management token cannot replace a generation API key.</li></ol>
+<p><img alt="Copy an application API key or open Manage Keys" src="https://raw.githubusercontent.com/AceDataCloud/NanoBananaDify/2522b2f57210597af2db866445319334a1677a23/_assets/tutorial/get-api-key-en.png" /></p>
+<p><img alt="Create a separately named key with optional restrictions" src="https://raw.githubusercontent.com/AceDataCloud/NanoBananaDify/2522b2f57210597af2db866445319334a1677a23/_assets/tutorial/create-api-key-en.png" /></p>
+<p>Save the key in the client&#x27;s credential store or the environment variable shown below. Never put it in a prompt, shared workflow, screenshot, or Git commit. If authentication fails, check the full copied value, application/service access, expiration, usage limit, and balance before creating another key.</p>
+<!-- END TOKEN ONBOARDING -->
 ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
