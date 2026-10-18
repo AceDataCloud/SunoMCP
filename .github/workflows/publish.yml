@@ -246,6 +246,7 @@ jobs:
 
   publish-smithery:
     name: Publish to Smithery
+    timeout-minutes: 10
     if: github.event_name == 'push'
     needs: [build]
     runs-on: ubuntu-latest
@@ -278,8 +279,12 @@ jobs:
       - name: Publish to Smithery
         env:
           SMITHERY_API_KEY: ${{ secrets.SMITHERY_API_KEY }}
+          SMITHERY_NAME: acedatacloud-mcp/mcp-suno
         run: |
-          smithery mcp publish "https://suno.mcp.acedata.cloud/mcp" --name acedatacloud-mcp/mcp-suno --config-schema '{"type":"object","properties":{"apiKey":{"type":"string","description":"AceDataCloud API Bearer Token (get from https://platform.acedata.cloud)","x-from":{"header":"x-api-key"},"x-to":{"header":"Authorization","prefix":"Bearer "}}},"required":["apiKey"]}' 2>&1 || echo "Smithery publish completed"
+          set -euo pipefail
+          test -n "$SMITHERY_API_KEY"
+          smithery --json mcp publish "https://suno.mcp.acedata.cloud/mcp" --name "$SMITHERY_NAME" --config-schema '{"type":"object","properties":{"apiKey":{"type":"string","description":"AceDataCloud API Bearer Token (get from https://platform.acedata.cloud)","x-from":{"header":"x-api-key"},"x-to":{"header":"Authorization","prefix":"Bearer "}}},"required":["apiKey"]}' | tee "$RUNNER_TEMP/smithery-publish.log"
+          python3 .github/scripts/verify_smithery_release.py "$SMITHERY_NAME" "$RUNNER_TEMP/smithery-publish.log"
 
   publish-jetbrains:
     name: Publish JetBrains Plugin

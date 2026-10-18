@@ -1,0 +1,8 @@
+{
+  "displayName": "Suno by Ace Data Cloud",
+  "description": "Generate Suno music and lyrics, then retrieve the same audio task through Ace Data Cloud. Independently provided by Ace Data Cloud; not the model vendor's official integration.\n\n1. Install this server from Smithery in your client.\n2. Register or sign in to [Ace Data Cloud Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_api_key). Initialize General application if needed, then copy its API Key or create a dedicated key. Check service access, expiry, limits and balance.\n3. In the connection's apiKey / API Token field, paste only the token, without Bearer. Complete sign-in when prompted.\n4. Query suno_get_task with an existing task's task_id; do not submit generation again while pending.\n\nGeneration is metered; see [current pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_pricing). A platform- account token cannot replace the application API Key.",
+  "homepage": "https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_listing",
+  "repositoryUrl": "https://github.com/AceDataCloud/SunoMCP",
+  "license": "MIT",
+  "iconUrl": "https://raw.githubusercontent.com/AceDataCloud/MCPs/bbb7502332f71abb74a0a9aa5f234b16efa7ae49/suno/vscode/icon.png"
+}

@@ -1,0 +1,23 @@
+{
+  "type": "external",
+  "upstreamUrl": "https://suno.mcp.acedata.cloud/mcp",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "apiKey": {
+        "type": "string",
+        "description": "Ace Data Cloud application API Token. Get it at https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_api_key. Paste the token only, without Bearer.",
+        "x-from": {
+          "header": "x-api-key"
+        },
+        "x-to": {
+          "header": "Authorization",
+          "prefix": "Bearer "
+        }
+      }
+    },
+    "required": [
+      "apiKey"
+    ]
+  }
+}
