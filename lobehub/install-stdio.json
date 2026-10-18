@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "ace-suno": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "mcp-suno==2026.10.12.1",
+        "mcp-suno"
+      ],
+      "env": {
+        "ACEDATACLOUD_API_TOKEN": "YOUR_API_TOKEN"
+      }
+    }
+  }
+}

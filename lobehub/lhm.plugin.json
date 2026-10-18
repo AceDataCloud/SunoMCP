@@ -1,0 +1,2761 @@
+{
+  "identifier": "acedatacloud-mcpsuno",
+  "name": "Suno by Ace Data Cloud",
+  "version": "2026.10.12.1",
+  "author": "Ace Data Cloud",
+  "authorUrl": "https://github.com/AceDataCloud",
+  "homepage": "https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_lobehub_market_pricing",
+  "description": "Music generation, lyrics and audio editing through Ace Data Cloud. Requires an Ace service API token; generation is billed to your Ace account.",
+  "cloudEndpoint": "https://suno.mcp.acedata.cloud/mcp",
+  "tags": [
+    "suno",
+    "music",
+    "lyrics",
+    "audio",
+    "acedatacloud"
+  ],
+  "tools": [
+    {
+      "name": "suno_generate_music",
+      "title": null,
+      "description": "Generate AI music from a text prompt using Suno's Inspiration Mode.\n\n    This is the simplest way to create music - just describe what you want and Suno\n    will automatically generate appropriate lyrics, melody, style, and arrangement.\n\n    Use this when:\n    - You want quick music generation with minimal input\n    - You don't have specific lyrics in mind\n    - You want Suno to be creative with the arrangement\n\n    For full control over lyrics and style, use suno_generate_custom_music instead.\n\n    Returns:\n        Task ID and generated audio information including URLs, title, lyrics, and duration.\n    ",
+      "inputSchema": {
+        "properties": {
+          "prompt": {
+            "description": "Description of the music to generate. Be descriptive about genre, mood, instruments, and theme. Examples: 'A happy birthday song with acoustic guitar', 'Epic orchestral battle music with dramatic choir', 'Chill lo-fi hip hop beat for studying'",
+            "title": "Prompt",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Suno model version. 'chirp-v5-5' is the latest and recommended for best quality with 8-minute max duration. 'chirp-v4-5' is a reliable choice for most use cases. Older models (v3, v3-5, v4) have shorter duration limits.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "instrumental": {
+            "default": false,
+            "description": "If true, generate instrumental music without vocals. Default is false (with vocals).",
+            "title": "Instrumental",
+            "type": "boolean"
+          },
+          "variation_category": {
+            "anyOf": [
+              {
+                "enum": [
+                  "high",
+                  "normal",
+                  "subtle"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Variation intensity for v5+ models. 'high' for maximum variation, 'normal' for balanced, 'subtle' for minimal changes. Only supported in chirp-v5 and above.",
+            "title": "Variation Category"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when the audio is generated.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "title": "suno_generate_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_generate_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_generate_custom_music",
+      "title": null,
+      "description": "Generate AI music with full control over lyrics, title, and style (Custom Mode).\n\n    This gives you complete creative control over the song. You provide the lyrics\n    with section markers, and Suno generates the melody and arrangement.\n\n    Use this when:\n    - You have specific lyrics you want to use\n    - You want precise control over the music style\n    - You need a specific song title\n    - You want to specify vocal gender (v4.5+ models)\n    - You want the API to auto-generate lyrics from a prompt (use lyric_prompt)\n    - You need a specific track length (use duration)\n\n    For quick generation without writing lyrics, use suno_generate_music instead.\n\n    Returns:\n        Task ID and generated audio information including URLs, title, lyrics, and duration.\n    ",
+      "inputSchema": {
+        "properties": {
+          "lyric": {
+            "default": "",
+            "description": "Song lyrics with section markers. Use [Verse], [Chorus], [Pre-Chorus], [Bridge], [Outro], [Intro] to structure the song. Example:\n[Verse 1]\nWalking down the empty street\nRain is falling at my feet\n\n[Chorus]\nBut I keep moving on\nUntil the break of dawn. Leave empty when using lyric_prompt to auto-generate lyrics.",
+            "title": "Lyric",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "description": "Title of the song. Keep it concise and memorable.",
+            "title": "Title",
+            "type": "string"
+          },
+          "style": {
+            "default": "",
+            "description": "Music style description. Be specific about genre, mood, tempo, and instruments. Examples: 'upbeat pop rock, energetic drums, electric guitar', 'acoustic folk, gentle, fingerpicking', 'dark electronic, synthwave, 80s retro'",
+            "title": "Style",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Suno model version. 'chirp-v5-5' or 'chirp-v5' recommended for best quality.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "instrumental": {
+            "default": false,
+            "description": "If true, generate instrumental version (lyrics will be ignored). Default is false.",
+            "title": "Instrumental",
+            "type": "boolean"
+          },
+          "lyric_prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Prompt text for auto-generating lyrics. Only used when custom is true and lyric is empty.",
+            "title": "Lyric Prompt"
+          },
+          "negative_tags": {
+            "default": "",
+            "description": "Styles or genres to explicitly exclude from custom generation. Examples: 'heavy metal, screaming', 'autotune, electronic'",
+            "title": "Negative Tags",
+            "type": "string"
+          },
+          "vocal_gender": {
+            "default": "",
+            "description": "Preferred vocal gender. 'f' for female, 'm' for male, empty string for AI to decide. Only works with v4.5+ models.",
+            "enum": [
+              "",
+              "f",
+              "m"
+            ],
+            "title": "Vocal Gender",
+            "type": "string"
+          },
+          "variation_category": {
+            "anyOf": [
+              {
+                "enum": [
+                  "high",
+                  "normal",
+                  "subtle"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Variation intensity for v5+ models. 'high' for maximum variation, 'normal' for balanced, 'subtle' for minimal changes. Only supported in chirp-v5 and above.",
+            "title": "Variation Category"
+          },
+          "weirdness": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Advanced parameter for custom mode. Controls how unusual/experimental the generation is.",
+            "title": "Weirdness"
+          },
+          "style_influence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Advanced parameter for custom mode. Controls how strongly the style prompt influences the generation.",
+            "title": "Style Influence"
+          },
+          "duration": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Target length of the generated track in seconds, an integer between 10 and 360. Only takes effect for the 'generate' action in custom mode with model 'chirp-v5-5'; other combinations return a 400 error. The finished track lands near this value but is not guaranteed to match it exactly.",
+            "title": "Duration"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when the audio is generated.",
+            "title": "Callback Url"
+          }
+        },
+        "title": "suno_generate_custom_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_generate_custom_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_extend_music",
+      "title": null,
+      "description": "Extend an existing song from a specific timestamp with new lyrics.\n\n    This allows you to continue a previously generated song, adding new sections\n    like additional verses, a bridge, or an outro.\n\n    Use this when:\n    - A generated song is too short and you want to add more\n    - You want to add a bridge or outro to an existing song\n    - You're building a longer song piece by piece\n\n    After extending multiple times, use suno_concat_music to merge all segments.\n\n    Returns:\n        Task ID and the extended audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the audio to extend. This is the 'id' field from a previous generation result.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "lyric": {
+            "description": "Lyrics for the extended section. Use section markers like [Verse], [Chorus], [Bridge], [Outro]. The extension will continue from where the original song left off.",
+            "title": "Lyric",
+            "type": "string"
+          },
+          "continue_at": {
+            "description": "Timestamp in seconds where to start the extension. For example, 120.5 means continue from 2 minutes and 0.5 seconds into the song.",
+            "title": "Continue At",
+            "type": "number"
+          },
+          "style": {
+            "default": "",
+            "description": "Music style for the extension. Leave empty to maintain the original style, or specify to change the style mid-song.",
+            "title": "Style",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use for the extension.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when the extension is complete.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id",
+          "lyric",
+          "continue_at"
+        ],
+        "title": "suno_extend_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_extend_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_cover_music",
+      "title": null,
+      "description": "Create a cover or remix version of an existing song in a different style.\n\n    This generates a new version of a song with a different arrangement, genre,\n    or mood while keeping the core melody and lyrics.\n\n    Use this when:\n    - You want to hear a song in a different genre\n    - You want an acoustic/unplugged version of an electronic song\n    - You want to remix a song with a different vibe\n\n    Returns:\n        Task ID and the cover audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the audio to create a cover of. This is the 'id' field from a previous generation.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "prompt": {
+            "default": "",
+            "description": "Description of how you want the cover to sound. Examples: 'acoustic unplugged version', 'jazz lounge style', '80s synthwave remix'",
+            "title": "Prompt",
+            "type": "string"
+          },
+          "style": {
+            "default": "",
+            "description": "Target music style for the cover. Examples: 'jazz, smooth, saxophone', 'acoustic folk, gentle guitar', 'electronic dance, high energy'",
+            "title": "Style",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use for the cover.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "audio_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Advanced parameter for cover operations. Controls how much the original audio influences the cover generation.",
+            "title": "Audio Weight"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when the cover is complete.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_cover_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_cover_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_concat_music",
+      "title": null,
+      "description": "Concatenate extended song segments into a single complete audio file.\n\n    After extending a song multiple times with suno_extend_music, use this tool\n    to merge all the segments into one continuous audio file.\n\n    Use this when:\n    - You've extended a song one or more times\n    - You want a single audio file instead of multiple segments\n    - You're ready to finalize a long-form composition\n\n    Returns:\n        Task ID and the concatenated audio information with the full song.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the LAST segment of an extended song chain. Suno will automatically find and merge all connected segments.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when the concatenation is complete.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_concat_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_concat_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_generate_with_persona",
+      "title": null,
+      "description": "Generate music using a saved artist persona for consistent vocal style.\n\n    This allows you to maintain a consistent voice/singing style across multiple\n    songs by using a previously saved persona.\n\n    Use this when:\n    - You want multiple songs with the same vocal style\n    - You're creating an album or series with consistent vocals\n    - You found a voice you like and want to reuse it\n\n    First create a persona with suno_create_persona, then use its ID here.\n\n    Returns:\n        Task ID and generated audio information with the persona's voice applied.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of a reference audio to base the generation on.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "persona_id": {
+            "description": "ID of the persona to use. Get this from suno_create_persona tool. The persona defines the vocal style and characteristics.",
+            "title": "Persona Id",
+            "type": "string"
+          },
+          "prompt": {
+            "description": "Description of the music to generate. The persona's voice will be applied to this new song.",
+            "title": "Prompt",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when the audio is generated.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id",
+          "persona_id",
+          "prompt"
+        ],
+        "title": "suno_generate_with_personaArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_generate_with_personaOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_remaster_music",
+      "title": null,
+      "description": "Remaster an existing song to improve audio quality.\n\n    Takes a previously generated song and applies audio remastering to enhance\n    clarity, dynamics, and overall sound quality.\n\n    Use this when:\n    - You want to improve the audio quality of a generated song\n    - You want a song generated with an older model to sound better\n    - You need a polished, production-ready version\n\n    Returns:\n        Task ID and the remastered audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the audio to remaster. This is the 'id' field from a previous generation.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "variation_category": {
+            "description": "Required remaster variation intensity. Use 'high' for maximum variation, 'normal' for balanced, or 'subtle' for minimal changes.",
+            "enum": [
+              "high",
+              "normal",
+              "subtle"
+            ],
+            "title": "Variation Category",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use for remastering. Supported choices are chirp-v4-5-plus, chirp-v5, and chirp-v5-5.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id",
+          "variation_category"
+        ],
+        "title": "suno_remaster_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_remaster_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_stems_music",
+      "title": null,
+      "description": "Separate a song into individual stems (vocals and instruments).\n\n    Splits the audio into separate tracks for vocals and instrumentals,\n    useful for remixing, karaoke, or isolating specific parts.\n\n    Use this when:\n    - You want to separate vocals from instrumentals\n    - You need individual stem tracks for mixing\n    - You want to create a karaoke version\n\n    Returns:\n        Task ID and stem separation results with individual track URLs.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the audio to separate into stems.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_stems_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_stems_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_replace_section",
+      "title": null,
+      "description": "Replace a specific time range in a song with new generated content.\n\n    Re-generates a portion of a song between the specified start and end times,\n    keeping the rest of the song unchanged. Great for fixing sections you don't like.\n\n    Use this when:\n    - A specific section of a song needs improvement\n    - You want to change lyrics in the middle of a song\n    - You want to replace a verse or chorus with something different\n\n    Returns:\n        Task ID plus two complete songs by default, or two unmerged clips in candidates mode.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the audio to replace a section in.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "replace_section_start": {
+            "description": "Start time in seconds of the section to replace.",
+            "title": "Replace Section Start",
+            "type": "number"
+          },
+          "replace_section_end": {
+            "description": "End time in seconds of the section to replace.",
+            "title": "Replace Section End",
+            "type": "number"
+          },
+          "lyric": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "New lyrics for the replaced section. Use section markers like [Verse], [Chorus].",
+            "title": "Lyric"
+          },
+          "style": {
+            "default": "",
+            "description": "Music style for the replaced section.",
+            "title": "Style",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          },
+          "replace_section_result_mode": {
+            "default": "full_song",
+            "description": "Result shape: full_song returns two complete songs, one from each replacement candidate; candidates returns the two unmerged replacement clips.",
+            "enum": [
+              "candidates",
+              "full_song"
+            ],
+            "title": "Replace Section Result Mode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "audio_id",
+          "replace_section_start",
+          "replace_section_end"
+        ],
+        "title": "suno_replace_sectionArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_replace_sectionOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_upload_extend",
+      "title": null,
+      "description": "Extend an uploaded audio (your own music) with new AI-generated content.\n\n    Similar to suno_extend_music but works with audio you uploaded via\n    suno_upload_audio. Allows you to add new sections to your own music.\n\n    Use this when:\n    - You uploaded your own music and want to extend it\n    - You want to add AI-generated sections to your existing recordings\n\n    Returns:\n        Task ID and the extended audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the uploaded audio to extend. Must be an audio uploaded via suno_upload_audio.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "lyric": {
+            "description": "Lyrics for the extension section.",
+            "title": "Lyric",
+            "type": "string"
+          },
+          "continue_at": {
+            "description": "Timestamp in seconds where to start the extension.",
+            "title": "Continue At",
+            "type": "number"
+          },
+          "style": {
+            "default": "",
+            "description": "Music style for the extension.",
+            "title": "Style",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id",
+          "lyric",
+          "continue_at"
+        ],
+        "title": "suno_upload_extendArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_upload_extendOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_upload_cover",
+      "title": null,
+      "description": "Create an AI cover of an uploaded audio (your own music).\n\n    Similar to suno_cover_music but works with audio you uploaded via\n    suno_upload_audio. Re-arranges your music in a different style.\n\n    Use this when:\n    - You uploaded your own music and want a cover in a different style\n    - You want to hear your song re-interpreted by AI\n\n    Returns:\n        Task ID and the cover audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the uploaded audio to create a cover of. Must be an audio uploaded via suno_upload_audio.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "style": {
+            "default": "",
+            "description": "Target music style for the cover.",
+            "title": "Style",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "audio_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Advanced parameter for cover operations. Controls how much the original audio influences the cover generation.",
+            "title": "Audio Weight"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_upload_coverArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_upload_coverOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_mashup_music",
+      "title": null,
+      "description": "Create a musical mashup by blending multiple songs together.\n\n    Combines elements from multiple generated songs into a single cohesive\n    mashup track. Different from lyrics mashup - this blends the actual audio.\n\n    Use this when:\n    - You want to blend two or more songs together musically\n    - You're creating a DJ-style mashup\n    - You want to combine melodies from different songs\n\n    Returns:\n        Task ID and the mashup audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "mashup_audio_ids": {
+            "description": "Exactly two audio IDs to mash up together.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Mashup Audio Ids",
+            "type": "array"
+          },
+          "prompt": {
+            "description": "Required creative direction for blending the tracks, such as the desired arrangement, mood, and balance between sources.",
+            "title": "Prompt",
+            "type": "string"
+          },
+          "style": {
+            "default": "",
+            "description": "Optional target music style for the mashup.",
+            "title": "Style",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "description": "Optional title for the mashup.",
+            "title": "Title",
+            "type": "string"
+          },
+          "instrumental": {
+            "default": false,
+            "description": "If true, generate an instrumental mashup without vocals.",
+            "title": "Instrumental",
+            "type": "boolean"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "mashup_audio_ids",
+          "prompt"
+        ],
+        "title": "suno_mashup_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_mashup_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_all_stems_music",
+      "title": null,
+      "description": "Separate a song into all individual stems (vocals, bass, drums, other instruments).\n\n    Splits the audio into multiple separate tracks for all components,\n    providing more granular stem separation than suno_stems_music. The service may\n    return two same-named sets of 12 stems without metadata that distinguishes the sets;\n    both sets are preserved so no audio is silently discarded.\n\n    Use this when:\n    - You need full multi-track stem separation\n    - You want individual instrument tracks for remixing\n    - You need bass, drums, and other instrument tracks separately\n\n    Returns:\n        Task ID and all stem separation results with individual track URLs.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the audio to separate into all individual stems.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_all_stems_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_all_stems_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_generate_with_persona_vox",
+      "title": null,
+      "description": "Generate music using a saved artist persona with VOX-specific consistency.\n\n    Similar to suno_generate_with_persona but uses the artist_consistency_vox action,\n    which is optimized for vocal consistency with a persona.\n\n    Use this when:\n    - You want multiple songs with the same vocal style using VOX mode\n    - You need stricter vocal consistency than suno_generate_with_persona provides\n    - You're creating content with a specific voice persona\n\n    First create a persona with suno_create_persona or suno_create_voice, then use its ID here.\n\n    Returns:\n        Task ID and generated audio information with the persona's voice applied.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of a reference audio to base the generation on.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "persona_id": {
+            "description": "ID of the persona to use for the VOX generation. Get this from suno_create_persona or suno_create_voice tool.",
+            "title": "Persona Id",
+            "type": "string"
+          },
+          "prompt": {
+            "description": "Description of the music to generate. The persona's voice will be applied to this new song.",
+            "title": "Prompt",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id",
+          "persona_id",
+          "prompt"
+        ],
+        "title": "suno_generate_with_persona_voxArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_generate_with_persona_voxOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_underpainting",
+      "title": null,
+      "description": "Add AI-generated accompaniment/instrumental background to uploaded audio.\n\n    Takes your uploaded vocal track and adds an AI-generated instrumental\n    accompaniment beneath it (underpainting = adding music under vocals).\n\n    Use this when:\n    - You have a vocal recording and want to add music behind it\n    - You want to give an acapella track a full musical arrangement\n    - You need to add instrumental backing to existing vocals\n\n    Returns:\n        Task ID and the audio with accompaniment added.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the uploaded audio to add accompaniment to. Must be uploaded via suno_upload_audio.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "underpainting_start": {
+            "default": 0.0,
+            "description": "Start time in seconds for adding accompaniment. Default is 0.",
+            "title": "Underpainting Start",
+            "type": "number"
+          },
+          "underpainting_end": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End time in seconds for adding accompaniment. Must be less than total song duration.",
+            "title": "Underpainting End"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_underpaintingArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_underpaintingOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_overpainting",
+      "title": null,
+      "description": "Add AI-generated vocals to uploaded instrumental audio.\n\n    Takes your uploaded instrumental track and adds AI-generated vocals\n    on top of it (overpainting = painting vocals over the music).\n\n    Use this when:\n    - You have an instrumental track and want to add vocals\n    - You want to give background music a singing voice\n    - You need to add vocal melody to existing music\n\n    Returns:\n        Task ID and the audio with vocals added.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the uploaded audio to add vocals to. Must be uploaded via suno_upload_audio.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "overpainting_start": {
+            "default": 0.0,
+            "description": "Start time in seconds for adding vocals. Default is 0.",
+            "title": "Overpainting Start",
+            "type": "number"
+          },
+          "overpainting_end": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End time in seconds for adding vocals. Must be less than total song duration.",
+            "title": "Overpainting End"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_overpaintingArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_overpaintingOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_samples_music",
+      "title": null,
+      "description": "Add AI-generated samples to uploaded audio.\n\n    Takes your uploaded audio and adds AI-generated musical samples\n    within the specified time range.\n\n    Use this when:\n    - You want to add sample loops or motifs to existing music\n    - You need to enhance a track with additional musical elements\n    - You want to add AI-generated samples to a specific section\n\n    Returns:\n        Task ID and the audio with samples added.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the uploaded audio to add samples to. Must be uploaded via suno_upload_audio.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "samples_start": {
+            "default": 0.0,
+            "description": "Start time in seconds for adding samples. Default is 0.",
+            "title": "Samples Start",
+            "type": "number"
+          },
+          "samples_end": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End time in seconds for adding samples. Must be less than total song duration.",
+            "title": "Samples End"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Model version to use.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_samples_musicArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_samples_musicOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_generate_inspo",
+      "title": null,
+      "description": "Generate brand-new music inspired by 1 to 4 reference audios (Suno Inspo / 灵感创作).\n\n    Unlike a cover, inspo does not reproduce the source tracks - it draws stylistic\n    inspiration from them and composes a fresh song guided by your prompt and style tags.\n\n    Use this when:\n    - You have reference tracks whose vibe you want to riff on\n    - You want a new song \"in the style of\" some audio you provide\n\n    Returns:\n        Task ID and generated audio information including URLs, title, lyrics, and duration.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_urls": {
+            "description": "1 to 4 publicly accessible reference audio URLs used as inspiration. Suno extracts stylistic ideas from these tracks (rather than copying them) to create a brand-new song. Tip: avoid well-known catalog recordings, which may be rejected by Suno's copyright check.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Audio Urls",
+            "type": "array"
+          },
+          "prompt": {
+            "default": "",
+            "description": "Optional lyrics or creative brief for the new song. Leave empty to let Suno write its own lyrics.",
+            "title": "Prompt",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "description": "Optional title of the song.",
+            "title": "Title",
+            "type": "string"
+          },
+          "style": {
+            "default": "",
+            "description": "Optional music style tags. Examples: 'acoustic, folk, warm', 'lo-fi, chill, instrumental'",
+            "title": "Style",
+            "type": "string"
+          },
+          "model": {
+            "default": "chirp-v5-5",
+            "description": "Suno model version to use for the inspired generation.",
+            "enum": [
+              "chirp-v6",
+              "chirp-v6-wild",
+              "chirp-v6-mini",
+              "chirp-v3-0",
+              "chirp-v3-5",
+              "chirp-v4",
+              "chirp-v4-5",
+              "chirp-v4-5-plus",
+              "chirp-v5",
+              "chirp-v5-5"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "audio_weight": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "How strongly the reference audios influence the result, 0 to 1. Higher means closer to the references' vibe.",
+            "title": "Audio Weight"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when generation completes.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_urls"
+        ],
+        "title": "suno_generate_inspoArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_generate_inspoOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_create_custom_model",
+      "title": null,
+      "description": "Create a reusable custom music model from authorized audio examples.\n\n    This is a paid, long-running operation. Call it only after the user confirms\n    the source files and the 5.6-Credit list price.\n    ",
+      "inputSchema": {
+        "properties": {
+          "name": {
+            "description": "Name for the custom music model.",
+            "title": "Name",
+            "type": "string"
+          },
+          "audio_urls": {
+            "description": "6 to 24 authorized audio URLs used to train the custom music model.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 24,
+            "minItems": 6,
+            "title": "Audio Urls",
+            "type": "array"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for custom model creation status.",
+            "title": "Callback Url"
+          },
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional Idempotency-Key header value for safe retries.",
+            "title": "Idempotency Key"
+          }
+        },
+        "required": [
+          "name",
+          "audio_urls"
+        ],
+        "title": "suno_create_custom_modelArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_create_custom_modelOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_custom_model",
+      "title": null,
+      "description": "Retrieve a single custom music model by ID.",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "ID of the custom music model to retrieve.",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "suno_get_custom_modelArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_custom_modelOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_list_custom_models",
+      "title": null,
+      "description": "List custom music models for the current Suno application.",
+      "inputSchema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of custom models to return.",
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of custom models to skip for pagination.",
+            "title": "Offset",
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "queued",
+                  "uploading",
+                  "training",
+                  "ready",
+                  "failed",
+                  "archived"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional status filter for custom models.",
+            "title": "Status"
+          }
+        },
+        "title": "suno_list_custom_modelsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_list_custom_modelsOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_generate_with_custom_model",
+      "title": null,
+      "description": "Generate a song using a ready custom music model.\n\n    The initial response only accepts the async task. Poll it until success or\n    failure; this operation never falls back to another model.\n    ",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "Ready custom music model ID to generate with.",
+            "title": "Id",
+            "type": "string"
+          },
+          "title": {
+            "description": "Title for the generated song.",
+            "title": "Title",
+            "type": "string"
+          },
+          "lyric": {
+            "description": "Lyrics for the generated song.",
+            "title": "Lyric",
+            "type": "string"
+          },
+          "style": {
+            "description": "Music style for the generated song.",
+            "title": "Style",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "lyric",
+          "style"
+        ],
+        "title": "suno_generate_with_custom_modelArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_generate_with_custom_modelOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_archive_custom_model",
+      "title": null,
+      "description": "Archive a custom music model so it can no longer be used.\n\n    Archiving does not guarantee that model capacity is released.\n    ",
+      "inputSchema": {
+        "properties": {
+          "id": {
+            "description": "ID of the custom music model to archive.",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "suno_archive_custom_modelArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_archive_custom_modelOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_list_models",
+      "title": null,
+      "description": "List all available Suno models and their capabilities.\n\n    Shows all available model versions with their limits, features, and\n    recommended use cases. Use this to understand which model to choose\n    for your music generation.\n\n    Model comparison:\n    - chirp-v6: Current v6 model\n    - chirp-v6-wild: v6 Wild model\n    - chirp-v6-mini: v6 Mini model\n    - chirp-v5-5: Previous model name, retained for compatibility\n    - chirp-v5: High quality, 8-minute max duration\n    - chirp-v4-5-plus: High quality with 8-minute duration\n    - chirp-v4-5: Recommended balance of quality and speed, 4-minute duration\n    - chirp-v4: Good quality, 150 seconds max\n    - chirp-v3-5/v3: Legacy models, 120 seconds max\n\n    Returns:\n        Table of all models with their version, limits, and features.\n    ",
+      "inputSchema": {
+        "properties": {},
+        "title": "suno_list_modelsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_list_modelsOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_list_actions",
+      "title": null,
+      "description": "List all available Suno API actions and corresponding tools.\n\n    Reference guide for what each action does and which tool to use.\n    Helpful for understanding the full capabilities of the Suno MCP.\n\n    Returns:\n        Categorized list of all actions and their corresponding tools.\n    ",
+      "inputSchema": {
+        "properties": {},
+        "title": "suno_list_actionsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_list_actionsOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_lyric_format_guide",
+      "title": null,
+      "description": "Get guidance on formatting lyrics for Suno music generation.\n\n    Shows how to structure lyrics with section markers for best results.\n    Following this format helps Suno understand the song structure and\n    generate appropriate melodies for each section.\n\n    Returns:\n        Complete guide with section markers, examples, and tips.\n    ",
+      "inputSchema": {
+        "properties": {},
+        "title": "suno_get_lyric_format_guideArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_lyric_format_guideOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_generate_lyrics",
+      "title": null,
+      "description": "Generate song lyrics from a text prompt.\n\n    Creates structured lyrics with proper song sections (Verse, Chorus, Bridge, etc.)\n    based on your description. The generated lyrics are formatted and ready to use\n    with suno_generate_custom_music.\n\n    Use this when:\n    - You need lyrics but don't want to write them yourself\n    - You want AI-generated lyrics for a specific theme or mood\n    - You need properly structured lyrics with section markers\n\n    The output includes section markers like [Verse], [Chorus], [Bridge] that\n    Suno's music generation understands.\n\n    Returns:\n        Generated lyrics with title, status, and formatted text with section markers.\n    ",
+      "inputSchema": {
+        "properties": {
+          "prompt": {
+            "description": "Description of the lyrics you want. Include theme, mood, genre, and any specific elements. Examples: 'A romantic ballad about lost love and rainy nights', 'An upbeat pop song about summer vacation', 'A motivational hip-hop track about overcoming obstacles'",
+            "title": "Prompt",
+            "type": "string"
+          },
+          "model": {
+            "default": "default",
+            "description": "Model version for lyrics generation. 'default' works well for most lyrics. 'remi-v1' offers an alternative style.",
+            "enum": [
+              "default",
+              "remi-v1"
+            ],
+            "title": "Model",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "title": "suno_generate_lyricsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_generate_lyricsOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_mp4",
+      "title": null,
+      "description": "Get an MP4 video version of a generated song.\n\n    Converts a generated audio into an MP4 video file with visualizations.\n    Useful for sharing on social media or video platforms.\n\n    Use this when:\n    - You want a video version of a generated song\n    - You need to share the song on video platforms\n    - You want a visual representation of the audio\n\n    Returns:\n        Task ID and MP4 video information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "The song ID to get the MP4 video for. This is the 'id' field from a previous audio generation result.",
+            "title": "Audio Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_get_mp4Arguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_mp4Output",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_timing",
+      "title": null,
+      "description": "Get timing and subtitle data for a generated song.\n\n    Returns word-level timing information that can be used for\n    synchronized lyrics display, karaoke, or subtitle generation.\n\n    Use this when:\n    - You need synchronized lyrics/subtitles\n    - You want to create karaoke-style displays\n    - You need word-level timing for video editing\n\n    Returns:\n        Timing data with word-level timestamps.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "The song ID to get timing/subtitle data for.",
+            "title": "Audio Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_get_timingArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_timingOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_extract_vocals",
+      "title": null,
+      "description": "Extract the vocal track from a generated song (stem separation).\n\n    Isolates the vocals from a song, removing instrumental background.\n    Useful for remixing, creating acapella versions, or persona creation.\n\n    Use this when:\n    - You want an isolated vocal track\n    - You need vocals for a remix or mashup\n    - You want to create a persona from specific vocal segments\n\n    Returns:\n        Task ID and extracted vocal audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "The song ID to extract vocals from.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "vocal_start": {
+            "description": "Required extraction start time in seconds. The selected range must be shorter than 30 seconds.",
+            "minimum": 0,
+            "title": "Vocal Start",
+            "type": "number"
+          },
+          "vocal_end": {
+            "description": "Required extraction end time in seconds. It must be greater than vocal_start, with a range shorter than 30 seconds.",
+            "exclusiveMinimum": 0,
+            "title": "Vocal End",
+            "type": "number"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id",
+          "vocal_start",
+          "vocal_end"
+        ],
+        "title": "suno_extract_vocalsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_extract_vocalsOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_wav",
+      "title": null,
+      "description": "Get the lossless WAV format of a generated song.\n\n    Converts the song to high-quality uncompressed WAV format.\n    WAV files are larger but have no quality loss compared to MP3.\n\n    Use this when:\n    - You need a lossless audio format for production\n    - You want the highest quality audio output\n    - You need uncompressed audio for further processing\n\n    Returns:\n        Task ID and WAV audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "The song ID to get the WAV format for.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_get_wavArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_wavOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_mp3",
+      "title": null,
+      "description": "Get the MP3 format of a generated song.\n\n    Converts the song to MP3 format, which is compact and widely supported\n    across playback devices and platforms.\n\n    Use this when:\n    - You need a compressed and portable audio format\n    - You want to share songs easily across platforms\n    - You prefer smaller file sizes than WAV\n\n    Returns:\n        Task ID and MP3 audio information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "The song ID to get the MP3 format for.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_get_mp3Arguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_mp3Output",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_midi",
+      "title": null,
+      "description": "Get MIDI data extracted from a generated song.\n\n    Converts the song's melodic and rhythmic information into MIDI format,\n    which can be used in digital audio workstations (DAWs) for further editing.\n\n    Use this when:\n    - You want to edit the melody in a DAW\n    - You need note-level data from the song\n    - You want to recreate the song with different instruments\n\n    Returns:\n        Task ID and MIDI data information.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "The song ID to get MIDI data for.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Webhook callback URL for asynchronous notifications.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_id"
+        ],
+        "title": "suno_get_midiArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_midiOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_create_persona",
+      "title": null,
+      "description": "Create a new artist persona from an existing audio's vocal style.\n\n    This saves the vocal characteristics from a generated song so you can reuse\n    that same voice style in future generations. Great for maintaining consistency\n    across multiple songs.\n\n    Use this when:\n    - You generated a song and love the voice\n    - You want to create multiple songs with the same vocalist\n    - You're building an album with consistent vocal style\n    - You want to save a unique voice for future use\n\n    After creating a persona, use suno_generate_with_persona with the returned\n    persona_id to generate new songs with that voice.\n\n    Returns:\n        Persona ID that can be used with suno_generate_with_persona tool.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_id": {
+            "description": "ID of the audio to use as the persona reference. This should be a previously generated song whose vocal style you want to save and reuse.",
+            "title": "Audio Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name for this persona. Use a descriptive name that helps you remember the voice style. Examples: 'My Rock Voice', 'Soft Female Singer', 'Deep Male Baritone', 'Energetic Pop Vocalist'",
+            "title": "Name",
+            "type": "string"
+          },
+          "vox_audio_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional audio ID used to generate a new singer's style by combining with the main audio. Useful for creating hybrid vocal personas.",
+            "title": "Vox Audio Id"
+          },
+          "vocal_start": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Start time in seconds of the vocal segment to use from the audio. Useful for isolating a specific vocal section.",
+            "title": "Vocal Start"
+          },
+          "vocal_end": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "End time in seconds of the vocal segment to use from the audio.",
+            "title": "Vocal End"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Description of the singer's style. Examples: 'Warm and breathy female voice with jazz influences', 'Powerful male rock vocalist with raspy tone'",
+            "title": "Description"
+          }
+        },
+        "required": [
+          "audio_id",
+          "name"
+        ],
+        "title": "suno_create_personaArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_create_personaOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_list_personas",
+      "title": null,
+      "description": "List all saved artist personas for a user.\n\n    Returns all personas previously created with suno_create_persona or\n    suno_create_voice for the given user.\n\n    Use this when:\n    - You want to see all available voice personas\n    - You need to find a persona ID to use in music generation\n    - You want to manage your saved vocal styles\n\n    Returns:\n        List of personas with their IDs, names, and descriptions.\n    ",
+      "inputSchema": {
+        "properties": {
+          "user_id": {
+            "description": "The user ID to list personas for.",
+            "title": "User Id",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum number of personas to return. Default is 50.",
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "description": "Number of personas to skip for pagination. Default is 0.",
+            "title": "Offset",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "suno_list_personasArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_list_personasOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_delete_persona",
+      "title": null,
+      "description": "Delete a saved artist persona.\n\n    Permanently removes a previously created persona. This action cannot be undone.\n\n    Use this when:\n    - You want to remove an unused voice persona\n    - You need to clean up old personas\n    - You want to delete a persona you no longer need\n\n    Returns:\n        Confirmation of the deletion.\n    ",
+      "inputSchema": {
+        "properties": {
+          "persona_id": {
+            "description": "The persona ID to delete.",
+            "title": "Persona Id",
+            "type": "string"
+          },
+          "user_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "The user ID for ownership verification (optional).",
+            "title": "User Id"
+          }
+        },
+        "required": [
+          "persona_id"
+        ],
+        "title": "suno_delete_personaArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_delete_personaOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_optimize_style",
+      "title": null,
+      "description": "Optimize a music style description for better generation results.\n\n    Takes a rough style description and refines it into an optimized style\n    prompt that Suno can better understand and produce higher quality music for.\n\n    Use this when:\n    - You have a vague style idea and want to refine it\n    - You want better style prompts for suno_generate_custom_music\n    - You need suggestions for style terms\n\n    Returns:\n        Optimized style description ready for use in music generation.\n    ",
+      "inputSchema": {
+        "properties": {
+          "prompt": {
+            "description": "Style prompt words that need to be optimized. Examples: 'rock guitar', 'jazz smooth', 'electronic dance party'",
+            "title": "Prompt",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "title": "suno_optimize_styleArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_optimize_styleOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_mashup_lyrics",
+      "title": null,
+      "description": "Generate mashup lyrics by combining two sets of lyrics.\n\n    Takes two different song lyrics and intelligently combines them into\n    a cohesive mashup. Great for creating unique lyrical combinations.\n\n    Use this when:\n    - You want to blend two songs' lyrics together\n    - You're creating a mashup or medley\n    - You want creative lyrical combinations from two sources\n\n    Returns:\n        Combined mashup lyrics ready for use in music generation.\n    ",
+      "inputSchema": {
+        "properties": {
+          "lyrics_a": {
+            "description": "The first set of lyrics to combine. Can be full song lyrics with section markers.",
+            "title": "Lyrics A",
+            "type": "string"
+          },
+          "lyrics_b": {
+            "description": "The second set of lyrics to combine. Can be full song lyrics with section markers.",
+            "title": "Lyrics B",
+            "type": "string"
+          }
+        },
+        "required": [
+          "lyrics_a",
+          "lyrics_b"
+        ],
+        "title": "suno_mashup_lyricsArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_mashup_lyricsOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_upload_audio",
+      "title": null,
+      "description": "Upload external audio for use in subsequent operations.\n\n    Use standard mode for normal uploads. Use enhanced mode only when standard\n    upload cannot process authorized audio; it returns a task_id for suno_get_task.\n    Enhanced audio IDs support Cover, Samples, and Mashup.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_url": {
+            "description": "Public URL of the audio file. Enhanced mode requires HTTPS and audio you own or are authorized to use.",
+            "title": "Audio Url",
+            "type": "string"
+          },
+          "mode": {
+            "default": "standard",
+            "description": "Upload mode. standard preserves normal upload behavior; enhanced handles some authorized audio that standard mode cannot process, costs 1.87 Credits on success, and runs asynchronously.",
+            "enum": [
+              "standard",
+              "enhanced"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Audio name, required for enhanced mode and limited to 100 characters.",
+            "title": "Name"
+          },
+          "callback_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional HTTPS webhook URL for the enhanced upload result.",
+            "title": "Callback Url"
+          }
+        },
+        "required": [
+          "audio_url"
+        ],
+        "title": "suno_upload_audioArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_upload_audioOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_create_voice",
+      "title": null,
+      "description": "Create a custom voice persona from an external audio URL.\n\n    Creates a voice persona directly from a publicly accessible audio URL\n    (MP3 or WAV format). The audio must contain clear vocals from a single\n    speaker and be at least 10 seconds long.\n\n    This is different from suno_create_persona which creates a persona from\n    a previously generated Suno audio. Use this to create a persona from\n    your own voice recordings or external audio files.\n\n    Use this when:\n    - You have an external audio file with clear vocals\n    - You want to create a voice persona from your own recordings\n    - You want to use a specific real-world voice as a persona\n\n    Returns:\n        Persona ID that can be used with suno_generate_with_persona tool.\n    ",
+      "inputSchema": {
+        "properties": {
+          "audio_url": {
+            "description": "Publicly accessible URL of the audio file to create a voice from. Must be MP3 or WAV format, at least 10 seconds long, containing clear vocals from a single speaker without background noise or music.",
+            "title": "Audio Url",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional name for the custom voice persona.",
+            "title": "Name"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Description of the custom voice persona (optional).",
+            "title": "Description"
+          }
+        },
+        "required": [
+          "audio_url"
+        ],
+        "title": "suno_create_voiceArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_create_voiceOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_task",
+      "title": null,
+      "description": "Query the status and result of a music generation task.\n\n    Use this to check if a generation is complete and retrieve the resulting\n    audio URLs, titles, lyrics, and other metadata.\n\n    Use this when:\n    - You want to check if a generation has completed\n    - You need to retrieve audio URLs from a previous generation\n    - You want to get the full details of a generated song\n\n    Task states:\n    - 'pending': Generation is still in progress — KEEP POLLING\n    - 'processing': Generation is being processed — KEEP POLLING\n    - 'complete': Generation finished successfully\n    - 'failed': Generation failed (check error message)\n\n    The API may omit its top-level state. The MCP normalizes response.success=true to\n    complete and response.success=false to failed; responses without a success field\n    remain pending.\n\n    Returns:\n        Task status and generated audio information including URLs, title, lyrics, and task timing metadata.\n    ",
+      "inputSchema": {
+        "properties": {
+          "task_id": {
+            "description": "The task ID returned from a generation request. This is the 'task_id' field from any suno_generate_*, suno_extend_*, suno_cover_*, or suno_concat_* tool response.",
+            "title": "Task Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id"
+        ],
+        "title": "suno_get_taskArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_taskOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    },
+    {
+      "name": "suno_get_tasks_batch",
+      "title": null,
+      "description": "Query multiple music generation tasks at once.\n\n    Efficiently check the status of multiple tasks in a single request.\n    More efficient than calling suno_get_task multiple times.\n\n    Use this when:\n    - You have multiple pending generations to check\n    - You want to get status of several songs at once\n    - You're tracking a batch of generations\n\n    The MCP treats response.success=true as complete and response.success=false as\n    failed when the API omits its top-level state.\n\n    Returns:\n        Status and audio information for all queried tasks.\n    ",
+      "inputSchema": {
+        "properties": {
+          "task_ids": {
+            "description": "List of task IDs to query. Maximum recommended batch size is 50 tasks.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Task Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "task_ids"
+        ],
+        "title": "suno_get_tasks_batchArguments",
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "suno_get_tasks_batchOutput",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": null,
+      "execution": null
+    }
+  ],
+  "prompts": [
+    {
+      "name": "suno_music_generation_guide",
+      "title": null,
+      "description": "Guide for choosing the right Suno tool for music generation.",
+      "arguments": [],
+      "icons": null,
+      "meta": null
+    },
+    {
+      "name": "suno_workflow_examples",
+      "title": null,
+      "description": "Common workflow examples for Suno music generation.",
+      "arguments": [],
+      "icons": null,
+      "meta": null
+    },
+    {
+      "name": "suno_style_suggestions",
+      "title": null,
+      "description": "Style and prompt writing suggestions for Suno.",
+      "arguments": [],
+      "icons": null,
+      "meta": null
+    }
+  ],
+  "localizations": [
+    {
+      "locale": "zh-CN",
+      "name": "Suno（Ace Data Cloud 提供）",
+      "description": "通过 Ace Data Cloud 使用 Suno，需要 Ace 服务 API Token；生成按当前服务价格计费。",
+      "tags": [
+        "suno",
+        "music",
+        "lyrics",
+        "audio",
+        "acedatacloud"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ace-suno": {
+      "type": "http",
+      "url": "https://suno.mcp.acedata.cloud/mcp"
+    }
+  }
+}
