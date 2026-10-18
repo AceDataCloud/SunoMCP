@@ -1,7 +1,7 @@
 {
   "name": "mcp-suno",
-  "displayName": "Suno MCP",
-  "description": "AI music generation with Suno — songs, lyrics, covers, stems, and more.",
+  "displayName": "Suno by Ace Data Cloud",
+  "description": "Suno music generation by Ace Data Cloud — songs, lyrics, covers and task results in VS Code Chat.",
   "version": "0.3.0",
   "publisher": "acedatacloud",
   "icon": "icon.png",
@@ -44,18 +44,18 @@
     "mcpServerDefinitionProviders": [
       {
         "id": "acedatacloud.suno",
-        "label": "Suno MCP"
+        "label": "Suno by Ace Data Cloud"
       }
     ],
     "commands": [
       {
         "command": "acedatacloud.suno.setApiToken",
-        "title": "Suno MCP: Set Ace Data Cloud API Key",
+        "title": "Suno by Ace Data Cloud: Set Ace Data Cloud API Key",
         "category": "MCP"
       },
       {
         "command": "acedatacloud.suno.clearApiToken",
-        "title": "Suno MCP: Clear Ace Data Cloud API Key",
+        "title": "Suno by Ace Data Cloud: Clear Ace Data Cloud API Key",
         "category": "MCP"
       }
     ]

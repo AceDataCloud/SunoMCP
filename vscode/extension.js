@@ -14,14 +14,14 @@
 const vscode = require("vscode");
 
 const PROVIDER_ID = "acedatacloud.suno";
-const SERVER_LABEL = "Suno MCP";
+const SERVER_LABEL = "Suno by Ace Data Cloud";
 const SERVER_URL = "https://suno.mcp.acedata.cloud/mcp";
 const SET_TOKEN_CMD = "acedatacloud.suno.setApiToken";
 const CLEAR_TOKEN_CMD = "acedatacloud.suno.clearApiToken";
 // Per-extension SecretStorage namespace; we keep one key per service so
 // rotating one API key doesn't affect siblings.
 const SECRET_KEY = "suno.apiToken";
-const SIGNUP_URL = "https://platform.acedata.cloud";
+const CREDENTIAL_URL = "https://platform.acedata.cloud/console/applications?utm_source=vscode&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_extension_api_key";
 
 async function readToken(context) {
   const env = process.env.ACEDATACLOUD_API_TOKEN;
@@ -32,9 +32,9 @@ async function readToken(context) {
 
 async function promptForToken(context) {
   const token = await vscode.window.showInputBox({
-    title: `${SERVER_LABEL} — Ace Data Cloud API key`,
-        prompt: `Paste an API key from ${SIGNUP_URL}/console/applications (Applications -> API Key). Stored in the OS keychain.`,
-        placeHolder: "API key from /console/applications",
+    title: `${SERVER_LABEL} — Ace Data Cloud api key`,
+        prompt: `Paste an Ace Data Cloud api key from ${CREDENTIAL_URL}. Stored in VS Code SecretStorage.`,
+        placeHolder: "API Key from /console/applications",
     password: true,
     ignoreFocusOut: true,
   });
@@ -53,13 +53,13 @@ function activate(context) {
     vscode.commands.registerCommand(SET_TOKEN_CMD, async () => {
       const t = await promptForToken(context);
       if (t) {
-        vscode.window.showInformationMessage(`${SERVER_LABEL}: API key saved.`);
+        vscode.window.showInformationMessage(`${SERVER_LABEL}: api key saved.`);
         onDidChange.fire();
       }
     }),
     vscode.commands.registerCommand(CLEAR_TOKEN_CMD, async () => {
       await context.secrets.delete(SECRET_KEY);
-    vscode.window.showInformationMessage(`${SERVER_LABEL}: API key cleared.`);
+    vscode.window.showInformationMessage(`${SERVER_LABEL}: api key cleared.`);
       onDidChange.fire();
     }),
     context.secrets.onDidChange((e) => {
@@ -71,11 +71,14 @@ function activate(context) {
         new vscode.McpHttpServerDefinition(SERVER_LABEL, vscode.Uri.parse(SERVER_URL)),
       ],
       resolveMcpServerDefinition: async (server) => {
+        if (!server?.uri || server.uri.toString() !== SERVER_URL) {
+          throw new Error("Unexpected MCP server endpoint.");
+        }
         let token = await readToken(context);
         if (!token) token = await promptForToken(context);
         if (!token) {
           throw new Error(
-                        `${SERVER_LABEL} needs an Ace Data Cloud API key. ` +
+                        `${SERVER_LABEL} needs an Ace Data Cloud api key. ` +
                             `Run "${SERVER_LABEL}: Set Ace Data Cloud API Key" from the command palette.`
           );
         }

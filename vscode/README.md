@@ -1,8 +1,14 @@
-# Suno MCP
+# Suno by Ace Data Cloud
 
-AI music generation with Suno — songs, lyrics, covers, stems, and more.
+Suno music generation by Ace Data Cloud — songs, lyrics, covers and task results in VS Code Chat.
+[简体中文](https://github.com/AceDataCloud/SunoMCP/blob/main/vscode/README.zh-CN.md)
 
-[![VS Code Marketplace](https://img.shields.io/badge/VS%20Code-Marketplace-blue?logo=visualstudiocode&logoColor=white)](https://marketplace.visualstudio.com/items?itemName=acedatacloud.mcp-suno) [![PyPI](https://img.shields.io/pypi/v/mcp-suno.svg?label=PyPI)](https://pypi.org/project/mcp-suno/) [![Hosted MCP](https://img.shields.io/badge/hosted-mcp-blue)](https://suno.mcp.acedata.cloud/mcp)
+This integration is published and operated by **Ace Data Cloud**. It is not an official extension from the model or service owner. An Ace Data Cloud application API key is required; a key from another provider is not interchangeable.
+
+**First, verify without generating:** use the read-only tool in the first-use section below. Generation and your Chat model may be billed separately.
+
+
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/acedatacloud.mcp-suno?label=VS%20Code)](https://marketplace.visualstudio.com/items?itemName=acedatacloud.mcp-suno) [![PyPI](https://img.shields.io/pypi/v/mcp-suno.svg?label=PyPI)](https://pypi.org/project/mcp-suno/) [![Hosted MCP](https://img.shields.io/badge/hosted-mcp-blue)](https://suno.mcp.acedata.cloud/mcp)
 
 Connect VS Code's AI agents to Suno through Ace Data Cloud. Generate songs from text prompts, write custom lyrics with full musical control, extend tracks, remix or cover, separate stems, export MP4/WAV/MIDI — all from chat.
 
@@ -16,17 +22,19 @@ can call it directly from chat.
 
 1. **Install this extension.** VS Code registers the `suno` MCP server automatically.
 2. **Get an application API key** using the detailed steps below. Check service access and your current balance before the first request.
-3. **Open Copilot Chat** in agent mode and ask for a music task — the extension prompts for the API key the first time and stores it in the OS keychain via VS Code's `SecretStorage`.
+3. **Select a model with tool calling in VS Code Chat.** You can use your existing model, or install [Ace Data Cloud Chat Models](https://marketplace.visualstudio.com/items?itemName=acedatacloud.chat-models). For the Ace model, first follow its [setup guide](https://github.com/AceDataCloud/VSCodeModelProvider#4-show-the-model-in-chat), open **Chat: Manage Language Models**, make the model visible, and select it in Chat. BYOK Chat does not require GitHub sign-in or a Copilot plan; organization policies still apply.
+4. **Enable this server's tools.** Open **Chat → Agent → Configure Tools** and select only the tools you need under **Suno by Ace Data Cloud**. If the list is empty, choose **Update Tools**. The extension prompts for the API key on first use and saves it in VS Code's `SecretStorage`. Disable another copy of the same server from the Ace MCP bundle or manual `mcp.json` to avoid duplicate tools.
+5. **Verify one result.** Check the Tool Reference below and current pricing before running a request. If you already have a task ID, enable its task-query tool and query that same ID first. An accepted generation is not a completed result: poll the original task until it reaches a successful terminal state, open the returned media, and match the task ID in [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_console_usage). Do not resubmit generation to poll. Model Chat and background utility calls can add separate charges to the service request.
 
 You can rotate or remove the API key any time from the command palette:
 
-- **Suno MCP: Set Ace Data Cloud API Key**
-- **Suno MCP: Clear Ace Data Cloud API Key**
+- **Suno by Ace Data Cloud: Set Ace Data Cloud API Key**
+- **Suno by Ace Data Cloud: Clear Ace Data Cloud API Key**
 
 > The default config talks to the **hosted streamable-HTTP endpoint** at
 > `https://suno.mcp.acedata.cloud/mcp` — no Python, no `uvx`, no local install needed.
 
-### Get your API key
+### Get your credential
 
 <!-- BEGIN TOKEN ONBOARDING -->
 1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_api_key). Sign in, or register an account first.
@@ -42,13 +50,6 @@ You can rotate or remove the API key any time from the command palette:
 Save the key in the client's credential store or the environment variable shown below. Never put it in a prompt, shared workflow, screenshot, or Git commit. If authentication fails, check the full copied value, application/service access, expiration, usage limit, and balance before creating another key.
 <!-- END TOKEN ONBOARDING -->
 
-## VS Code Setup Guide
-
-For screenshots, token setup, project-level and user-level `mcp.json`, and Copilot Agent Mode examples, see:
-
-- [Suno MCP VS Code guide](https://platform.acedata.cloud/documents/promotion_article_mcp_suno_vscode?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_documents_promotion_article_mcp_suno_vscode)
-- [All Ace Data Cloud MCP servers in VS Code](https://platform.acedata.cloud/documents/promotion_article_mcp_all_vscode?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_documents_promotion_article_mcp_all_vscode)
-
 ### Example prompts
 
 - "Generate a lofi hip-hop track about late-night coding. Use suno."
@@ -59,7 +60,7 @@ For screenshots, token setup, project-level and user-level `mcp.json`, and Copil
 
 ## Tool Reference
 
-**35 tools** available via this server.
+**34 tools** available via this server.
 
 | Tool | Description |
 | --- | --- |
@@ -69,30 +70,29 @@ For screenshots, token setup, project-level and user-level `mcp.json`, and Copil
 | `suno_cover_music` | Create a cover or remix version of an existing song in a different style. |
 | `suno_concat_music` | Concatenate extended song segments into a single complete audio file. |
 | `suno_generate_with_persona` | Generate music using a saved artist persona for consistent vocal style. |
-| `suno_generate_with_persona_vox` | Generate music with stronger vocal consistency from a saved persona. |
-| `suno_remaster_music` | Remaster an existing song to improve audio quality. |
+| `suno_remaster_music` | Remaster an existing song; v5/v5.5 require a variation category. |
 | `suno_stems_music` | Separate a song into individual stems (vocals and instruments). |
-| `suno_all_stems_music` | Separate a song into vocals, bass, drums, and other instrument stems. |
 | `suno_replace_section` | Replace a specific time range in a song with new generated content. |
 | `suno_upload_extend` | Extend an uploaded audio (your own music) with new AI-generated content. |
 | `suno_upload_cover` | Create an AI cover of an uploaded audio (your own music). |
-| `suno_mashup_music` | Create a musical mashup by blending multiple songs together. |
+| `suno_mashup_music` | Blend exactly two songs using a required creative-direction prompt. |
+| `suno_all_stems_music` | Return two distinct 12-stem candidate sets, labeled `stem_set` 1 and 2 in task results. |
 | `suno_generate_lyrics` | Generate song lyrics from a text prompt. |
 | `suno_get_mp4` | Get an MP4 video version of a generated song. |
 | `suno_get_timing` | Get timing and subtitle data for a generated song. |
-| `suno_extract_vocals` | Extract the vocal track from a generated song (stem separation). |
+| `suno_extract_vocals` | Extract a required vocal interval shorter than 30 seconds. |
 | `suno_get_wav` | Get the lossless WAV format of a generated song. |
+| `suno_get_mp3` | Get the compressed MP3 format of a generated song. |
 | `suno_get_midi` | Get MIDI data extracted from a generated song. |
 | `suno_create_persona` | Create a new artist persona from an existing audio's vocal style. |
-| `suno_create_voice` | Create a custom voice persona from an external audio URL. |
-| `suno_list_personas` | List saved artist personas and voice IDs. |
-| `suno_delete_persona` | Delete a saved artist persona. |
+| `suno_create_custom_model` | Create a reusable custom music model from 6 to 24 authorized audio URLs. |
+| `suno_get_custom_model` | Retrieve one custom music model by ID. |
+| `suno_list_custom_models` | List custom music models for the current Suno application. |
+| `suno_generate_with_custom_model` | Generate a song using a ready custom music model. |
+| `suno_delete_custom_model` | Archive a custom music model so it can no longer be used. |
 | `suno_optimize_style` | Optimize a music style description for better generation results. |
 | `suno_mashup_lyrics` | Generate mashup lyrics by combining two sets of lyrics. |
-| `suno_upload_audio` | Upload an external audio file to Suno for use in subsequent operations. |
-| `suno_underpainting` | Add AI-generated accompaniment under uploaded vocals. |
-| `suno_overpainting` | Add AI-generated vocals over uploaded instrumental audio. |
-| `suno_samples_music` | Add AI-generated samples to uploaded audio. |
+| `suno_upload_audio` | Upload external audio in standard or enhanced mode for subsequent operations. |
 | `suno_get_task` | Query the status and result of a music generation task. |
 | `suno_get_tasks_batch` | Query multiple music generation tasks at once. |
 | `suno_list_models` | List all available Suno models and their capabilities. |
@@ -105,7 +105,7 @@ For screenshots, token setup, project-level and user-level `mcp.json`, and Copil
 
 ## Pricing
 
-From $0.05 per song. New users get free trial credit at sign-up. See full pricing at [https://platform.acedata.cloud/documents/suno-mcp](https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_quick_start).
+Music generation is metered. Check current pricing and the trial allowance displayed in your own account. See [Documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_quick_start).
 
 ---
 
@@ -116,7 +116,7 @@ and registers a single hosted server with VS Code:
 
 ```text
 Provider id : acedatacloud.suno
-Server label: Suno MCP
+Server label: Suno by Ace Data Cloud
 Server URL  : https://suno.mcp.acedata.cloud/mcp
 Transport   : Streamable HTTP
 Auth        : Bearer API key from VS Code SecretStorage (or $ACEDATACLOUD_API_TOKEN)
@@ -142,7 +142,7 @@ this extension.
     {
       "type": "promptString",
       "id": "acedatacloud_api_token",
-      "description": "Ace Data Cloud API key",
+            "description": "Ace Data Cloud API key",
       "password": true
     }
   ]
@@ -177,8 +177,41 @@ version, install [`uv`](https://docs.astral.sh/uv/) and use:
 - **PyPI package:** [`mcp-suno`](https://pypi.org/project/mcp-suno/)
 - **Source repository:** https://github.com/AceDataCloud/SunoMCP
 - **Ace Data Cloud platform:** https://platform.acedata.cloud?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_platform
-- **MCP documentation:** https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_quick_start
+- **Documentation:** https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_quick_start
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## First use: discover, then read an existing result
+
+1. Install [Suno by Ace Data Cloud](https://marketplace.visualstudio.com/items?itemName=acedatacloud.mcp-suno). This is an independent service extension; the Ace toolbox is optional. Do not enable two copies of the same server.
+2. Complete the application-key steps above. Run **Suno by Ace Data Cloud: Set Ace Data Cloud API Key** and paste only the token. No workspace configuration file is needed.
+3. In **Chat: Manage Language Models**, show and select a tool-capable model. If you use the separate Ace Chat Models extension, follow its [model setup](https://github.com/AceDataCloud/VSCodeModelProvider#4-show-the-model-in-chat). Then open **Chat → Agent → Configure Tools** and enable only `suno_list_models` for this first check.
+4. Send the prompt below and inspect the confirmation's tool name and arguments. Your Chat model and background requests may be billed even when the service tool is read-only.
+
+```text
+Call suno_list_models only. Show supported models/actions. Do not generate anything.
+```
+
+The model-list tool returns reference information without generating media. It does not prove that your key has generation access.
+
+For an existing media task, enable only `suno_get_task`, replace `TASK_ID` with your original task ID, and query that same ID until terminal success or failure. Open the returned media link and match the original generation task to its charge in [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_console_usage). An accepted task or green Chat turn alone is not a completed artifact. Never resubmit generation just to check progress.
+
+### Real VS Code reference screenshots
+
+![Manage Models in the Ace Chat Models extension](https://raw.githubusercontent.com/AceDataCloud/VSCodeModelProvider/667593eb14bf15d434a1c41d47ef1f39199f7d68/assets/tutorial/02-manage-models.png)
+
+![Tool selection in the GPT Image MCP example](https://raw.githubusercontent.com/AceDataCloud/MCPs/537d5767aea410db930e4b01faf5dd14580c8ba7/vscode-bundle/assets/tutorial/04-tools.png)
+
+Historical real VS Code 1.141 screenshots, included in tutorials on 2026-10-09 (Asia/Shanghai). The tool-selection image uses the OpenAI server as a reference: choose this extension's server and the exact tool named above. These images do not show a newly published version or prove this independent service was called.
+
+### Troubleshooting your first call
+
+| Symptom | Check |
+| --- | --- |
+| Model missing / sign-in prompt | Complete Manage Language Models and the model extension's setup; respect organizational BYOK policy. |
+| Tools missing | Update Tools, check workspace/server trust, and disable duplicate bundle or manual registrations. |
+| 401 / 403 | Check application/service access, expiry, Allowed APIs, usage limit and balance. Use an application key rather than a platform management token. |
+| Pending task | Query the same original ID; do not submit generation again. |
+| 429 / 5xx | Preserve task/trace ID, inspect original task and Usage, and do not automatically retry a paid operation. |
