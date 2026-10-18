@@ -8,10 +8,59 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.request
 import uuid
 from pathlib import Path
 from urllib.parse import quote
+
+USER_AGENT = "AceDataCloud-Smithery-Release-Check/1.0"
+PENDING_STATUSES = {"PENDING", "QUEUED", "WORKING"}
+TERMINAL_STATUSES = {
+    "SUCCESS",
+    "FAILURE",
+    "FAILURE_SCAN",
+    "AUTH_REQUIRED",
+    "AUTH_TIMEOUT",
+    "CANCELLED",
+    "INTERNAL_ERROR",
+}
+
+
+class ReleaseStatusError(RuntimeError):
+    """A sanitized, known release state that must never pass CI."""
+
+
+class ReleasePendingTimeout(TimeoutError):
+    """The accepted release stayed pending until the verification deadline."""
+
+
+def read_release(url, key, timeout):
+    request = urllib.request.Request(
+        url,
+        headers={
+            "Authorization": f"Bearer {key}",
+            "User-Agent": USER_AGENT,
+            "Accept": "application/json",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        return json.load(response)
+
+
+def safe_failure_reason(error):
+    """Keep HTTP/scan failures distinguishable without echoing upstream secrets."""
+    if isinstance(error, ReleaseStatusError):
+        return str(error)
+    if isinstance(error, ReleasePendingTimeout):
+        return "Release still pending after verification deadline; inspect before publishing again"
+    if isinstance(error, urllib.error.HTTPError):
+        return f"Release API returned HTTP {error.code}"
+    if isinstance(error, (urllib.error.URLError, TimeoutError)):
+        return "Release API network/TLS/timeout failure"
+    if isinstance(error, (ValueError, TypeError, AttributeError)):
+        return "Release API response or release identity is invalid"
+    return "Release verification failed unexpectedly"
 
 
 def accepted_release(log, qualified_name):
@@ -46,16 +95,21 @@ def wait_for_release(
         release = fetch(min(15, deadline - clock()))
         if release.get("id") != release_id:
             raise ValueError("Smithery returned a different release ID")
-        status = release.get("status")
+        raw_status = release.get("status")
+        status = (
+            raw_status
+            if isinstance(raw_status, str) and raw_status in PENDING_STATUSES | TERMINAL_STATUSES
+            else "UNKNOWN"
+        )
         if status != previous_status:
             print(f"Smithery release {release_id}: {status}", flush=True)
             previous_status = status
         if status == "SUCCESS":
             return release
-        if status not in {"PENDING", "QUEUED", "WORKING"}:
-            raise RuntimeError(f"Smithery release did not succeed: {status}")
+        if status not in PENDING_STATUSES:
+            raise ReleaseStatusError(f"Smithery release did not succeed: {status}")
         sleep(max(0, min(interval, deadline - clock())))
-    raise TimeoutError("Release still pending; inspect it before publishing again")
+    raise ReleasePendingTimeout("Release still pending; inspect it before publishing again")
 
 
 def main():
@@ -67,17 +121,14 @@ def main():
     url = f"https://api.smithery.ai/servers/{quote(qualified_name, safe='/')}/releases/{release_id}"
 
     def fetch(timeout):
-        headers = {"Authorization": f"Bearer {key}"}
-        request = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            return json.load(response)
+        return read_release(url, key, timeout)
 
     try:
         wait_for_release(release_id, fetch)
-    except Exception:
+    except Exception as error:
         # Do not print response bodies or upstream logs: they may contain secrets.
         raise RuntimeError(
-            f"Smithery release verification failed. Inspect https://smithery.ai/servers/"
+            f"{safe_failure_reason(error)}. Inspect https://smithery.ai/servers/"
             f"{qualified_name}/releases (release {release_id})"
         ) from None
 
