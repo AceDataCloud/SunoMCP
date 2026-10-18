@@ -1,46 +1,14 @@
 <idea-plugin>
     <id>com.acedatacloud.mcp.suno</id>
-    <name>Suno MCP</name>
+    <name>Suno by Ace Data Cloud</name>
     <vendor email="dev@acedata.cloud" url="https://acedata.cloud">Ace Data Cloud</vendor>
 
     <description><![CDATA[
-<p><b>AI Music Generation</b> with <a href="https://suno.com">Suno</a> via
-<a href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a>.</p>
-
-<p>This plugin helps you set up the MCP Suno server with JetBrains AI Assistant.
-Once configured, AI Assistant can generate songs, lyrics, covers, remixes, and more
-using Suno AI — all powered by <a href="https://platform.acedata.cloud?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_platform">Ace Data Cloud</a>.</p>
-
-<h3>Features</h3>
-<ul>
-    <li><b>35 AI Music Tools</b> — Generate, extend, cover, remix, mashup, stems, and more</li>
-    <li><b>Easy Setup</b> — One-click copy MCP configuration for AI Assistant</li>
-    <li><b>Dual Mode</b> — STDIO (local) and HTTP (remote) server support</li>
-    <li><b>Token Management</b> — Store API token securely in IDE settings</li>
-</ul>
-
-<h3>Available Tools</h3>
-<ul>
-    <li><b>Generate</b> — Create songs from text prompts or custom lyrics</li>
-    <li><b>Extend</b> — Continue a song from a specific timestamp</li>
-    <li><b>Cover</b> — Create covers and remixes in different styles</li>
-    <li><b>Mashup</b> — Blend multiple songs together</li>
-    <li><b>Stems</b> — Separate vocals and instruments</li>
-    <li><b>Lyrics</b> — Generate and optimize lyrics</li>
-    <li><b>Persona</b> — Save and reuse voice styles</li>
-    <li><b>Export</b> — Get MP4, WAV, MIDI, and timing data</li>
-</ul>
-
-<h3>Quick Start</h3>
-<ol>
-    <li>Install this plugin</li>
-    <li>Open <b>Settings → Tools → Suno MCP</b></li>
-    <li>Enter your <a href="https://platform.acedata.cloud?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_platform">Ace Data Cloud</a> API token</li>
-    <li>Click <b>Copy Config</b> and paste into <b>Settings → Tools → AI Assistant → MCP</b></li>
-</ol>
-
-<p>Requires <a href="https://github.com/astral-sh/uv">uv</a> (Python package runner) for STDIO mode,
-or use HTTP mode for zero-install remote access.</p>
+<p>Suno music generation and task lookup, provided by Ace Data Cloud.</p>
+<p>Install this independent integration, open Settings → Tools → Suno MCP, enter an application API key, list models, choose one explicitly and submit a prompt. Use the returned task ID to check the same task until a terminal result. Generation uses your Ace balance; installation does not include free API usage.</p>
+<p>The native service panel works without AI Assistant. Optional MCP setup also connects these tools to AI Assistant; it does not add an LLM provider preset.</p>
+<p>This is an independent Ace Data Cloud integration, not an official Suno or JetBrains product. Models, access and current pricing are controlled by your Ace account.</p>
+<p><a href="https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_quick_start">Service documentation</a> · <a href="https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_models">Current pricing</a></p>
 <!-- BEGIN TOKEN ONBOARDING -->
 <h3>Get your Ace Data Cloud API key</h3>
 <ol><li>Open <a href="https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_api_key">Ace Data Cloud → Applications</a>. Sign in, or register an account first.</li><li>Find <b>General application</b>. If it has not been created, choose <b>Initialize General Application</b>. A general key can use the services available to your account; a dedicated application&#x27;s key is limited to its service. Check the required service/model access and <a href="https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&amp;utm_medium=referral&amp;utm_campaign=evergreen&amp;utm_content=suno_mcp_jetbrains_models">current pricing</a>.</li><li>Copy the <b>API Key</b> from the application card, or open <b>Keys / Manage Keys → Create</b> to create a separate key for this integration. Give it a recognizable name so you can revoke or rotate it independently.</li><li>When creating a key, review <b>Expiration Time</b>, <b>Set Usage Limitation</b>, and <b>Allowed APIs</b>. Enable only the restrictions you need, allow the operations you will call, then click <b>Create</b> and copy the token from the key list. Task lookup does not grant permission to submit a generation. Confirm the application&#x27;s balance can cover your first request; any trial allowance is whatever your account currently displays.</li><li>Copy only the token value, without quotation marks, spaces, or <code>Bearer </code>. An API Key / API Token field expects this raw value; only a manually configured HTTP <code>Authorization</code> header needs the <code>Bearer </code> prefix. A <code>platform-...</code> account-management token cannot replace a generation API key.</li></ol>
