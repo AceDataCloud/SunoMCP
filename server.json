@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.AceDataCloud/mcp-suno",
-  "description": "MCP server for Suno AI music generation, lyrics, and covers",
+  "description": "Create Suno music, lyrics and covers with Ace Data Cloud; retrieve the same task for results.",
   "version": "2026.3.19.7",
   "repository": {
     "url": "https://github.com/AceDataCloud/SunoMCP",
@@ -32,5 +32,12 @@
       "url": "https://suno.mcp.acedata.cloud/mcp"
     }
   ],
-  "websiteUrl": "https://suno.mcp.acedata.cloud"
+  "websiteUrl": "https://platform.acedata.cloud/documents/suno-mcp?utm_source=mcp_registry&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_listing_guide",
+  "title": "Suno by Ace Data Cloud",
+  "icons": [
+    {
+      "src": "https://cdn.acedata.cloud/l3ffw7.jpg",
+      "mimeType": "image/jpeg"
+    }
+  ]
 }

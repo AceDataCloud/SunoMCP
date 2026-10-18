@@ -92,6 +92,7 @@ include = [
     "main.py",
     "README.md",
     "README.pypi.md",
+    "readme/",
     "LICENSE",
     "CHANGELOG.md",
     ".env.example",
