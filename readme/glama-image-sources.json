@@ -1,0 +1,27 @@
+{
+  "service": "suno",
+  "title": "Suno by Ace Data Cloud",
+  "checked_on": "2026-10-18",
+  "images": [
+    {
+      "path": "images/glama-suno-20261017.jpg",
+      "source_url": "https://glama.ai/mcp/servers/AceDataCloud/SunoMCP",
+      "date": "2026-10-17",
+      "kind": "real_page",
+      "limits": "Suno listing only; not auth, healthy connector or generation proof",
+      "sha256": "2762f3fe29da47aaa95ecbcb930385d2227fbd6092b448085ddbfd3efc051c51"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/AceDataCloud/SunoDify/8d3d03570e73324220f111f7fe343da0792a8071/_assets/tutorial/get-api-key-en.png",
+      "source": "SunoDify 8d3d0357",
+      "kind": "real Ace platform screenshot, redacted",
+      "checked_on": "2026-10-18"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/AceDataCloud/SunoDify/8d3d03570e73324220f111f7fe343da0792a8071/_assets/tutorial/create-api-key-en.png",
+      "source": "SunoDify 8d3d0357",
+      "kind": "real Ace platform screenshot; Dify example name remains",
+      "checked_on": "2026-10-18"
+    }
+  ]
+}

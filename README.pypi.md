@@ -15,6 +15,10 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server for AI 
 
 Generate AI music, lyrics, and manage audio projects directly from Claude, VS Code, or any MCP-compatible client.
 
+## Use Suno in Glama
+
+Find the Ace-provided [Suno source listing](https://glama.ai/mcp/servers/AceDataCloud/SunoMCP) or [remote connector](https://glama.ai/mcp/connectors/io.github.AceDataCloud/mcp-suno). Follow the [Glama installation, API Token and first-use guide](https://github.com/AceDataCloud/SunoMCP/blob/main/readme/GLAMA.md). Public discovery and a successful personal connection are separate checks; generation uses your Ace account balance.
+
 ## Suno in goose
 
 Use the independent **Suno by Ace Data Cloud** native goose plugin: [install and API Token guide](goose/README.md) · [简体中文](goose/README_zh_Hans.md). It reuses this MCP server and does not imply goose Marketplace or default-provider inclusion.
