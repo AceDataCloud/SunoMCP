@@ -85,6 +85,7 @@ packages = ["core", "tools", "prompts", "main.py"]
 
 [tool.hatch.build.targets.sdist]
 include = [
+    "kilo/",
     "core/",
     "tools/",
     "prompts/",
