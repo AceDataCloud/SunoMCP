@@ -85,6 +85,9 @@ packages = ["core", "tools", "prompts", "main.py"]
 
 [tool.hatch.build.targets.sdist]
 include = [
+    "goose/",
+    ".goose-plugin/",
+    ".mcp.json",
     "kilo/",
     "core/",
     "tools/",

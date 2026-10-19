@@ -1,0 +1,28 @@
+{
+  "name": "suno-by-acedatacloud",
+  "version": "0.1.0",
+  "description": "Suno by Ace Data Cloud: Suno music, lyrics and covers. Independent goose MCP and Skill plugin.",
+  "author": {
+    "name": "Ace Data Cloud"
+  },
+  "homepage": "https://github.com/AceDataCloud/SunoMCP/blob/main/goose/README.md",
+  "repository": "https://github.com/AceDataCloud/SunoMCP",
+  "license": "MIT",
+  "keywords": [
+    "suno",
+    "goose",
+    "acedatacloud"
+  ],
+  "skills": {
+    "paths": [
+      "./goose/skills"
+    ],
+    "exclusive": true
+  },
+  "mcpServers": {
+    "paths": [
+      "./.mcp.json"
+    ],
+    "exclusive": true
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "suno": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "mcp-suno==2026.10.19.2",
+        "mcp-suno"
+      ]
+    }
+  }
+}
