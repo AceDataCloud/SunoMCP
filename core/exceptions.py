@@ -20,9 +20,28 @@ class SunoAuthError(SunoError):
 class SunoAPIError(SunoError):
     """API request error."""
 
-    def __init__(self, message: str, code: str = "api_error", status_code: int | None = None):
+    def __init__(
+        self,
+        message: str,
+        code: str = "api_error",
+        status_code: int | None = None,
+        task_id: str | None = None,
+        trace_id: str | None = None,
+    ):
         self.status_code = status_code
+        self.task_id = task_id
+        self.trace_id = trace_id
         super().__init__(message, code)
+
+    def __str__(self) -> str:
+        identifiers = []
+        if self.task_id:
+            identifiers.append(f"task_id={self.task_id}")
+        if self.trace_id:
+            identifiers.append(f"trace_id={self.trace_id}")
+        if not identifiers:
+            return self.message
+        return f"{self.message} (code={self.code}, {', '.join(identifiers)})"
 
 
 class SunoValidationError(SunoError):

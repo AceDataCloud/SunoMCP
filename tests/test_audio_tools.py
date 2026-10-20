@@ -108,19 +108,37 @@ class TestCustomNegativeTags:
     """Tests for excluded styles on custom generation."""
 
     @pytest.mark.asyncio
-    async def test_negative_tags_are_forwarded(self, mock_audio_response):
+    @pytest.mark.parametrize("negative_tags", ["metal, distortion", "distortion, " * 200])
+    async def test_negative_tags_are_forwarded(self, mock_audio_response, negative_tags):
         with patch(
             "tools.audio_tools.client.generate_audio",
             new=AsyncMock(return_value=mock_audio_response),
         ) as mock_generate:
             await suno_generate_custom_music(
                 lyric="[Verse]\nhello",
-                negative_tags="metal, distortion",
+                negative_tags=negative_tags,
             )
 
         payload = mock_generate.await_args.kwargs
-        assert payload["negative_tags"] == "metal, distortion"
+        assert payload["custom"] is True
+        assert payload["negative_tags"] == negative_tags
         assert "style_negative" not in payload
+
+    @pytest.mark.asyncio
+    async def test_negative_tags_schema_has_no_fixed_limit(self, mock_audio_response):
+        tools = {tool.name: tool for tool in await mcp.list_tools()}
+        schema = tools["suno_generate_custom_music"].inputSchema["properties"]["negative_tags"]
+        assert "maxLength" not in schema
+        assert "no fixed character limit" in schema["description"]
+        negative_tags = "distortion, " * 200
+
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as mock_generate:
+            await mcp.call_tool("suno_generate_custom_music", {"negative_tags": negative_tags})
+
+        assert mock_generate.await_args.kwargs["negative_tags"] == negative_tags
 
     @pytest.mark.asyncio
     async def test_empty_negative_tags_are_omitted(self, mock_audio_response):

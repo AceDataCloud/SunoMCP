@@ -282,6 +282,22 @@ For custom lyrics:
 
 > Use `suno_generate_custom_music` with title “Storm”, style “energetic rock”, and these lyrics: `[Verse] Thunder in the night [Chorus] We are the storm`. Then follow the returned task ID to completion.
 
+`negative_tags` excludes styles or genres only in custom mode (`custom=true`). The API currently sets no fixed character limit for this field, but overly long content may still fail; keep the description concise.
+
+For covers, extensions and stem separation, use the returned audio `id` as `audio_id`. A downloadable audio file does **not** guarantee that its ID remains available for further processing.
+
+### Processing errors
+
+The audio API documents these HTTP 500 errors:
+
+| Code | Meaning |
+| --- | --- |
+| `suno_processing_unavailable` | Music processing is unavailable. |
+| `suno_model_unavailable` | The selected model is unavailable for this operation. |
+| `suno_processing_failed` | Music processing returned no audio. |
+
+Stop on terminal failure, retain any returned `task_id` and `trace_id`, and contact support with those IDs. Do not blindly resubmit, switch models, or treat an existing download URL as proof that another processing request will work.
+
 ## Available Models
 
 | Model             | Version | Max Duration | Features             |

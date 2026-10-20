@@ -118,7 +118,7 @@ async def suno_generate_custom_music(
     negative_tags: Annotated[
         str,
         Field(
-            description="Styles or genres to explicitly exclude from custom generation. Examples: 'heavy metal, screaming', 'autotune, electronic'"
+            description="Styles or genres to exclude in custom mode (custom=true). The API currently sets no fixed character limit, but overly long content may still fail; keep it concise. Examples: 'heavy metal, screaming', 'autotune, electronic'"
         ),
     ] = "",
     vocal_gender: Annotated[

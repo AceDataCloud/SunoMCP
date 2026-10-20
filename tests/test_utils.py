@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 from core.utils import (
     format_audio_result,
     format_lyrics_result,
@@ -33,6 +35,23 @@ class TestFormatAudioResult:
         data = json.loads(result)
         assert data["success"] is False
         assert data["error"]["code"] == "invalid_request"
+
+    @pytest.mark.parametrize(
+        "code",
+        ["suno_processing_unavailable", "suno_model_unavailable", "suno_processing_failed"],
+    )
+    def test_processing_failure_does_not_request_polling(self, mock_error_response, code):
+        response = {
+            **mock_error_response,
+            "error": {**mock_error_response["error"], "code": code},
+            "task_id": "test-task-123",
+            "trace_id": "test-trace-456",
+        }
+
+        data = json.loads(format_audio_result(response))
+
+        assert data == response
+        assert "mcp_async_submission" not in data
 
     def test_format_empty_data(self):
         """Test formatting response with no audio data."""

@@ -181,6 +181,53 @@ class TestSunoClient:
             assert exc_info.value.status_code == 403
 
     @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        ("code", "message"),
+        [
+            (
+                "suno_processing_unavailable",
+                "Music processing is unavailable. Contact support with the trace ID.",
+            ),
+            (
+                "suno_model_unavailable",
+                "The selected model is unavailable for this operation. Contact support with the trace ID.",
+            ),
+            (
+                "suno_processing_failed",
+                "Music processing returned no audio. Contact support with the trace ID.",
+            ),
+        ],
+    )
+    @pytest.mark.parametrize("task_id", [None, "test-task-123"])
+    async def test_processing_errors_preserve_support_identifiers(
+        self, client, code, message, task_id
+    ):
+        body = {"error": {"code": code, "message": message}, "trace_id": "test-trace-456"}
+        if task_id is not None:
+            body["task_id"] = task_id
+        response = httpx.Response(500, json=body)
+
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            with pytest.raises(SunoAPIError) as exc_info:
+                await client.generate_audio(action="cover", audio_id="audio-1")
+
+        error = exc_info.value
+        assert error.code == code
+        assert error.message == message
+        assert error.status_code == 500
+        assert error.task_id == task_id
+        assert error.trace_id == "test-trace-456"
+        assert code in str(error)
+        assert "trace_id=test-trace-456" in str(error)
+        if task_id is not None:
+            assert f"task_id={task_id}" in str(error)
+        mock_instance.post.assert_awaited_once()
+
+    @pytest.mark.asyncio
     async def test_request_timeout(self, client):
         """Test timeout raises timeout error."""
         with patch("httpx.AsyncClient") as mock_client:

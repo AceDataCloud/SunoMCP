@@ -86,7 +86,13 @@ class SunoClient:
 
         if status == 401:
             raise SunoAuthError(message)
-        raise SunoAPIError(message=message, code=code, status_code=status)
+        raise SunoAPIError(
+            message=message,
+            code=code,
+            status_code=status,
+            task_id=body.get("task_id"),
+            trace_id=body.get("trace_id"),
+        )
 
     async def request(
         self,

@@ -10,7 +10,7 @@ def _with_submission_guidance(
     """Attach MCP polling guidance to async submission responses."""
     payload = dict(data)
     task_id = payload.get("task_id")
-    if not task_id:
+    if not task_id or payload.get("success") is False:
         return payload
 
     payload["mcp_async_submission"] = {
