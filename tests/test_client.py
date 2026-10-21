@@ -184,6 +184,7 @@ class TestSunoClient:
     @pytest.mark.parametrize(
         ("code", "message"),
         [
+            ("api_error", "the account may have been offline"),
             (
                 "suno_processing_unavailable",
                 "Music processing is unavailable. Contact support with the trace ID.",

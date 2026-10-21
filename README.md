@@ -291,6 +291,7 @@ The audio API documents these HTTP 500 errors:
 
 | Code | Meaning |
 | --- | --- |
+| `api_error` with message `the account may have been offline` | The audio API reports that the account may have been offline. |
 | `suno_processing_unavailable` | Music processing is unavailable. |
 | `suno_model_unavailable` | The selected model is unavailable for this operation. |
 | `suno_processing_failed` | Music processing returned no audio. |
