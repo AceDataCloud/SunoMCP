@@ -106,6 +106,59 @@ class TestSunoClient:
         assert request.kwargs["json"] == {"audio_id": "audio-1", "async": True}
 
     @pytest.mark.asyncio
+    async def test_availability_is_authenticated_and_synchronous(
+        self, client, mock_availability_response
+    ):
+        response = httpx.Response(200, json=mock_availability_response)
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            result = await client.check_audio_availability(
+                audio_id=mock_availability_response["data"]["id"]
+            )
+
+        assert result == mock_availability_response
+        mock_instance.post.assert_awaited_once_with(
+            "https://api.test.com/suno/availability",
+            json={"audio_id": mock_availability_response["data"]["id"]},
+            headers=client._get_headers(),
+            timeout=client.timeout,
+        )
+        assert (
+            mock_instance.post.await_args.kwargs["headers"]["authorization"] == "Bearer test-token"
+        )
+
+    @pytest.mark.asyncio
+    async def test_availability_unknown_preserves_error_and_identifiers(
+        self, client, mock_availability_response
+    ):
+        response = httpx.Response(
+            503,
+            json={
+                "error": {"code": "availability_unknown", "message": "Availability unknown"},
+                "task_id": mock_availability_response["task_id"],
+                "trace_id": mock_availability_response["trace_id"],
+            },
+        )
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            with pytest.raises(SunoAPIError) as exc_info:
+                await client.check_audio_availability(
+                    audio_id=mock_availability_response["data"]["id"]
+                )
+
+        assert exc_info.value.status_code == 503
+        assert exc_info.value.code == "availability_unknown"
+        assert exc_info.value.task_id == mock_availability_response["task_id"]
+        assert exc_info.value.trace_id == mock_availability_response["trace_id"]
+        mock_instance.post.assert_awaited_once()
+
+    @pytest.mark.asyncio
     async def test_custom_models_uses_endpoint_and_idempotency_header(
         self, client, mock_audio_response
     ):

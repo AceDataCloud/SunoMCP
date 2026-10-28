@@ -60,6 +60,7 @@ Search for `mcp-suno` (or `io.github.AceDataCloud/mcp-suno`) to locate the exact
 | `suno_generate_lyrics` | Generate song lyrics from a text prompt. |
 | `suno_get_mp4` | Get an MP4 video version of a generated song. |
 | `suno_get_timing` | Get timing and subtitle data for a generated song. |
+| `suno_check_audio_availability` | Synchronously check for positive evidence that an audio ID is available on the current channel. |
 | `suno_extract_vocals` | Extract a required vocal interval shorter than 30 seconds. |
 | `suno_get_wav` | Get the lossless WAV format of a generated song. |
 | `suno_get_mp3` | Get the compressed MP3 format of a generated song. |
@@ -284,6 +285,18 @@ For custom lyrics:
 `negative_tags` excludes styles or genres only in custom mode (`custom=true`). The API currently sets no fixed character limit for this field, but overly long content may still fail; keep the description concise.
 
 For covers, extensions and stem separation, use the returned audio `id` as `audio_id`. A downloadable audio file does **not** guarantee that its ID remains available for further processing.
+
+### Check audio availability before processing
+
+Before a cover or extension, you can call `suno_check_audio_availability` with the audio UUID from a completed song's `id`, **not** the generation `task_id`:
+
+```json
+{"audio_id":"33333333-3333-4333-8333-333333333333"}
+```
+
+Pass these arguments to `suno_check_audio_availability`. It calls `POST /suno/availability` synchronously with an API token and currently costs no Credits. Do not poll its returned `task_id` as though it were a generation job.
+
+A successful response has `data.id` and `data.available=true`: the current channel found positive evidence of availability at check time. This does **not** guarantee that a later cover, extension or other operation will succeed. If availability cannot be confirmed, the API returns an error such as HTTP 503 `availability_unknown`, **never** `available=false`. Do not interpret an error (including rate limits or upstream failures) as proof that the audio is unavailable. Retain returned support identifiers and do not blindly retry or submit a paid operation to resolve uncertainty. Invalid audio IDs return HTTP 400; the MCP tool rejects malformed UUIDs before calling the API.
 
 ### Processing errors
 

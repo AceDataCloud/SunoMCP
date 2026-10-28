@@ -2,6 +2,7 @@
 
 import json
 from typing import Annotated
+from uuid import UUID
 
 from pydantic import Field
 
@@ -57,6 +58,18 @@ async def suno_get_timing(
         Timing data with word-level timestamps.
     """
     result = await client.get_timing(audio_id=audio_id)
+    return json.dumps(result, ensure_ascii=False, indent=2)
+
+
+@mcp.tool()
+async def suno_check_audio_availability(
+    audio_id: Annotated[
+        UUID,
+        Field(description="Audio UUID from a completed Suno song's id, not the task_id."),
+    ],
+) -> str:
+    """Check current-channel audio availability synchronously; success only reports available=true, not a guarantee that later operations succeed. Unknown availability raises an error, never false. Requires an API token; currently costs no Credits."""
+    result = await client.check_audio_availability(audio_id=str(audio_id))
     return json.dumps(result, ensure_ascii=False, indent=2)
 
 

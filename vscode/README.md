@@ -60,7 +60,7 @@ Save the key in the client's credential store or the environment variable shown 
 
 ## Tool Reference
 
-**34 tools** available via this server.
+**35 tools** available via this server.
 
 | Tool | Description |
 | --- | --- |
@@ -80,6 +80,7 @@ Save the key in the client's credential store or the environment variable shown 
 | `suno_generate_lyrics` | Generate song lyrics from a text prompt. |
 | `suno_get_mp4` | Get an MP4 video version of a generated song. |
 | `suno_get_timing` | Get timing and subtitle data for a generated song. |
+| `suno_check_audio_availability` | Synchronously check for positive evidence that an audio ID is available on the current channel. |
 | `suno_extract_vocals` | Extract a required vocal interval shorter than 30 seconds. |
 | `suno_get_wav` | Get the lossless WAV format of a generated song. |
 | `suno_get_mp3` | Get the compressed MP3 format of a generated song. |

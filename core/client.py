@@ -201,6 +201,9 @@ class SunoClient:
         logger.info(f"⏱️ Getting timing for audio: {kwargs.get('audio_id', '')}")
         return await self.request("/suno/timing", kwargs)
 
+    async def check_audio_availability(self, audio_id: str) -> dict[str, Any]:
+        return await self.request("/suno/availability", {"audio_id": audio_id})
+
     async def get_vox(self, **kwargs: Any) -> dict[str, Any]:
         """Extract vocals from a song."""
         logger.info(f"🎙️ Extracting vocals for audio: {kwargs.get('audio_id', '')}")

@@ -92,6 +92,11 @@ Stems & Extraction:
 - suno_all_stems_music: Separate a song into all individual stems (vocals, bass, drums, etc.)
 - suno_extract_vocals: Extract only the vocal track from a song
 
+Audio Availability:
+- suno_check_audio_availability: Synchronous current-channel precheck using an audio UUID, not a task ID.
+  Requires an API token; currently costs no Credits. Success only returns available=true,
+  without guaranteeing later processing. Unknown availability is an error, never false.
+
 Media Conversion:
 - suno_get_mp4: Get MP4 video version of a song
 - suno_get_wav: Get lossless WAV format of a song
