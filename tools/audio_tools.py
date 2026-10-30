@@ -312,6 +312,17 @@ async def suno_cover_music(
             description="Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when the cover is complete."
         ),
     ] = None,
+    persona_id: Annotated[
+        str | None,
+        Field(
+            description=(
+                "Persona ID for a specified-voice cover. For private voices from suno_create_voice, "
+                "first upload the source with the same persona_id in suno_upload_audio, then use "
+                "suno_upload_cover with its returned audio_id. Keep all steps on the same service "
+                "channel; vocal_gender is not required and cannot replace the voice ID."
+            ),
+        ),
+    ] = None,
 ) -> str:
     """Create a cover or remix version of an existing song in a different style.
 
@@ -339,6 +350,8 @@ async def suno_cover_music(
         payload["style"] = style
     if audio_weight is not None:
         payload["audio_weight"] = audio_weight
+    if persona_id is not None:
+        payload["persona_id"] = persona_id
 
     result = await client.generate_audio(**payload)
     return format_audio_result(result)
@@ -675,6 +688,17 @@ async def suno_upload_cover(
         str | None,
         Field(description="Webhook callback URL for asynchronous notifications."),
     ] = None,
+    persona_id: Annotated[
+        str | None,
+        Field(
+            description=(
+                "Persona ID for a specified-voice cover. Private voices require the audio_id "
+                "returned by suno_upload_audio with this same persona_id in standard mode. "
+                "Keep voice creation, upload and cover on the same service channel. "
+                "No extra vocal_gender is needed; gender cannot replace the voice ID."
+            ),
+        ),
+    ] = None,
 ) -> str:
     """Create an AI cover of an uploaded audio (your own music).
 
@@ -699,6 +723,8 @@ async def suno_upload_cover(
         payload["style"] = style
     if audio_weight is not None:
         payload["audio_weight"] = audio_weight
+    if persona_id is not None:
+        payload["persona_id"] = persona_id
 
     result = await client.generate_audio(**payload)
     return format_audio_result(result)

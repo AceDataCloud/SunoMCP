@@ -14,6 +14,32 @@ from tools.audio_tools import (
 )
 
 
+class TestCoverPersona:
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("tool_name", ["suno_cover_music", "suno_upload_cover"])
+    @pytest.mark.parametrize("persona_id", [None, "persona-id-456"])
+    async def test_schema_and_dispatch(self, tool_name, persona_id, mock_audio_response):
+        tool = next(tool for tool in await mcp.list_tools() if tool.name == tool_name)
+        assert "persona_id" not in tool.inputSchema["required"]
+        assert "same service channel" in tool.inputSchema["properties"]["persona_id"]["description"]
+        arguments = {"audio_id": "audio-id-1"}
+        if persona_id is not None:
+            arguments["persona_id"] = persona_id
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as request:
+            await mcp.call_tool(tool_name, arguments)
+        payload = request.await_args.kwargs
+        assert payload["action"] == ("cover" if tool_name == "suno_cover_music" else "upload_cover")
+        assert payload["audio_id"] == arguments["audio_id"]
+        if persona_id is None:
+            assert "persona_id" not in payload
+        else:
+            assert payload["persona_id"] == persona_id
+        assert "vocal_gender" not in payload
+
+
 class TestInspoTool:
     """Tests for the suno_generate_inspo tool."""
 

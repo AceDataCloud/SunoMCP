@@ -287,6 +287,16 @@ For custom lyrics:
 
 For covers, extensions and stem separation, use the returned audio `id` as `audio_id`. A downloadable audio file does **not** guarantee that its ID remains available for further processing.
 
+### Cover with a specified voice
+
+Both `suno_cover_music` and `suno_upload_cover` accept `persona_id` for a specified-voice cover. A private voice created by `suno_create_voice` requires this sequence:
+
+1. Keep the returned `persona_id` from voice creation.
+2. Call `suno_upload_audio` with the original song's public `audio_url`, `mode: "standard"` and that `persona_id` to associate the source with the voice. `persona_id` cannot be used with `mode: "enhanced"`.
+3. Call `suno_upload_cover` with the upload's returned `data.audio_id` and the same `persona_id`, then follow its task ID to completion.
+
+Do not reuse an older audio ID that was not uploaded with that private voice. Voice creation, upload and cover must use the same service channel. No extra `vocal_gender` is needed; a gender preference is not a substitute for a voice ID.
+
 ### Check audio availability before processing
 
 Before a cover or extension, you can call `suno_check_audio_availability` with the audio UUID from a completed song's `id`, **not** the generation `task_id`:

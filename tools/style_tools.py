@@ -89,6 +89,17 @@ async def suno_upload_audio(
         str | None,
         Field(description="Optional HTTPS webhook URL for the enhanced upload result."),
     ] = None,
+    persona_id: Annotated[
+        str | None,
+        Field(
+            min_length=1,
+            description=(
+                "Optional voice Persona ID, standard mode only. Associates the source audio "
+                "with this voice for suno_upload_cover. Create the voice, upload and cover "
+                "on the same service channel."
+            ),
+        ),
+    ] = None,
 ) -> str:
     """Upload external audio for use in subsequent operations.
 
@@ -96,11 +107,15 @@ async def suno_upload_audio(
     upload cannot process authorized audio; it returns a task_id for suno_get_task.
     Enhanced audio IDs support Cover, Samples, and Mashup.
     """
+    if persona_id is not None and mode != "standard":
+        raise ValueError("persona_id is only supported when mode=standard")
     if mode == "enhanced" and not name:
         raise ValueError("name is required when mode=enhanced")
     payload: dict[str, Any] = {"audio_url": audio_url}
     if mode == "enhanced":
         payload["mode"] = mode
+    if persona_id is not None:
+        payload["persona_id"] = persona_id
     if name:
         payload["name"] = name
     if callback_url:
