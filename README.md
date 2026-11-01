@@ -282,7 +282,13 @@ For custom lyrics:
 
 > Use `suno_generate_custom_music` with title “Storm”, style “energetic rock”, and these lyrics: `[Verse] Thunder in the night [Chorus] We are the storm`. Then follow the returned task ID to completion.
 
-`negative_tags` excludes styles or genres only in custom mode (`custom=true`). The API currently sets no fixed character limit for this field, but overly long content may still fail; keep the description concise.
+`negative_tags` excludes styles or genres in custom generation (`custom=true`) and in `suno_replace_section`. The API currently sets no fixed character limit for this field, but overly long content may still fail; keep the description concise.
+
+Extensions (`suno_extend_music`, `suno_upload_extend`) require a positive `continue_at` in seconds; fractional boundaries such as `30.792` are preserved. Lyrics affect only new content after that boundary, not the original portion. Replacement requires `0 <= replace_section_start < replace_section_end`. `suno_samples_music` selects an interval from one source audio: `samples_start` defaults to 0, and `samples_end` is required and must be greater than start. Interval ends must not exceed the source duration. `duration` (an integer from 10–360) is a target used only for generation; actual length depends on the model.
+
+For `suno_generate_inspo`, supply 1–4 public reference audio URLs. Use `instrumental=true` for a no-lyrics request, or `custom=true` with `lyric_prompt` and empty `lyric` for automatic lyrics. The optional `persona_id` is a voice ID, not an audio ID; voice support with Inspo depends on the service channel. Extensions do not use an additional persona ID.
+
+For `suno_all_stems_music`, wait for successful terminal completion of the full task. Playable URLs during processing do not mean every stem is complete.
 
 For covers, extensions and stem separation, use the returned audio `id` as `audio_id`. A downloadable audio file does **not** guarantee that its ID remains available for further processing.
 

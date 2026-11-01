@@ -154,7 +154,9 @@ async def suno_generate_custom_music(
     duration: Annotated[
         int | None,
         Field(
-            description="Target length of the generated track in seconds, an integer between 10 and 360. Only takes effect for the 'generate' action in custom mode with model 'chirp-v5-5'; other combinations return a 400 error. The finished track lands near this value but is not guaranteed to match it exactly."
+            description="Target length in whole seconds (10-360). Only generate uses duration; the model may ignore this target. Actual length comes from the result.",
+            ge=10,
+            le=360,
         ),
     ] = None,
     audio_weight: Annotated[
@@ -249,7 +251,8 @@ async def suno_extend_music(
     continue_at: Annotated[
         float,
         Field(
-            description="Timestamp in seconds where to start the extension. For example, 120.5 means continue from 2 minutes and 0.5 seconds into the song."
+            description="Positive continuation boundary in seconds; fractional seconds are preserved. Lyrics only affect new content after this boundary, not the source before it.",
+            gt=0,
         ),
     ],
     style: Annotated[
@@ -561,11 +564,15 @@ async def suno_replace_section(
     ],
     replace_section_start: Annotated[
         float,
-        Field(description="Start time in seconds of the section to replace."),
+        Field(
+            ge=0, description="Required start time in seconds, at least 0; fractions are preserved."
+        ),
     ],
     replace_section_end: Annotated[
         float,
-        Field(description="End time in seconds of the section to replace."),
+        Field(
+            description="Required end time in seconds, greater than start and no later than source duration."
+        ),
     ],
     lyric: Annotated[
         str | None,
@@ -595,6 +602,12 @@ async def suno_replace_section(
             ),
         ),
     ] = "full_song",
+    negative_tags: Annotated[
+        str,
+        Field(
+            description="Styles or genres to exclude from the replacement; keep concise. No fixed API character limit."
+        ),
+    ] = "",
 ) -> str:
     """Replace a specific time range in a song with new generated content.
 
@@ -609,6 +622,11 @@ async def suno_replace_section(
     Returns:
         Task ID plus two complete songs by default, or two unmerged clips in candidates mode.
     """
+    if replace_section_start < 0 or replace_section_end <= replace_section_start:
+        raise ValueError(
+            "replace_section_end must be greater than a nonnegative replace_section_start"
+        )
+
     payload: dict = {
         "action": "replace_section",
         "audio_id": audio_id,
@@ -619,6 +637,8 @@ async def suno_replace_section(
     }
 
     payload["replace_section_result_mode"] = result_mode
+    if negative_tags:
+        payload["negative_tags"] = negative_tags
     if lyric:
         payload["lyric"] = lyric
         payload["custom"] = True
@@ -643,7 +663,10 @@ async def suno_upload_extend(
     ],
     continue_at: Annotated[
         float,
-        Field(description="Timestamp in seconds where to start the extension."),
+        Field(
+            gt=0,
+            description="Positive continuation boundary in seconds; fractional seconds are preserved.",
+        ),
     ],
     style: Annotated[
         str,
@@ -1029,12 +1052,12 @@ async def suno_samples_music(
     ],
     samples_start: Annotated[
         float,
-        Field(description="Start time in seconds for adding samples. Default is 0."),
+        Field(ge=0, description="Sample interval start in seconds, at least 0. Default is 0."),
     ] = 0.0,
     samples_end: Annotated[
         float | None,
         Field(
-            description="End time in seconds for adding samples. Must be less than total song duration."
+            description="Required sample interval end in seconds, greater than start and no later than source duration."
         ),
     ] = None,
     model: Annotated[
@@ -1059,6 +1082,11 @@ async def suno_samples_music(
     Returns:
         Task ID and the audio with samples added.
     """
+    if samples_end is None or samples_start < 0 or samples_end <= samples_start:
+        raise ValueError(
+            "samples_end is required and must be greater than a nonnegative samples_start"
+        )
+
     payload: dict = {
         "action": "samples",
         "audio_id": audio_id,
@@ -1079,7 +1107,9 @@ async def suno_generate_inspo(
     audio_urls: Annotated[
         list[str],
         Field(
-            description="1 to 4 publicly accessible reference audio URLs used as inspiration. Suno extracts stylistic ideas from these tracks (rather than copying them) to create a brand-new song. Tip: avoid well-known catalog recordings, which may be rejected by Suno's copyright check."
+            description="1 to 4 publicly accessible reference audio URLs used as inspiration. Suno extracts stylistic ideas from these tracks (rather than copying them) to create a brand-new song. Tip: avoid well-known catalog recordings, which may be rejected by Suno's copyright check.",
+            min_length=1,
+            max_length=4,
         ),
     ],
     prompt: Annotated[
@@ -1114,6 +1144,25 @@ async def suno_generate_inspo(
             description="Webhook callback URL for asynchronous notifications. When provided, the API will call this URL when generation completes."
         ),
     ] = None,
+    instrumental: Annotated[
+        bool | None, Field(description="Generate instrumental music without lyrics.")
+    ] = None,
+    persona_id: Annotated[
+        str | None,
+        Field(
+            description="Voice ID, not an audio ID. Availability with Inspo depends on the service channel."
+        ),
+    ] = None,
+    custom: Annotated[
+        bool | None, Field(description="Enable custom mode; use lyric or lyric_prompt for lyrics.")
+    ] = None,
+    lyric: Annotated[
+        str | None, Field(description="Lyrics in custom mode; ignored for instrumental generation.")
+    ] = None,
+    lyric_prompt: Annotated[
+        str | None,
+        Field(description="Auto-lyric prompt, only when custom=true and lyric is empty."),
+    ] = None,
 ) -> str:
     """Generate brand-new music inspired by 1 to 4 reference audios (Suno Inspo / 灵感创作).
 
@@ -1142,6 +1191,15 @@ async def suno_generate_inspo(
         payload["style"] = style
     if audio_weight is not None:
         payload["audio_weight"] = audio_weight
+    for key, value in {
+        "instrumental": instrumental,
+        "persona_id": persona_id,
+        "custom": custom,
+        "lyric": lyric,
+        "lyric_prompt": lyric_prompt,
+    }.items():
+        if value is not None:
+            payload[key] = value
 
     result = await client.generate_audio(**payload)
     return format_audio_result(result)
