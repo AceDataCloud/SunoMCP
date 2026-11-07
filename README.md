@@ -80,6 +80,14 @@ Search for `mcp-suno` (or `io.github.AceDataCloud/mcp-suno`) to locate the exact
 | `suno_list_actions` | List all available Suno API actions and corresponding tools. |
 | `suno_get_lyric_format_guide` | Get guidance on formatting lyrics for Suno music generation. |
 
+## Verify the connection before generating
+
+First discover the server's tools, then call `suno_list_models` with no arguments. This returns local reference information without generating music; it does not validate the application key. Your client's Chat model may still be billed separately.
+
+For an application-backed read-only check, enable only `suno_list_custom_models` and call it with `limit=1`. This uses the existing custom-model **retrieve_batch** operation; it does not create music or train a model. A successful `items` response, including an empty list for a new application, is the success criterion. The key must permit the custom-model lookup API. This confirms only that lookup's access, not permission to generate music or sufficient balance for a generation.
+
+If the tool is missing, reconnect and refresh the tool list. For 401/403, check the copied key, application/service permissions, Allowed APIs, expiration and usage limits before creating another credential. For other errors retain the task/trace ID, never the key. Do not retry generation to test authentication. Review [current pricing](https://platform.acedata.cloud/models?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_models) before a paid request.
+
 ## Connect in minutes
 
 The hosted server is `https://suno.mcp.acedata.cloud/mcp`. Choose **one** authentication route before following a client example:

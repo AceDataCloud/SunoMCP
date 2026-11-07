@@ -41,6 +41,8 @@ VS Code 1.141历史真实截图于2026-10-09收入教程；工具图以OpenAI为
 
 模型说明工具不生成媒体，也不证明生成权限；没有已完成任务时，图片服务停在工具发现，不要为验安装新发生成。聊天模型和辅助请求仍可能收费，先查模型价格。已有任务只用 `suno_get_task` 查询同一个原ID（将 `TASK_ID` 替换为自己的原任务ID），直至成功或失败；打开结果媒体，并在 [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_console_usage) 对应原生成任务及Credits账单。accepted、绿色聊天回合都不等于最终媒体成功，不要重新生成来轮询。
 
+若要做读取当前应用的认证检查，只启用 `suno_list_custom_models`，参数 `limit=1`。成功的 `items` 响应（包括新应用的空列表）说明自定义模型查询可访问；这是 retrieve_batch，不创建音乐或训练模型，也不证明生成权限或余额。Allowed APIs 需允许该查询；聊天模型仍可能单独计费。
+
 ## 5. 常见问题
 
 - 看不到模型：先完成 Manage Language Models 和模型扩展设置；不要绕过组织政策。

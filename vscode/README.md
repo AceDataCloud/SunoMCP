@@ -197,6 +197,8 @@ Call suno_list_models only. Show supported models/actions. Do not generate anyth
 
 The model-list tool returns reference information without generating media. It does not prove that your key has generation access.
 
+For an application-backed read-only authentication check, enable only `suno_list_custom_models` and call it with `limit=1`. A successful `items` response, including an empty list, confirms custom-model lookup access. It does not create music or train a model; it does not prove generation permission or balance. Check Allowed APIs for that lookup. Your Chat model can still be billed separately.
+
 For an existing media task, enable only `suno_get_task`, replace `TASK_ID` with your original task ID, and query that same ID until terminal success or failure. Open the returned media link and match the original generation task to its charge in [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_console_usage). An accepted task or green Chat turn alone is not a completed artifact. Never resubmit generation just to check progress.
 
 ### Real VS Code reference screenshots
