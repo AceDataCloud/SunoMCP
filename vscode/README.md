@@ -60,7 +60,7 @@ Save the key in the client's credential store or the environment variable shown 
 
 ## Tool Reference
 
-**35 tools** available via this server.
+**37 tools** available via this server.
 
 | Tool | Description |
 | --- | --- |
@@ -85,7 +85,9 @@ Save the key in the client's credential store or the environment variable shown 
 | `suno_get_wav` | Get the lossless WAV format of a generated song. |
 | `suno_get_mp3` | Get the compressed MP3 format of a generated song. |
 | `suno_get_midi` | Get MIDI data extracted from a generated song. |
-| `suno_create_persona` | Create a new artist persona from an existing audio's vocal style. |
+| `suno_create_persona` | Create a new artist persona from an existing audio's vocal style; API pricing applies. |
+| `suno_list_personas` | List saved personas for a user without a usage charge. |
+| `suno_delete_persona` | Permanently delete a saved persona without a usage charge. |
 | `suno_create_custom_model` | Create a reusable custom music model from 6 to 24 authorized audio URLs. |
 | `suno_get_custom_model` | Retrieve one custom music model by ID. |
 | `suno_list_custom_models` | List custom music models for the current Suno application. |

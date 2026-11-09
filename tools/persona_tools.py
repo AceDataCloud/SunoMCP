@@ -59,6 +59,9 @@ async def suno_create_persona(
     - You're building an album with consistent vocal style
     - You want to save a unique voice for future use
 
+    Creation follows the API's pricing rules; the free listing/deletion policy
+    does not apply. Check current pricing before creating a persona.
+
     After creating a persona, use suno_generate_with_persona with the returned
     persona_id to generate new songs with that voice.
 
@@ -101,7 +104,8 @@ async def suno_list_personas(
     """List all saved artist personas for a user.
 
     Returns all personas previously created with suno_create_persona or
-    suno_create_voice for the given user.
+    suno_create_voice for the given user. This GET operation is free and needs
+    no extra billing-exemption header; normal authentication and permissions apply.
 
     Use this when:
     - You want to see all available voice personas
@@ -132,7 +136,9 @@ async def suno_delete_persona(
 ) -> str:
     """Delete a saved artist persona.
 
-    Permanently removes a previously created persona. This action cannot be undone.
+    Permanently removes a previously created persona. This action cannot be undone;
+    confirm the user's intent before deleting. This DELETE operation is free and
+    needs no extra billing-exemption header; normal authentication and permissions apply.
 
     Use this when:
     - You want to remove an unused voice persona

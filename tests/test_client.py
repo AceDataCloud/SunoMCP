@@ -159,6 +159,68 @@ class TestSunoClient:
         mock_instance.post.assert_awaited_once()
 
     @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        ("operation", "method", "arguments"),
+        [
+            ("list_personas", "get", {"user_id": "user-uuid", "limit": 50, "offset": 0}),
+            (
+                "delete_persona",
+                "delete",
+                {"persona_id": "eae26f89-b64b-404d-a80c-761996660b1c", "user_id": None},
+            ),
+            (
+                "delete_persona",
+                "delete",
+                {"persona_id": "eae26f89-b64b-404d-a80c-761996660b1c", "user_id": "user-uuid"},
+            ),
+        ],
+    )
+    async def test_persona_management_uses_free_methods_with_normal_headers(
+        self, client, operation, method, arguments
+    ):
+        response = MagicMock(status_code=200)
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            request = getattr(mock_instance, method)
+            request.return_value = response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            result = await getattr(client, operation)(**arguments)
+
+        assert result is response.json.return_value
+        request.assert_awaited_once_with(
+            "https://api.test.com/suno/persona",
+            params={key: value for key, value in arguments.items() if value is not None},
+            headers={
+                "accept": "application/json",
+                "authorization": "Bearer test-token",
+                "content-type": "application/json",
+            },
+            timeout=client.timeout,
+        )
+        mock_instance.post.assert_not_awaited()
+
+    @pytest.mark.asyncio
+    async def test_persona_creation_keeps_post_contract(self, client, mock_persona_response):
+        response = httpx.Response(200, json=mock_persona_response)
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.return_value = response
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            result = await client.create_persona(audio_id="audio-id-1", name="My Voice")
+
+        assert result == mock_persona_response
+        mock_instance.post.assert_awaited_once_with(
+            "https://api.test.com/suno/persona",
+            json={"audio_id": "audio-id-1", "name": "My Voice"},
+            headers=client._get_headers(),
+            timeout=client.timeout,
+        )
+        mock_instance.get.assert_not_awaited()
+        mock_instance.delete.assert_not_awaited()
+
+    @pytest.mark.asyncio
     async def test_custom_models_uses_endpoint_and_idempotency_header(
         self, client, mock_audio_response
     ):

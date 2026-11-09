@@ -65,7 +65,9 @@ Search for `mcp-suno` (or `io.github.AceDataCloud/mcp-suno`) to locate the exact
 | `suno_get_wav` | Get the lossless WAV format of a generated song. |
 | `suno_get_mp3` | Get the compressed MP3 format of a generated song. |
 | `suno_get_midi` | Get MIDI data extracted from a generated song. |
-| `suno_create_persona` | Create a new artist persona from an existing audio's vocal style. |
+| `suno_create_persona` | Create a new artist persona from an existing audio's vocal style; API pricing applies. |
+| `suno_list_personas` | List saved personas for a user without a usage charge. |
+| `suno_delete_persona` | Permanently delete a saved persona without a usage charge. |
 | `suno_create_custom_model` | Create a reusable custom music model from 6 to 24 authorized audio URLs. |
 | `suno_get_custom_model` | Retrieve one custom music model by ID. |
 | `suno_list_custom_models` | List custom music models for the current Suno application. |
@@ -299,6 +301,12 @@ For `suno_generate_inspo`, supply 1–4 public reference audio URLs. Use `instru
 For `suno_all_stems_music`, wait for successful terminal completion of the full task. Playable URLs during processing do not mean every stem is complete.
 
 For covers, extensions and stem separation, use the returned audio `id` as `audio_id`. A downloadable audio file does **not** guarantee that its ID remains available for further processing.
+
+### Manage saved personas
+
+Call `suno_list_personas` with `user_id` to find an existing voice before creating another one; use optional `limit` (default 50) and `offset` (default 0) for pagination. Listing uses `GET /suno/persona` and is free. After confirming the exact persona to remove, call `suno_delete_persona` with `persona_id` and optional `user_id` for ownership verification. Deletion uses `DELETE /suno/persona` and is also free, but permanent; do not use it to test the connection.
+
+Neither listing nor deletion needs an extra billing-exemption header. Normal API authentication and permissions still apply. `suno_create_persona` uses `POST /suno/persona` and remains subject to the API's pricing rules; check current pricing and spending approval before creation. The free list/delete policy does not make voice creation or music generation free.
 
 ### Cover with a specified voice
 
