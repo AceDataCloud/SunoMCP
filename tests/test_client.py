@@ -344,6 +344,43 @@ class TestSunoClient:
         mock_instance.post.assert_awaited_once()
 
     @pytest.mark.asyncio
+    async def test_trial_concurrency_error_does_not_retry_or_block_task_polling(
+        self, client, mock_task_response
+    ):
+        response = httpx.Response(
+            429,
+            json={
+                "error": {"code": "too_many_requests"},
+                "trace_id": "test-trace-456",
+            },
+        )
+        with patch("httpx.AsyncClient") as mock_client:
+            mock_instance = AsyncMock()
+            mock_instance.post.side_effect = [
+                response,
+                httpx.Response(200, json=mock_task_response),
+            ]
+            mock_client.return_value.__aenter__.return_value = mock_instance
+
+            with pytest.raises(SunoAPIError) as exc_info:
+                await client.generate_audio(action="generate")
+
+            assert exc_info.value.status_code == 429
+            assert exc_info.value.code == "too_many_requests"
+            assert exc_info.value.trace_id == "test-trace-456"
+            mock_instance.post.assert_awaited_once()
+
+            result = await client.query_task(action="retrieve", id=mock_task_response["id"])
+
+        assert result == mock_task_response
+        assert mock_instance.post.await_count == 2
+        assert mock_instance.post.await_args.args[0] == "https://api.test.com/suno/tasks"
+        assert mock_instance.post.await_args.kwargs["json"] == {
+            "action": "retrieve",
+            "id": mock_task_response["id"],
+        }
+
+    @pytest.mark.asyncio
     async def test_request_timeout(self, client):
         """Test timeout raises timeout error."""
         with patch("httpx.AsyncClient") as mock_client:
@@ -353,6 +390,8 @@ class TestSunoClient:
 
             with pytest.raises(SunoTimeoutError, match="timed out"):
                 await client.request("/suno/audios", {})
+
+        mock_instance.post.assert_awaited_once()
 
     @pytest.mark.asyncio
     async def test_request_http_error(self, client):
