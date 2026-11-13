@@ -149,7 +149,9 @@ async def suno_create_voice(
 
     This is different from suno_create_persona which creates a persona from
     a previously generated Suno audio. Use this to create a persona from
-    your own voice recordings or external audio files.
+    your own voice recordings or external audio files. Successful voice creation
+    costs 0.15 Credits per request. Discounts follow the actual bill; failed
+    requests are not charged.
 
     Use this when:
     - You have an external audio file with clear vocals

@@ -37,7 +37,9 @@ async def suno_generate_lyrics(
     - You need properly structured lyrics with section markers
 
     The output includes section markers like [Verse], [Chorus], [Bridge] that
-    Suno's music generation understands.
+    Suno's music generation understands. Successful requests cost 0.08 Credits
+    each, even with multiple lyric candidates. Discounts follow the actual bill;
+    failed requests are not charged.
 
     Returns:
         Generated lyrics with title, status, and formatted text with section markers.

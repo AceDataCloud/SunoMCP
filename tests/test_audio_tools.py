@@ -358,7 +358,76 @@ class TestCustomDuration:
             request.assert_not_awaited()
 
 
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "name,credits",
+    [
+        ("suno_generate_lyrics", "0.08 Credits"),
+        ("suno_create_voice", "0.15 Credits"),
+        ("suno_stems_music", "0.56 Credits"),
+    ],
+)
+async def test_tool_descriptions_state_success_only_request_pricing(name, credits):
+    tools = {tool.name: tool for tool in await mcp.list_tools()}
+    description = tools[name].description
+    assert credits in description
+    assert "per request" in description or "each" in description
+    assert "failed requests are not charged" in description.replace("\n    ", " ")
+
+
 class TestReplaceSectionResultMode:
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize(
+        "fields",
+        [
+            {"lyric": "Local new words", "prompt": "Local new words"},
+            {"lyric": "Local new words"},
+            {"prompt": "Local new words"},
+            {"prompt": ""},
+            {},
+        ],
+    )
+    async def test_local_lyrics_and_optional_prompt_dispatch(self, fields, mock_audio_response):
+        with patch(
+            "tools.audio_tools.client.generate_audio",
+            new=AsyncMock(return_value=mock_audio_response),
+        ) as request:
+            await mcp.call_tool(
+                "suno_replace_section",
+                {
+                    "audio_id": "audio-1",
+                    "replace_section_start": 30.792,
+                    "replace_section_end": 50.5,
+                    **fields,
+                },
+            )
+
+        payload = request.await_args.kwargs
+        assert payload["audio_id"] == "audio-1"
+        assert payload["replace_section_start"] == 30.792
+        assert payload["replace_section_end"] == 50.5
+        assert payload["replace_section_result_mode"] == "full_song"
+        for key in ("lyric", "prompt"):
+            if key in fields:
+                assert payload[key] == fields[key]
+            else:
+                assert key not in payload
+        assert payload.get("custom") is (True if "lyric" in fields else None)
+        assert "duration" not in payload
+        request.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_replacement_schema_explains_local_input_and_result_limits(self):
+        tools = {tool.name: tool for tool in await mcp.list_tools()}
+        tool = tools["suno_replace_section"]
+        properties = tool.inputSchema["properties"]
+        assert "prompt" not in tool.inputSchema["required"]
+        assert properties["prompt"]["default"] is None
+        assert "same text as lyric" in properties["prompt"]["description"]
+        assert "not the whole song" in properties["lyric"]["description"]
+        assert "length may change" in properties["replace_section_result_mode"]["description"]
+        assert "not a transcript" in tool.description
+
     @pytest.mark.asyncio
     async def test_fastmcp_dispatch_maps_openapi_parameter_name(
         self, mock_audio_response: dict[str, object]

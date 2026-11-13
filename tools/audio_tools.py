@@ -538,7 +538,10 @@ async def suno_stems_music(
     """Separate a song into individual stems (vocals and instruments).
 
     Splits the audio into separate tracks for vocals and instrumentals,
-    useful for remixing, karaoke, or isolating specific parts.
+    useful for remixing, karaoke, or isolating specific parts. Successful stems
+    requests cost 0.56 Credits each, with vocals and accompaniment billed together.
+    Discounts follow the actual bill; failed requests are not charged.
+    all_stems and extract_stem have their own prices.
 
     Use this when:
     - You want to separate vocals from instrumentals
@@ -560,7 +563,9 @@ async def suno_stems_music(
 async def suno_replace_section(
     audio_id: Annotated[
         str,
-        Field(description="ID of the audio to replace a section in."),
+        Field(
+            description="Complete source song's audio ID, not a task ID. For another edit, use the selected full-song result's id and recheck its duration and timestamps."
+        ),
     ],
     replace_section_start: Annotated[
         float,
@@ -577,7 +582,7 @@ async def suno_replace_section(
     lyric: Annotated[
         str | None,
         Field(
-            description="New lyrics for the replaced section. Use section markers like [Verse], [Chorus]."
+            description="Local new lyrics for the selected interval, not the whole song. For lyric edits, also set prompt to the same local text; full_song output does not require full-song lyrics."
         ),
     ] = None,
     style: Annotated[
@@ -597,8 +602,8 @@ async def suno_replace_section(
         Field(
             validation_alias="replace_section_result_mode",
             description=(
-                "Result shape: full_song returns two complete songs, one from each replacement candidate; "
-                "candidates returns the two unmerged replacement clips."
+                "full_song (default) returns two complete songs without another concat; length may change. "
+                "candidates returns two unmerged clips; select a candidate's id for concat."
             ),
         ),
     ] = "full_song",
@@ -608,11 +613,24 @@ async def suno_replace_section(
             description="Styles or genres to exclude from the replacement; keep concise. No fixed API character limit."
         ),
     ] = "",
+    prompt: Annotated[
+        str | None,
+        Field(
+            description="Local new lyrics for the selected interval, preferably the same text as lyric. Not an inspiration or style description; does not guarantee word-for-word singing."
+        ),
+    ] = None,
 ) -> str:
     """Replace a specific time range in a song with new generated content.
 
-    Re-generates a portion of a song between the specified start and end times,
-    keeping the rest of the song unchanged. Great for fixing sections you don't like.
+    Supply local new lyrics, preferably matching lyric and prompt. Lyric-only
+    requests remain supported. Listen to the source and use suno_get_timing to
+    select complete phrases; match the local line count, length and rhythm.
+    Default full_song returns two complete songs without another concat, but
+    length may change and later sections may shift. duration cannot lock an edit.
+    Returned lyric is metadata, not a transcript, and may be empty. Listen to
+    both results to check new words and transitions; success is not proof of
+    lyric fidelity. For another edit, use the selected full-song id and recheck
+    its timestamps. More polling cannot change a completed result.
 
     Use this when:
     - A specific section of a song needs improvement
@@ -642,6 +660,8 @@ async def suno_replace_section(
     if lyric:
         payload["lyric"] = lyric
         payload["custom"] = True
+    if prompt is not None:
+        payload["prompt"] = prompt
     if style:
         payload["style"] = style
 

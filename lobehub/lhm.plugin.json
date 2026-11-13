@@ -662,7 +662,7 @@
     {
       "name": "suno_stems_music",
       "title": null,
-      "description": "Separate a song into individual stems (vocals and instruments).\n\n    Splits the audio into separate tracks for vocals and instrumentals,\n    useful for remixing, karaoke, or isolating specific parts.\n\n    Use this when:\n    - You want to separate vocals from instrumentals\n    - You need individual stem tracks for mixing\n    - You want to create a karaoke version\n\n    Returns:\n        Task ID and stem separation results with individual track URLs.\n    ",
+      "description": "Separate a song into individual stems (vocals and instruments).\n\n    Splits the audio into separate tracks for vocals and instrumentals,\n    useful for remixing, karaoke, or isolating specific parts. Successful stems\n    requests cost 0.56 Credits each, with vocals and accompaniment billed together.\n    Discounts follow the actual bill; failed requests are not charged.\n    all_stems and extract_stem have their own prices.\n\n    Use this when:\n    - You want to separate vocals from instrumentals\n    - You need individual stem tracks for mixing\n    - You want to create a karaoke version\n\n    Returns:\n        Task ID and stem separation results with individual track URLs.\n    ",
       "inputSchema": {
         "properties": {
           "audio_id": {
@@ -711,21 +711,22 @@
     {
       "name": "suno_replace_section",
       "title": null,
-      "description": "Replace a specific time range in a song with new generated content.\n\n    Re-generates a portion of a song between the specified start and end times,\n    keeping the rest of the song unchanged. Great for fixing sections you don't like.\n\n    Use this when:\n    - A specific section of a song needs improvement\n    - You want to change lyrics in the middle of a song\n    - You want to replace a verse or chorus with something different\n\n    Returns:\n        Task ID plus two complete songs by default, or two unmerged clips in candidates mode.\n    ",
+      "description": "Replace a specific time range in a song with new generated content.\n\n    Supply local new lyrics, preferably matching lyric and prompt. Lyric-only\n    requests remain supported. Listen to the source and use suno_get_timing to\n    select complete phrases; match the local line count, length and rhythm.\n    Default full_song returns two complete songs without another concat, but\n    length may change and later sections may shift. duration cannot lock an edit.\n    Returned lyric is metadata, not a transcript, and may be empty. Listen to\n    both results to check new words and transitions; success is not proof of\n    lyric fidelity. For another edit, use the selected full-song id and recheck\n    its timestamps. More polling cannot change a completed result.\n\n    Use this when:\n    - A specific section of a song needs improvement\n    - You want to change lyrics in the middle of a song\n    - You want to replace a verse or chorus with something different\n\n    Returns:\n        Task ID plus two complete songs by default, or two unmerged clips in candidates mode.\n    ",
       "inputSchema": {
         "properties": {
           "audio_id": {
-            "description": "ID of the audio to replace a section in.",
+            "description": "Complete source song's audio ID, not a task ID. For another edit, use the selected full-song result's id and recheck its duration and timestamps.",
             "title": "Audio Id",
             "type": "string"
           },
           "replace_section_start": {
-            "description": "Start time in seconds of the section to replace.",
+            "description": "Required start time in seconds, at least 0; fractions are preserved.",
+            "minimum": 0,
             "title": "Replace Section Start",
             "type": "number"
           },
           "replace_section_end": {
-            "description": "End time in seconds of the section to replace.",
+            "description": "Required end time in seconds, greater than start and no later than source duration.",
             "title": "Replace Section End",
             "type": "number"
           },
@@ -739,7 +740,7 @@
               }
             ],
             "default": null,
-            "description": "New lyrics for the replaced section. Use section markers like [Verse], [Chorus].",
+            "description": "Local new lyrics for the selected interval, not the whole song. For lyric edits, also set prompt to the same local text; full_song output does not require full-song lyrics.",
             "title": "Lyric"
           },
           "style": {
@@ -781,13 +782,32 @@
           },
           "replace_section_result_mode": {
             "default": "full_song",
-            "description": "Result shape: full_song returns two complete songs, one from each replacement candidate; candidates returns the two unmerged replacement clips.",
+            "description": "full_song (default) returns two complete songs without another concat; length may change. candidates returns two unmerged clips; select a candidate's id for concat.",
             "enum": [
               "candidates",
               "full_song"
             ],
             "title": "Replace Section Result Mode",
             "type": "string"
+          },
+          "negative_tags": {
+            "default": "",
+            "description": "Styles or genres to exclude from the replacement; keep concise. No fixed API character limit.",
+            "title": "Negative Tags",
+            "type": "string"
+          },
+          "prompt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Local new lyrics for the selected interval, preferably the same text as lyric. Not an inspiration or style description; does not guarantee word-for-word singing.",
+            "title": "Prompt"
           }
         },
         "required": [
@@ -1914,7 +1934,7 @@
     {
       "name": "suno_generate_lyrics",
       "title": null,
-      "description": "Generate song lyrics from a text prompt.\n\n    Creates structured lyrics with proper song sections (Verse, Chorus, Bridge, etc.)\n    based on your description. The generated lyrics are formatted and ready to use\n    with suno_generate_custom_music.\n\n    Use this when:\n    - You need lyrics but don't want to write them yourself\n    - You want AI-generated lyrics for a specific theme or mood\n    - You need properly structured lyrics with section markers\n\n    The output includes section markers like [Verse], [Chorus], [Bridge] that\n    Suno's music generation understands.\n\n    Returns:\n        Generated lyrics with title, status, and formatted text with section markers.\n    ",
+      "description": "Generate song lyrics from a text prompt.\n\n    Creates structured lyrics with proper song sections (Verse, Chorus, Bridge, etc.)\n    based on your description. The generated lyrics are formatted and ready to use\n    with suno_generate_custom_music.\n\n    Use this when:\n    - You need lyrics but don't want to write them yourself\n    - You want AI-generated lyrics for a specific theme or mood\n    - You need properly structured lyrics with section markers\n\n    The output includes section markers like [Verse], [Chorus], [Bridge] that\n    Suno's music generation understands. Successful requests cost 0.08 Credits\n    each, even with multiple lyric candidates. Discounts follow the actual bill;\n    failed requests are not charged.\n\n    Returns:\n        Generated lyrics with title, status, and formatted text with section markers.\n    ",
       "inputSchema": {
         "properties": {
           "prompt": {
@@ -2583,7 +2603,7 @@
     {
       "name": "suno_create_voice",
       "title": null,
-      "description": "Create a custom voice persona from an external audio URL.\n\n    Creates a voice persona directly from a publicly accessible audio URL\n    (MP3 or WAV format). The audio must contain clear vocals from a single\n    speaker and be at least 10 seconds long.\n\n    This is different from suno_create_persona which creates a persona from\n    a previously generated Suno audio. Use this to create a persona from\n    your own voice recordings or external audio files.\n\n    Use this when:\n    - You have an external audio file with clear vocals\n    - You want to create a voice persona from your own recordings\n    - You want to use a specific real-world voice as a persona\n\n    Returns:\n        Persona ID that can be used with suno_generate_with_persona tool.\n    ",
+      "description": "Create a custom voice persona from an external audio URL.\n\n    Creates a voice persona directly from a publicly accessible audio URL\n    (MP3 or WAV format). The audio must contain clear vocals from a single\n    speaker and be at least 10 seconds long.\n\n    This is different from suno_create_persona which creates a persona from\n    a previously generated Suno audio. Use this to create a persona from\n    your own voice recordings or external audio files. Successful voice creation\n    costs 0.15 Credits per request. Discounts follow the actual bill; failed\n    requests are not charged.\n\n    Use this when:\n    - You have an external audio file with clear vocals\n    - You want to create a voice persona from your own recordings\n    - You want to use a specific real-world voice as a persona\n\n    Returns:\n        Persona ID that can be used with suno_generate_with_persona tool.\n    ",
       "inputSchema": {
         "properties": {
           "audio_url": {

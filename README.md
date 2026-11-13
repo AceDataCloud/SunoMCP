@@ -302,6 +302,37 @@ For `suno_all_stems_music`, wait for successful terminal completion of the full 
 
 For covers, extensions and stem separation, use the returned audio `id` as `audio_id`. A downloadable audio file does **not** guarantee that its ID remains available for further processing.
 
+### Replace a song section
+
+1. Listen to the complete source song and use `suno_get_timing` to select full musical phrases. Supply its audio `id`, not its `task_id`, and keep `0 <= replace_section_start < replace_section_end <= source duration`.
+2. Pass **local new lyrics only** in `lyric`; for a lyric edit, set `prompt` to the same local text. `prompt` is not an inspiration or style description here. Match the selected phrase's line count, syllables and rhythm; neither field guarantees word-for-word singing.
+3. Keep `replace_section_result_mode: "full_song"` (default) to receive two complete songs without another `suno_concat_music` call. Poll the original task with `suno_get_task`, then select a song from `response.data`. Use `"candidates"` only to choose an unmerged clip and pass that candidate's `id` to `suno_concat_music`.
+4. Listen to both results and check new words, transitions and `duration`. A successful task does not prove the lyrics were sung correctly. Returned `lyric` is metadata, not a transcript; full-song lyrics may be empty when source timing is unavailable. Full songs can be longer than the source and later sections may shift; the generation-only `duration` parameter cannot lock replacement length.
+5. For another edit, use the selected **complete result's audio ID**, recheck its timing, and supply fresh local lyrics—not the entire returned `lyric`. If the results still sing old words, miss words or grow unexpectedly, retain the task ID, source ID, request fields and result audio for support. More polling cannot change completed audio.
+
+Example MCP arguments (substitute your completed song's ID and actual interval):
+
+```json
+{
+  "audio_id": "YOUR_COMPLETED_AUDIO_ID",
+  "replace_section_start": 30.0,
+  "replace_section_end": 50.0,
+  "lyric": "New words for this phrase",
+  "prompt": "New words for this phrase",
+  "replace_section_result_mode": "full_song"
+}
+```
+
+### Suno request pricing
+
+| Tool / action | Standard cost per successful request |
+|---|---|
+| `suno_generate_lyrics` | 0.08 Credits, even with multiple lyric candidates |
+| `suno_create_voice` | 0.15 Credits |
+| `suno_stems_music` (`stems`) | 0.56 Credits for vocals and accompaniment together |
+
+Applicable discounts follow the actual bill; failed requests are not charged. `all_stems`, `extract_stem` and other actions have their own prices. Confirm current pricing and spending approval before submitting; these costs are not verified account billing records.
+
 ### Manage saved personas
 
 Call `suno_list_personas` with `user_id` to find an existing voice before creating another one; use optional `limit` (default 50) and `offset` (default 0) for pagination. Listing uses `GET /suno/persona` and is free. After confirming the exact persona to remove, call `suno_delete_persona` with `persona_id` and optional `user_id` for ownership verification. Deletion uses `DELETE /suno/persona` and is also free, but permanent; do not use it to test the connection.
