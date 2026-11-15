@@ -13,7 +13,7 @@ Flow:
 5. MCP server exchanges code for a JWT via POST /oauth2/token (with PKCE)
 6. MCP server uses the JWT to fetch/create the user's API credential
 7. Issues the durable credential token as the OAuth access_token — the credential
-   does not expire, so there is no refresh flow and restarts never force re-auth
+   has a bounded lifetime; clients reauthorize after expiry
 """
 
 import base64
@@ -51,9 +51,9 @@ def _normalize_scopes(scopes: list[str] | None) -> list[str]:
 class AceDataCloudOAuthProvider:
     """OAuth provider that delegates authentication to AceDataCloud platform.
 
-    The access token is the user's durable, non-expiring api.acedata.cloud
-    credential. There is no refresh flow — the credential never expires, so pod
-    restarts/redeploys never force re-authorization.
+    The access token is the user's durable, expiring api.acedata.cloud
+    credential. There is no refresh flow — the backend enforces the original
+    consent lifetime and revocation; clients reauthorize when it expires.
     """
 
     def __init__(self, redis_client: Redis | None = None, state_key: str = "") -> None:
@@ -204,7 +204,7 @@ class AceDataCloudOAuthProvider:
 
         client_id = client.client_id or ""
 
-        # The access token is the user's durable, non-expiring credential.
+        # The access token is the user's durable, expiring credential.
         self._access_tokens[api_token] = AccessToken(
             token=api_token,
             client_id=client_id,
@@ -224,7 +224,7 @@ class AceDataCloudOAuthProvider:
         client: OAuthClientInformationFull,  # noqa: ARG002
         refresh_token: str,  # noqa: ARG002
     ) -> RefreshToken | None:
-        # No refresh flow — the access token is a durable, non-expiring credential.
+        # No refresh flow — the access token is a durable, expiring credential.
         return None
 
     async def exchange_refresh_token(
@@ -235,11 +235,11 @@ class AceDataCloudOAuthProvider:
     ) -> OAuthToken:
         from mcp.server.auth.provider import TokenError
 
-        # Tokens never expire, so there is nothing to refresh. An old client that
+        # This provider requires new consent after expiry. An old client that
         # still holds a pre-migration refresh_token gets a clean re-auth prompt.
         raise TokenError(
             error="invalid_grant",
-            error_description="This server issues non-expiring tokens; refresh is not supported.",
+            error_description="This server issues expiring tokens; refresh is not supported.",
         )
 
     async def load_access_token(self, token: str) -> AccessToken | None:
@@ -371,33 +371,12 @@ class AceDataCloudOAuthProvider:
                 if not application_id:
                     return None
 
-                # Query for existing shared "OAuth MCP" credential first
-                cred_list_resp = await client.get(
-                    f"{settings.platform_base_url}/api/v1/credentials/",
-                    params={"application_id": application_id, "name": "OAuth MCP"},
-                    headers=headers,
-                )
-                existing_creds = []
-                if cred_list_resp.status_code == 200:
-                    cred_data = cred_list_resp.json()
-                    existing_creds = cred_data.get("items", cred_data.get("results", []))
-
-                # Reuse existing credential if found
-                if existing_creds and isinstance(existing_creds, list):
-                    data = existing_creds[0]
-                    token = data.get("token") if isinstance(data, dict) else None
-                    if isinstance(token, str) and token:
-                        logger.info(f"Reusing existing OAuth MCP Credential (id={data.get('id')})")
-                        return token
-
-                # Create new credential only if not found
+                # The backend derives the service from the verified OAuth client;
+                # it never accepts a caller-selected service or reuses broad tokens.
                 cred_resp = await client.post(
-                    f"{settings.platform_base_url}/api/v1/credentials/",
+                    f"{settings.platform_base_url}/api/v1/credentials/hosted-mcp/",
                     headers={**headers, "Content-Type": "application/json"},
-                    json={
-                        "application_id": application_id,
-                        "name": "OAuth MCP",
-                    },
+                    json={},
                 )
                 if cred_resp.status_code not in (200, 201):
                     logger.error(
