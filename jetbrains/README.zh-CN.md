@@ -36,7 +36,7 @@ Ace Data Cloud 提供的独立 Suno music 集成，并非 Suno 或 JetBrains 官
 
 ## 4. 首次使用：先查模型，再明确提交一次
 
-1. 点击 **List models**。点击 List models 会调用该服务的模型信息工具，不提交生成。先核对返回的模型和[当前价](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)，再把自己选择的精确模型 ID 填入 **Model (choose explicitly)**。插件不默认替换或添加 fallback。
+1. 点击 **List models**。点击 List models 会调用该服务的模型信息工具，不提交生成。界面保留服务返回的完整模型目录及兼容别名，不按品牌前缀筛选。先核对返回的模型和[当前价](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)，再把自己选择的精确模型 ID 填入 **Model (choose explicitly)**。插件不默认替换或添加 fallback。
 2. 在 **Prompt** 填写自己的要求。Suno 新面板只提供现有生成工具的基础模型/提示词入口，服务的其他参数与高级能力请查看[服务文档](https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)，不能从基础界面推断全套高级功能均已接入。
 3. 点击 **Generate music** 后，核对一次请求的模型与计费提醒；只有明确同意消耗自己的应用余额才选择 **Submit once**，否则选择 Cancel。插件不会自动生成或自动重试。
 4. 本教程没有让用户照抄固定收费样例，也没有证明新的生产生成。静态模型列表、连接或 HTTP 200 都不能当作生成成功。

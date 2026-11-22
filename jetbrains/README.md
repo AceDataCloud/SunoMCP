@@ -34,7 +34,7 @@ The new native panel keeps its key in memory and clears it when the settings pag
 
 ## First use and existing task lookup
 
-1. Click **List models**. Review [current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen), then enter the exact model ID you want. The plugin does not silently select a substitute.
+1. Click **List models** to read this service's full model catalog, including compatible aliases returned by the service. Review [current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen), then enter the exact model ID you want. The plugin does not filter model names by brand prefix or silently select a substitute.
 2. Enter a prompt and click **Generate music**. Review the one-request charge confirmation. Cancel if the model, access or balance is unclear. No automatic generation or retry runs.
 3. Copy the returned `task_id` to **Existing task ID** if it is not filled automatically. Click **Check existing task** on that same ID until the response reports a terminal state. Keep the result/URL and verify it opens before calling the job successful. A pending response or accepted request is not completed media.
 4. If a submission times out, do not submit again blindly. Find the original task in your Ace account first to avoid duplicate charges. A failed/content-restricted/rate-limited result must remain distinct.

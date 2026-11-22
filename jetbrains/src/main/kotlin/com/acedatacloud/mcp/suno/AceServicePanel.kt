@@ -32,9 +32,6 @@ class AceServicePanel : JPanel(BorderLayout(8, 8)) {
         buttons.add(button("List models", "suno_list_models") { JsonObject() })
         buttons.add(button("Generate music", "suno_generate_music", billable = true) {
             require(model.text.isNotBlank()) { "List models, check current pricing and enter a model explicitly." }
-            require("".isEmpty() || model.text.trim().startsWith("")) {
-                "This independent Suno entry only accepts  models. Use the matching service plugin for another model."
-            }
             require(prompt.text.isNotBlank()) { "Enter a prompt." }
             JsonObject().apply { addProperty("model", model.text.trim()); addProperty("prompt", prompt.text.trim()) }
         })
