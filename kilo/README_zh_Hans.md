@@ -18,8 +18,8 @@
 
 ## 2. 获取正确的应用 API Token
 
-1. 注册或登录 [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=kilo_suno_api_key)。如果还没有通用应用，选择 **Initialize General Application**。
-2. 打开 **General application**。生成前确认 Suno 服务权限、[当前价格和账户余额](https://platform.acedata.cloud/models?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=kilo_suno_pricing)。通用应用 Token 可访问账户已有权限的多个服务；专用服务 Token 仅覆盖对应服务。
+1. 注册或登录 [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)。如果还没有通用应用，选择 **Initialize General Application**。
+2. 打开 **General application**。生成前确认 Suno 服务权限、[当前价格和账户余额](https://platform.acedata.cloud/models?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)。通用应用 Token 可访问账户已有权限的多个服务；专用服务 Token 仅覆盖对应服务。
 3. 使用复制图标获取现有 Key，或选择 **Manage Keys → Create**，创建名为 `Kilo Suno` 的专用 Key。按需设置有效期、用量限制。若启用 Allowed APIs，需同时允许 **/suno/audios and /suno/tasks**，以免只允许生成却无法查询结果。
 
 ![复制应用 API Key 或打开 Manage Keys](https://raw.githubusercontent.com/AceDataCloud/SunoDify/8d3d03570e73324220f111f7fe343da0792a8071/_assets/tutorial/get-api-key-en.png)
@@ -50,11 +50,11 @@ Local 方式使用上面已核实的公开包固定版本。更新前先查看�
 
 ## 5. 明确生成后，查询同一个任务
 
-先查看 [服务参数和当前价格](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=kilo_suno_service_docs)，再明确要求生成所需内容。`suno_generate_music` 是付费操作；批准前核对具体模型、时长或尺寸等必填字段，不自动替换模型。
+先查看 [服务参数和当前价格](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)，再明确要求生成所需内容。`suno_generate_music` 是付费操作；批准前核对具体模型、时长或尺寸等必填字段，不自动替换模型。
 
 保留返回的 **task ID**。结果为 pending 时，按工具 schema 中的字段，用 **`suno_get_task`** 查询同一 ID，直到终态成功并返回最终音频链接，例如 `audio_url`，或出现终态失败。超时、断连不代表应该重新生成；应先查询已有任务。请打开接口实际返回的结果链接，不使用占位 URL。
 
-在 [Ace Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=kilo_suno_usage) 核对同一应用、同一凭据的请求与用量记录。一个工作流程可能包含多个 API 请求，应对每个实际请求去重核查。安装量、单次本地测试成功都不是营收或唯一账单证明。
+在 [Ace Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen) 核对同一应用、同一凭据的请求与用量记录。一个工作流程可能包含多个 API 请求，应对每个实际请求去重核查。安装量、单次本地测试成功都不是营收或唯一账单证明。
 
 ## 常见问题
 

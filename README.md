@@ -10,7 +10,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-green.svg)](https://modelcontextprotocol.io)
 
-A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server for AI music generation using [Suno](https://suno.ai) through the [AceDataCloud API](https://platform.acedata.cloud?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_platform).
+A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server for AI music generation using [Suno](https://suno.ai) through the [AceDataCloud API](https://platform.acedata.cloud?utm_source=github&utm_medium=referral&utm_campaign=evergreen).
 
 Generate AI music, lyrics, and manage audio projects directly from Claude, VS Code, or any MCP-compatible client.
 
@@ -88,7 +88,7 @@ First discover the server's tools, then call `suno_list_models` with no argument
 
 For an application-backed read-only check, enable only `suno_list_custom_models` and call it with `limit=1`. This uses the existing custom-model **retrieve_batch** operation; it does not create music or train a model. A successful `items` response, including an empty list for a new application, is the success criterion. The key must permit the custom-model lookup API. This confirms only that lookup's access, not permission to generate music or sufficient balance for a generation.
 
-If the tool is missing, reconnect and refresh the tool list. For 401/403, check the copied key, application/service permissions, Allowed APIs, expiration and usage limits before creating another credential. For other errors retain the task/trace ID, never the key. Do not retry generation to test authentication. Review [current pricing](https://platform.acedata.cloud/models?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_models) before a paid request.
+If the tool is missing, reconnect and refresh the tool list. For 401/403, check the copied key, application/service permissions, Allowed APIs, expiration and usage limits before creating another credential. For other errors retain the task/trace ID, never the key. Do not retry generation to test authentication. Review [current pricing](https://platform.acedata.cloud/models?utm_source=github&utm_medium=referral&utm_campaign=evergreen) before a paid request.
 
 ## Connect in minutes
 
@@ -100,7 +100,7 @@ The hosted server is `https://suno.mcp.acedata.cloud/mcp`. Choose **one** authen
 | API token | Your client cannot complete the remote OAuth flow, or you need an explicit credential for an integration | An AceDataCloud API token in the client's Bearer header. Keep it in a user-level secret store or environment variable. |
 | Local stdio | You want the MCP process to run on your machine | Install `mcp-suno` and pass `ACEDATACLOUD_API_TOKEN` to that process. |
 
-The hosted server always receives a Bearer token: with OAuth, the client obtains and sends it after sign-in; with API-token setup, you supply it. **DCR is client registration, not a separate AceDataCloud API key.** After consent, the hosted service currently reuses or creates an API credential for your account; it may fail if the account cannot obtain one. Some clients offer a published client identity or manual client ID; those are client-specific alternatives, not a second API-token requirement. Browser sign-in does not remove the need for an AceDataCloud account. Music generation uses your AceDataCloud account and may incur usage charges. Review [current Suno pricing and limits](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_documents_suno-audios) before generating.
+The hosted server always receives a Bearer token: with OAuth, the client obtains and sends it after sign-in; with API-token setup, you supply it. **DCR is client registration, not a separate AceDataCloud API key.** After consent, the hosted service currently reuses or creates an API credential for your account; it may fail if the account cannot obtain one. Some clients offer a published client identity or manual client ID; those are client-specific alternatives, not a second API-token requirement. Browser sign-in does not remove the need for an AceDataCloud account. Music generation uses your AceDataCloud account and may incur usage charges. Review [current Suno pricing and limits](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen) before generating.
 
 ### Browser sign-in: hosted server
 
@@ -164,8 +164,8 @@ Codex keeps user MCP settings in `~/.codex/config.toml` and can show the server 
 ### API token: hosted server
 
 <!-- BEGIN TOKEN ONBOARDING -->
-1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_api_key). Sign in, or register an account first.
-2. Find **General application**. If it has not been created, choose **Initialize General Application**. A general key can use the services available to your account; a dedicated application's key is limited to its service. Check the required service/model access and [current pricing](https://platform.acedata.cloud/models?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_models).
+1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=github&utm_medium=referral&utm_campaign=evergreen). Sign in, or register an account first.
+2. Find **General application**. If it has not been created, choose **Initialize General Application**. A general key can use the services available to your account; a dedicated application's key is limited to its service. Check the required service/model access and [current pricing](https://platform.acedata.cloud/models?utm_source=github&utm_medium=referral&utm_campaign=evergreen).
 3. Copy the **API Key** from the application card, or open **Keys / Manage Keys → Create** to create a separate key for this integration. Give it a recognizable name so you can revoke or rotate it independently.
 4. When creating a key, review **Expiration Time**, **Set Usage Limitation**, and **Allowed APIs**. Enable only the restrictions you need, allow the operations you will call, then click **Create** and copy the token from the key list. Task lookup does not grant permission to submit a generation. Confirm the application's balance can cover your first request; any trial allowance is whatever your account currently displays.
 5. Copy only the token value, without quotation marks, spaces, or `Bearer `. An API Key / API Token field expects this raw value; only a manually configured HTTP `Authorization` header needs the `Bearer ` prefix. A `platform-...` account-management token cannot replace a generation API key.
@@ -274,7 +274,7 @@ For self-hosted HTTP, run `mcp-suno --transport http --port 8000` or build this 
 
 1. `https://suno.mcp.acedata.cloud/health` returning `{"status":"ok"}` checks reachability only, not authentication.
 2. Use the client's MCP server list to confirm Suno tools appear. `suno_list_models` and `suno_list_actions` return static reference data; they confirm tool loading, **not** that your downstream API credential or balance works.
-3. When ready, ask the client to call `suno_generate_music` with a short prompt. Save the returned task ID, then call `suno_get_task` until it completes. This is the first end-to-end API check and can be billed. Check the current [Suno service limits and pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_documents_suno-audios) before this step.
+3. When ready, ask the client to call `suno_generate_music` with a short prompt. Save the returned task ID, then call `suno_get_task` until it completes. This is the first end-to-end API check and can be billed. Check the current [Suno service limits and pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen) before this step.
 
 If you see **401**, check whether the client completed OAuth or sent a valid token, and do not configure both paths at once. If OAuth redirects but fails, retry from the same client session; if the account cannot create or retrieve a credential, resolve that in AceDataCloud Platform. A tool list can load while an API call fails for balance, permissions, or service availability, so check the returned error rather than assuming the connection failed.
 
@@ -519,12 +519,12 @@ SunoMCP/
 
 ## API Reference
 
-This server wraps the [AceDataCloud Suno API](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_documents_suno-audios):
+This server wraps the [AceDataCloud Suno API](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen):
 
-- [Suno Audios API](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_documents_suno-audios) - Music generation
-- [Suno Lyrics API](https://platform.acedata.cloud/documents/suno-lyrics?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_documents_suno-lyrics) - Lyrics generation
-- [Suno Tasks API](https://platform.acedata.cloud/documents/suno-tasks?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_documents_suno-tasks) - Task queries
-- [Suno Persona API](https://platform.acedata.cloud/documents/suno-persona?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_documents_suno-persona) - Persona management
+- [Suno Audios API](https://platform.acedata.cloud/documents/suno-audios?utm_source=github&utm_medium=referral&utm_campaign=evergreen) - Music generation
+- [Suno Lyrics API](https://platform.acedata.cloud/documents/suno-lyrics?utm_source=github&utm_medium=referral&utm_campaign=evergreen) - Lyrics generation
+- [Suno Tasks API](https://platform.acedata.cloud/documents/suno-tasks?utm_source=github&utm_medium=referral&utm_campaign=evergreen) - Task queries
+- [Suno Persona API](https://platform.acedata.cloud/documents/suno-persona?utm_source=github&utm_medium=referral&utm_campaign=evergreen) - Persona management
 
 ## Contributing
 
@@ -539,7 +539,7 @@ Contributions are welcome! Please:
 ## Documentation
 
 <!-- canonical-documentation -->
-[Documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_quick_start)
+[Documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=github&utm_medium=referral&utm_campaign=evergreen)
 
 ## License
 
@@ -547,14 +547,14 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Links
 
-- [AceDataCloud Platform](https://platform.acedata.cloud?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_platform)
+- [AceDataCloud Platform](https://platform.acedata.cloud?utm_source=github&utm_medium=referral&utm_campaign=evergreen)
 - [Suno Official](https://suno.ai)
 - [Model Context Protocol](https://modelcontextprotocol.io)
 - [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
 
 ---
 
-Made with love by [AceDataCloud](https://platform.acedata.cloud?utm_source=github&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_readme_platform)
+Made with love by [AceDataCloud](https://platform.acedata.cloud?utm_source=github&utm_medium=referral&utm_campaign=evergreen)
 
 ## Cline setup / Cline 图文接入
 

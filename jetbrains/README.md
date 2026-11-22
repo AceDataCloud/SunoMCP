@@ -17,8 +17,8 @@ Source: [JetBrains installation documentation](https://www.jetbrains.com/help/id
 ## Get an application API key
 
 <!-- BEGIN TOKEN ONBOARDING -->
-1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_api_key). Sign in, or register an account first.
-2. Find **General application**. If it has not been created, choose **Initialize General Application**. A general key can use the services available to your account; a dedicated application's key is limited to its service. Check the required service/model access and [current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_models).
+1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen). Sign in, or register an account first.
+2. Find **General application**. If it has not been created, choose **Initialize General Application**. A general key can use the services available to your account; a dedicated application's key is limited to its service. Check the required service/model access and [current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen).
 3. Copy the **API Key** from the application card, or open **Keys / Manage Keys → Create** to create a separate key for this integration. Give it a recognizable name so you can revoke or rotate it independently.
 4. When creating a key, review **Expiration Time**, **Set Usage Limitation**, and **Allowed APIs**. Enable only the restrictions you need, allow the operations you will call, then click **Create** and copy the token from the key list. Task lookup does not grant permission to submit a generation. Confirm the application's balance can cover your first request; any trial allowance is whatever your account currently displays.
 5. Copy only the token value, without quotation marks, spaces, or `Bearer `. An API Key / API Token field expects this raw value; only a manually configured HTTP `Authorization` header needs the `Bearer ` prefix. A `platform-...` account-management token cannot replace a generation API key.
@@ -34,7 +34,7 @@ The new native panel keeps its key in memory and clears it when the settings pag
 
 ## First use and existing task lookup
 
-1. Click **List models**. Review [current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_models), then enter the exact model ID you want. The plugin does not silently select a substitute.
+1. Click **List models**. Review [current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen), then enter the exact model ID you want. The plugin does not silently select a substitute.
 2. Enter a prompt and click **Generate music**. Review the one-request charge confirmation. Cancel if the model, access or balance is unclear. No automatic generation or retry runs.
 3. Copy the returned `task_id` to **Existing task ID** if it is not filled automatically. Click **Check existing task** on that same ID until the response reports a terminal state. Keep the result/URL and verify it opens before calling the job successful. A pending response or accepted request is not completed media.
 4. If a submission times out, do not submit again blindly. Find the original task in your Ace account first to avoid duplicate charges. A failed/content-restricted/rate-limited result must remain distinct.
@@ -68,4 +68,4 @@ Source: [JetBrains MCP documentation](https://www.jetbrains.com/help/ai-assistan
 
 ## Source and support
 
-[Source repository](https://github.com/AceDataCloud/SunoMCP) · [Service documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_quick_start) · [Current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_models). Source of truth: [AceDataCloud/MCPs](https://github.com/AceDataCloud/MCPs). Existing MCP server and billing are reused. MIT.
+[Source repository](https://github.com/AceDataCloud/SunoMCP) · [Service documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen) · [Current pricing](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen). Source of truth: [AceDataCloud/MCPs](https://github.com/AceDataCloud/MCPs). Existing MCP server and billing are reused. MIT.

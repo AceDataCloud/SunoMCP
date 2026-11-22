@@ -2,7 +2,7 @@
 
 Use Suno music tools inside Cline through the existing Ace Data Cloud MCP server. This is an Ace Data Cloud integration, not an official Suno or Cline first-party plugin.
 
-English guide · [中文步骤](#中文步骤) · [API access and current pricing](https://platform.acedata.cloud/documents/suno-mcp?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_pricing)
+English guide · [中文步骤](#中文步骤) · [API access and current pricing](https://platform.acedata.cloud/documents/suno-mcp?utm_source=cli&utm_medium=referral&utm_campaign=evergreen)
 
 ## 1. Install from the Cline directory
 
@@ -18,7 +18,7 @@ This installs one named server, not all Ace services. It does not create an acco
 
 ## 2. Register or sign in and obtain your API Token
 
-1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_api_key). Register/sign in if needed.
+1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=cli&utm_medium=referral&utm_campaign=evergreen). Register/sign in if needed.
 2. Open **General application**; if none exists, choose **Initialize General Application**. A general key can access services enabled for your account; a service-specific key is limited to that service. Confirm **Suno** access, current pricing and a sufficient account balance.
 3. Copy the API Key on the application card, or open **Manage Keys → Create** to make a dedicated key named `Cline Suno`.
 
@@ -64,9 +64,9 @@ Model setup is separate: use a model provider already configured in Cline. Ace c
 
 For a no-generation installation check, ask Cline to use the static `suno_list_models` reference tool. Static reference results or a loaded schema prove tool loading only, not valid paid access or balance. In the IDE, leave MCP `autoApprove` empty and check global approval settings; CLI headless tasks may auto-approve, so use `cline --tui --auto-approve false` when you require interactive approval.
 
-When **you decide to generate** after reviewing the [current service contract and prices](https://platform.acedata.cloud/documents/suno-mcp?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_first_use), ask Cline to call `suno_generate_music` for one request with a currently supported model and parameters. This can be charged. Keep the returned **task_id**, then call `suno_get_task` with **that same ID** until its task result is terminal. Do not repeat the generation merely because the task is pending. A completed chat turn or a playable preview is not task completion.
+When **you decide to generate** after reviewing the [current service contract and prices](https://platform.acedata.cloud/documents/suno-mcp?utm_source=cli&utm_medium=referral&utm_campaign=evergreen), ask Cline to call `suno_generate_music` for one request with a currently supported model and parameters. This can be charged. Keep the returned **task_id**, then call `suno_get_task` with **that same ID** until its task result is terminal. Do not repeat the generation merely because the task is pending. A completed chat turn or a playable preview is not task completion.
 
-Read the returned task status, success/error and media fields according to the tool schema. On success, open the returned audio/video/image URL; do not invent a URL, reuse another account's task or treat an empty media field as success. Check [usage history](https://platform.acedata.cloud/console/usages?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_usage) for the original request and its charge; list/configuration commands are not billable-generation evidence. This guide contains no claimed Suno generation result or new paid test.
+Read the returned task status, success/error and media fields according to the tool schema. On success, open the returned audio/video/image URL; do not invent a URL, reuse another account's task or treat an empty media field as success. Check [usage history](https://platform.acedata.cloud/console/usages?utm_source=cli&utm_medium=referral&utm_campaign=evergreen) for the original request and its charge; list/configuration commands are not billable-generation evidence. This guide contains no claimed Suno generation result or new paid test.
 
 ## Troubleshooting
 
@@ -84,7 +84,7 @@ Read the returned task status, success/error and media fields according to the t
 
 The MCP integration is free to install; the server receives your selected prompts/media and authorization and calls Ace Data Cloud. Service calls follow current account/service pricing. Keep credentials in Cline's private user configuration, not prompts, shared workflows or exports. Use only content you may process.
 
-[Source](https://github.com/AceDataCloud/SunoMCP) · [Current models and prices](https://platform.acedata.cloud/models?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_models) · dev@acedata.cloud. Development/source PRs and local checks are separate from official directory acceptance, actual install, task completion, billing and attributed users.
+[Source](https://github.com/AceDataCloud/SunoMCP) · [Current models and prices](https://platform.acedata.cloud/models?utm_source=cli&utm_medium=referral&utm_campaign=evergreen) · dev@acedata.cloud. Development/source PRs and local checks are separate from official directory acceptance, actual install, task completion, billing and attributed users.
 
 ## 中文步骤
 
@@ -104,8 +104,8 @@ cline mcp add suno-acedatacloud https://suno.mcp.acedata.cloud/mcp --transport h
 
 ### 2. 注册登录并获取专用 API Token
 
-1. 打开 [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_api_key_zh)，新用户先注册并登录。
-2. 进入 **General application**；尚未创建时先点 **Initialize General Application**。通用应用的 Key 能访问账号已开通服务；专用应用的 Key 受对应服务限制。确认 **Suno** 权限、[当前模型和价格](https://platform.acedata.cloud/models?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_pricing_zh)及余额，不假定有固定免费额度。
+1. 打开 [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=cli&utm_medium=referral&utm_campaign=evergreen)，新用户先注册并登录。
+2. 进入 **General application**；尚未创建时先点 **Initialize General Application**。通用应用的 Key 能访问账号已开通服务；专用应用的 Key 受对应服务限制。确认 **Suno** 权限、[当前模型和价格](https://platform.acedata.cloud/models?utm_source=cli&utm_medium=referral&utm_campaign=evergreen)及余额，不假定有固定免费额度。
 3. 点应用卡片的复制按钮取得现有 API Key，或 **Manage Keys → Create** 创建名为 `Cline Suno` 的独立 Key，方便撤销和轮换。
 
 ![复制已有 API Key 或打开 Manage Keys](https://raw.githubusercontent.com/AceDataCloud/SunoDify/8d3d03570e73324220f111f7fe343da0792a8071/_assets/tutorial/get-api-key-en.png)
@@ -150,11 +150,11 @@ cline mcp add suno-acedatacloud https://suno.mcp.acedata.cloud/mcp --transport h
 
 免费安装检查先调用只读的 `suno_list_models`，查看静态参考列表。静态列表或 schema 只证明工具加载，不证明有效密钥、余额或收费业务成功。IDE 保持 `autoApprove` 为空并检查全局自动批准；CLI 无界面任务可能自动批准，需要逐次确认时使用 `cline --tui --auto-approve false`。
 
-真正生成前先查看 [本服务当前接口和计费](https://platform.acedata.cloud/documents/suno-mcp?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_first_use_zh) 并确认本次额度，然后让 Cline 调用 `suno_generate_music` 一次，参数/模型以当前工具 schema 为准。该动作可能收费。保存返回的 **task_id**，使用 `suno_get_task(task_id="<原 task_id>")` 持续查询同一个任务到终态；pending 时不要再次生成、不要打开自动付费重试。
+真正生成前先查看 [本服务当前接口和计费](https://platform.acedata.cloud/documents/suno-mcp?utm_source=cli&utm_medium=referral&utm_campaign=evergreen) 并确认本次额度，然后让 Cline 调用 `suno_generate_music` 一次，参数/模型以当前工具 schema 为准。该动作可能收费。保存返回的 **task_id**，使用 `suno_get_task(task_id="<原 task_id>")` 持续查询同一个任务到终态；pending 时不要再次生成、不要打开自动付费重试。
 
 按实际工具返回检查成功/失败状态、错误与媒体字段；成功后打开返回的真实音频/视频/图片链接。GPT Image 查询以 `finished_at` 判断已结束，再看 `response` 的成功或错误，不能只凭时间戳当成功；其他服务按自己的 schema 判断。聊天回合结束、绿色工具卡或可播放预览都不等于任务完成。媒体字段为空时不编造 URL、不拿别人的任务替代。
 
-到 [使用历史](https://platform.acedata.cloud/console/usages?utm_source=cli&utm_medium=referral&utm_campaign=evergreen&utm_content=cline_suno_usage_zh) 核对原请求和扣费；查询/安装日志不能当真实生成或唯一账单证明。本指南未声称已在 Cline 生成 Suno 媒体或带来付费用户。
+到 [使用历史](https://platform.acedata.cloud/console/usages?utm_source=cli&utm_medium=referral&utm_campaign=evergreen) 核对原请求和扣费；查询/安装日志不能当真实生成或唯一账单证明。本指南未声称已在 Cline 生成 Suno 媒体或带来付费用户。
 
 ### 5. 常见问题与隐私
 

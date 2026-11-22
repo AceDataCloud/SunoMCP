@@ -1,6 +1,6 @@
 # Suno in Glama — by Ace Data Cloud
 
-[简体中文](#中文操作指南) · [Open the service listing](https://glama.ai/mcp/servers/AceDataCloud/SunoMCP) · [Current access and pricing](https://platform.acedata.cloud/models?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_pricing)
+[简体中文](#中文操作指南) · [Open the service listing](https://glama.ai/mcp/servers/AceDataCloud/SunoMCP) · [Current access and pricing](https://platform.acedata.cloud/models?utm_source=glama&utm_medium=referral&utm_campaign=evergreen)
 
 Use **Suno by Ace Data Cloud** for music generation, lyrics, covers, and task results. Ace provides this integration and bills its API usage; this is not a model developer's official Glama app. It reuses the existing `mcp-suno` server, rather than asking you to install an unrelated Ace bundle.
 
@@ -18,7 +18,7 @@ The public connector was marked **Unhealthy** during the 2026-10-18 audit. That 
 
 ## 2. Register/sign in and obtain the right API Token
 
-1. [Register or sign in to Ace Data Cloud](https://platform.acedata.cloud/?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_signup) and open [Applications](https://platform.acedata.cloud/console/applications?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_api_key). If there is no General application, choose **Initialize General Application**.
+1. [Register or sign in to Ace Data Cloud](https://platform.acedata.cloud/?utm_source=glama&utm_medium=referral&utm_campaign=evergreen) and open [Applications](https://platform.acedata.cloud/console/applications?utm_source=glama&utm_medium=referral&utm_campaign=evergreen). If there is no General application, choose **Initialize General Application**.
 2. Open **General application**. Check access to Suno, the current model/operation price, balance, expiration and usage limits. No fixed trial balance is promised.
 3. Copy an existing API Key using **①**, or choose **② Manage Keys → Create** for a dedicated key named `Glama suno`. The screenshot's values are redacted.
 
@@ -44,7 +44,7 @@ Glama's [connector guide](https://glama.ai/blog/2025-10-22-what-are-mcp-connecto
 
 Confirm the connected server advertises `suno_generate_music` and `suno_get_task`. Call `suno_list_models` with empty arguments to read static reference information. This checks tool loading; it does not verify a downstream balance or authorize generation.
 
-When you deliberately authorize a first request, choose the model and fields from the currently advertised tool schema and review [current service access and pricing](https://platform.acedata.cloud/models?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_first_run_price). Call `suno_generate_music` **once**. Generation/editing can be billed; do not enable automatic retries just to obtain a result.
+When you deliberately authorize a first request, choose the model and fields from the currently advertised tool schema and review [current service access and pricing](https://platform.acedata.cloud/models?utm_source=glama&utm_medium=referral&utm_campaign=evergreen). Call `suno_generate_music` **once**. Generation/editing can be billed; do not enable automatic retries just to obtain a result.
 
 ## 5. Follow the original task to its final result
 
@@ -61,12 +61,12 @@ Keep the returned task ID. If the response is pending, use `suno_get_task` with 
 | Pending / preview only | Query the original task ID; do not regenerate to poll. |
 | 429 / timeout / failed | Reduce requests and inspect the original task; no automatic paid retry. |
 
-Your chosen input and API credential are used by the connection to reach Ace's API. Glama controls its own credential storage and logs. Keep secrets private. [API documentation](https://platform.acedata.cloud/documents/suno-audios?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_api_docs) · [Source and support](https://github.com/AceDataCloud/SunoMCP/issues).
+Your chosen input and API credential are used by the connection to reach Ace's API. Glama controls its own credential storage and logs. Keep secrets private. [API documentation](https://platform.acedata.cloud/documents/suno-audios?utm_source=glama&utm_medium=referral&utm_campaign=evergreen) · [Source and support](https://github.com/AceDataCloud/SunoMCP/issues).
 
 ## 中文操作指南
 
 1. 打开上方 **Glama 服务条目／远程 Connector**，确认作者 **AceDataCloud**。这是 Ace 提供的 Suno 集成，不冒充模型厂商官方插件。目录、个人连接和作者检测是三个不同状态；目前不能把 Unhealthy 写成已安装成功。
-2. [注册或登录 Ace](https://platform.acedata.cloud/?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_signup_zh) → [Applications／我的应用](https://platform.acedata.cloud/console/applications?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_api_key_zh) → **General application／通用应用**。没有时先初始化。核对服务权限、余额、有效期、用量限制和[当前价格](https://platform.acedata.cloud/models?utm_source=glama&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_glama_pricing_zh)。
+2. [注册或登录 Ace](https://platform.acedata.cloud/?utm_source=glama&utm_medium=referral&utm_campaign=evergreen) → [Applications／我的应用](https://platform.acedata.cloud/console/applications?utm_source=glama&utm_medium=referral&utm_campaign=evergreen) → **General application／通用应用**。没有时先初始化。核对服务权限、余额、有效期、用量限制和[当前价格](https://platform.acedata.cloud/models?utm_source=glama&utm_medium=referral&utm_campaign=evergreen)。
 3. 按真实图中的①复制已有 Key；或② **Manage Keys／管理密钥 → Create／创建**，给 Glama 建可独立撤销的专用 Token。启用 API 限制时同时允许所需生成和查询接口。图中值已遮挡，`Dify tutorial`只是原图例名；不要抄遮挡字符，不要用平台管理 Token 代替 API Token。
 4. 在 Glama 远程连接选择 OAuth 时完成 Ace 登录；选择 API Token 时按实际界面填入 Bearer token，若是原始 Header 表则使用 `Authorization: Bearer ...`。不要在提示词、URL、截图或共享配置里放 Key；实际登录后的字段尚待逐项截图验收，不能虚构按钮位置。
 5. 先检查工具列表，免费调用 `suno_list_models`。确认首用费用后才调用一次 `suno_generate_music`；保存任务 ID，只用 `suno_get_task`查同一任务直到终态。中间预览不是成功结果，不能重复生成来查询进度。

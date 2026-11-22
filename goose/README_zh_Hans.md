@@ -14,7 +14,7 @@ goose plugin install https://github.com/AceDataCloud/SunoMCP.git
 
 ## 2. 获取服务 Token
 
-先[注册或登录 Ace → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_goose_api_key)，打开 **General application**；没有通用应用时先初始化。检查 Suno 权限、余额和[当前价格](https://platform.acedata.cloud/models?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_goose_pricing)。复制卡片 API Key，或 **Manage Keys → Create** 创建专用 `goose Suno` Key。限制 Allowed APIs 时需同时放行 `/suno/audios, /suno/tasks` 等本次流程会用的接口。
+先[注册或登录 Ace → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)，打开 **General application**；没有通用应用时先初始化。检查 Suno 权限、余额和[当前价格](https://platform.acedata.cloud/models?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)。复制卡片 API Key，或 **Manage Keys → Create** 创建专用 `goose Suno` Key。限制 Allowed APIs 时需同时放行 `/suno/audios, /suno/tasks` 等本次流程会用的接口。
 
 ![真实 Ace 页面：复制已有 Key 或管理 Key](https://raw.githubusercontent.com/AceDataCloud/SunoDify/8d3d03570e73324220f111f7fe343da0792a8071/_assets/tutorial/get-api-key-en.png)
 

@@ -10,9 +10,9 @@
 
 ## 2. 注册并复制应用 API Token
 
-1. 打开 [Ace Applications](https://platform.acedata.cloud/console/applications?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_api_key)，先注册或登录 Ace。
+1. 打开 [Ace Applications](https://platform.acedata.cloud/console/applications?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen)，先注册或登录 Ace。
 2. 找到 **General application（通用应用）**；若不存在，先点 **Initialize General Application**。可复制卡片上的 API Key，或进入 **Keys / Manage Keys → Create** 创建本扩展专用 Key。
-3. 创建时检查有效期、使用限额、Allowed APIs。只开放需要的生成/查询接口，确认服务权限、[当前价格](https://platform.acedata.cloud/models?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_models)及余额。生成和任务查询是两个操作，允许查询不等于允许生成。
+3. 创建时检查有效期、使用限额、Allowed APIs。只开放需要的生成/查询接口，确认服务权限、[当前价格](https://platform.acedata.cloud/models?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen)及余额。生成和任务查询是两个操作，允许查询不等于允许生成。
 4. 复制裸 token，不加引号或 `Bearer `。`platform-...` 是账号管理令牌，不能替代图片、视频或音乐服务的应用 Key。
 
 ![通用应用的API Key复制入口，真实界面参考](https://raw.githubusercontent.com/AceDataCloud/SunoDify/8d3d03570e73324220f111f7fe343da0792a8071/_assets/tutorial/get-api-key-en.png)
@@ -39,7 +39,7 @@ VS Code 1.141历史真实截图于2026-10-09收入教程；工具图以OpenAI为
 只调用 suno_list_models，显示模型/动作说明，不要生成任何媒体。
 ```
 
-模型说明工具不生成媒体，也不证明生成权限；没有已完成任务时，图片服务停在工具发现，不要为验安装新发生成。聊天模型和辅助请求仍可能收费，先查模型价格。已有任务只用 `suno_get_task` 查询同一个原ID（将 `TASK_ID` 替换为自己的原任务ID），直至成功或失败；打开结果媒体，并在 [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_console_usage) 对应原生成任务及Credits账单。accepted、绿色聊天回合都不等于最终媒体成功，不要重新生成来轮询。
+模型说明工具不生成媒体，也不证明生成权限；没有已完成任务时，图片服务停在工具发现，不要为验安装新发生成。聊天模型和辅助请求仍可能收费，先查模型价格。已有任务只用 `suno_get_task` 查询同一个原ID（将 `TASK_ID` 替换为自己的原任务ID），直至成功或失败；打开结果媒体，并在 [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen) 对应原生成任务及Credits账单。accepted、绿色聊天回合都不等于最终媒体成功，不要重新生成来轮询。
 
 若要做读取当前应用的认证检查，只启用 `suno_list_custom_models`，参数 `limit=1`。成功的 `items` 响应（包括新应用的空列表）说明自定义模型查询可访问；这是 retrieve_batch，不创建音乐或训练模型，也不证明生成权限或余额。Allowed APIs 需允许该查询；聊天模型仍可能单独计费。
 
@@ -50,4 +50,4 @@ VS Code 1.141历史真实截图于2026-10-09收入教程；工具图以OpenAI为
 - 401/403：查Key完整性、应用/服务访问权限、有效期、限额、Allowed APIs与余额。
 - 任务未完成：保留原ID继续查；429或5xx先核原任务和Usage，不自动付费重试。
 
-更多服务说明见 [Documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_quick_start)。支持排查时提供task/trace ID，不提供Key。
+更多服务说明见 [Documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen)。支持排查时提供task/trace ID，不提供Key。

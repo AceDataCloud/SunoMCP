@@ -4,7 +4,7 @@
   "version": "2026.10.12.1",
   "author": "Ace Data Cloud",
   "authorUrl": "https://github.com/AceDataCloud",
-  "homepage": "https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_lobehub_market_pricing",
+  "homepage": "https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen",
   "description": "Music generation, lyrics and audio editing through Ace Data Cloud. Requires an Ace service API token; generation is billed to your Ace account.",
   "cloudEndpoint": "https://suno.mcp.acedata.cloud/mcp",
   "tags": [

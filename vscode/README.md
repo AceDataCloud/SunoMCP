@@ -24,7 +24,7 @@ can call it directly from chat.
 2. **Get an application API key** using the detailed steps below. Check service access and your current balance before the first request.
 3. **Select a model with tool calling in VS Code Chat.** You can use your existing model, or install [Ace Data Cloud Chat Models](https://marketplace.visualstudio.com/items?itemName=acedatacloud.chat-models). For the Ace model, first follow its [setup guide](https://github.com/AceDataCloud/VSCodeModelProvider#4-show-the-model-in-chat), open **Chat: Manage Language Models**, make the model visible, and select it in Chat. BYOK Chat does not require GitHub sign-in or a Copilot plan; organization policies still apply.
 4. **Enable this server's tools.** Open **Chat → Agent → Configure Tools** and select only the tools you need under **Suno by Ace Data Cloud**. If the list is empty, choose **Update Tools**. The extension prompts for the API key on first use and saves it in VS Code's `SecretStorage`. Disable another copy of the same server from the Ace MCP bundle or manual `mcp.json` to avoid duplicate tools.
-5. **Verify one result.** Check the Tool Reference below and current pricing before running a request. If you already have a task ID, enable its task-query tool and query that same ID first. An accepted generation is not a completed result: poll the original task until it reaches a successful terminal state, open the returned media, and match the task ID in [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_console_usage). Do not resubmit generation to poll. Model Chat and background utility calls can add separate charges to the service request.
+5. **Verify one result.** Check the Tool Reference below and current pricing before running a request. If you already have a task ID, enable its task-query tool and query that same ID first. An accepted generation is not a completed result: poll the original task until it reaches a successful terminal state, open the returned media, and match the task ID in [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen). Do not resubmit generation to poll. Model Chat and background utility calls can add separate charges to the service request.
 
 You can rotate or remove the API key any time from the command palette:
 
@@ -37,8 +37,8 @@ You can rotate or remove the API key any time from the command palette:
 ### Get your credential
 
 <!-- BEGIN TOKEN ONBOARDING -->
-1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_api_key). Sign in, or register an account first.
-2. Find **General application**. If it has not been created, choose **Initialize General Application**. A general key can use the services available to your account; a dedicated application's key is limited to its service. Check the required service/model access and [current pricing](https://platform.acedata.cloud/models?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_models).
+1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen). Sign in, or register an account first.
+2. Find **General application**. If it has not been created, choose **Initialize General Application**. A general key can use the services available to your account; a dedicated application's key is limited to its service. Check the required service/model access and [current pricing](https://platform.acedata.cloud/models?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen).
 3. Copy the **API Key** from the application card, or open **Keys / Manage Keys → Create** to create a separate key for this integration. Give it a recognizable name so you can revoke or rotate it independently.
 4. When creating a key, review **Expiration Time**, **Set Usage Limitation**, and **Allowed APIs**. Enable only the restrictions you need, allow the operations you will call, then click **Create** and copy the token from the key list. Task lookup does not grant permission to submit a generation. Confirm the application's balance can cover your first request; any trial allowance is whatever your account currently displays.
 5. Copy only the token value, without quotation marks, spaces, or `Bearer `. An API Key / API Token field expects this raw value; only a manually configured HTTP `Authorization` header needs the `Bearer ` prefix. A `platform-...` account-management token cannot replace a generation API key.
@@ -108,7 +108,7 @@ Save the key in the client's credential store or the environment variable shown 
 
 ## Pricing
 
-Music generation is metered. Check current pricing and the trial allowance displayed in your own account. See [Documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_quick_start).
+Music generation is metered. Check current pricing and the trial allowance displayed in your own account. See [Documentation](https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen).
 
 ---
 
@@ -179,8 +179,8 @@ version, install [`uv`](https://docs.astral.sh/uv/) and use:
 - **Hosted endpoint:** https://suno.mcp.acedata.cloud/mcp
 - **PyPI package:** [`mcp-suno`](https://pypi.org/project/mcp-suno/)
 - **Source repository:** https://github.com/AceDataCloud/SunoMCP
-- **Ace Data Cloud platform:** https://platform.acedata.cloud?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_platform
-- **Documentation:** https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_quick_start
+- **Ace Data Cloud platform:** https://platform.acedata.cloud?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen
+- **Documentation:** https://platform.acedata.cloud/documents/suno-mcp?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen
 
 ## License
 
@@ -201,7 +201,7 @@ The model-list tool returns reference information without generating media. It d
 
 For an application-backed read-only authentication check, enable only `suno_list_custom_models` and call it with `limit=1`. A successful `items` response, including an empty list, confirms custom-model lookup access. It does not create music or train a model; it does not prove generation permission or balance. Check Allowed APIs for that lookup. Your Chat model can still be billed separately.
 
-For an existing media task, enable only `suno_get_task`, replace `TASK_ID` with your original task ID, and query that same ID until terminal success or failure. Open the returned media link and match the original generation task to its charge in [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_vscode_console_usage). An accepted task or green Chat turn alone is not a completed artifact. Never resubmit generation just to check progress.
+For an existing media task, enable only `suno_get_task`, replace `TASK_ID` with your original task ID, and query that same ID until terminal success or failure. Open the returned media link and match the original generation task to its charge in [Usage](https://platform.acedata.cloud/console/usage?utm_source=vscode_marketplace&utm_medium=referral&utm_campaign=evergreen). An accepted task or green Chat turn alone is not a completed artifact. Never resubmit generation just to check progress.
 
 ### Real VS Code reference screenshots
 

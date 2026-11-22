@@ -42,8 +42,8 @@ class AceServicePanel : JPanel(BorderLayout(8, 8)) {
             require(taskId.text.isNotBlank()) { "Enter the task ID from the original submission." }
             JsonObject().apply { addProperty("task_id", taskId.text.trim()) }
         })
-        buttons.add(JButton("Get API key").apply { addActionListener { BrowserUtil.browse("https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_api_key") } })
-        buttons.add(JButton("Current pricing").apply { addActionListener { BrowserUtil.browse("https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_models") } })
+        buttons.add(JButton("Get API key").apply { addActionListener { BrowserUtil.browse("https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen") } })
+        buttons.add(JButton("Current pricing").apply { addActionListener { BrowserUtil.browse("https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen") } })
         controls.add(buttons)
         controls.add(JLabel("The native panel does not require AI Assistant. MCP chat configuration remains optional."))
         controls.add(JLabel("The key stays in this panel's memory and is cleared when this settings page closes."))

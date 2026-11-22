@@ -16,8 +16,8 @@ Ace Data Cloud 提供的独立 Suno music 集成，并非 Suno 或 JetBrains 官
 
 ## 2. 注册、登录并取得专用 API Token
 
-1. 打开 [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_api_key)，先注册或登录自己的 Ace 账号。
-2. 找到 **General application**。尚未初始化时选择 **Initialize General Application**；通用应用 Key 可使用账号已开放的服务，专用应用 Key 受其服务范围限制。确认 Suno 的服务/模型权限，并查看[当前模型与价格](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_models)，不要使用旧文章的报价或假定有免费额度。
+1. 打开 [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)，先注册或登录自己的 Ace 账号。
+2. 找到 **General application**。尚未初始化时选择 **Initialize General Application**；通用应用 Key 可使用账号已开放的服务，专用应用 Key 受其服务范围限制。确认 Suno 的服务/模型权限，并查看[当前模型与价格](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)，不要使用旧文章的报价或假定有免费额度。
 3. 在应用卡片复制 **API Key**；或进入 **Keys / Manage Keys → Create**，创建一个独立命名的 Key，例如 `suno-jetbrains`，便于单独撤销、轮换和核对使用。
 4. 创建时检查 **Expiration Time、Set Usage Limitation、Allowed APIs**。仅开放自己需要的操作；只允许任务查询不代表允许生成。检查应用当前余额能覆盖准备提交的请求，再点 Create 并从 Key 列表复制 Token。
 5. 只复制原始 Token，不要带引号、空格或 `Bearer `。`platform-...` 是账号管理 Token，不能替代本服务生成 API Key；仅手动配置 HTTP Authorization 时加 `Bearer ` 前缀。
@@ -36,8 +36,8 @@ Ace Data Cloud 提供的独立 Suno music 集成，并非 Suno 或 JetBrains 官
 
 ## 4. 首次使用：先查模型，再明确提交一次
 
-1. 点击 **List models**。点击 List models 会调用该服务的模型信息工具，不提交生成。先核对返回的模型和[当前价](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_models)，再把自己选择的精确模型 ID 填入 **Model (choose explicitly)**。插件不默认替换或添加 fallback。
-2. 在 **Prompt** 填写自己的要求。Suno 新面板只提供现有生成工具的基础模型/提示词入口，服务的其他参数与高级能力请查看[服务文档](https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_quick_start)，不能从基础界面推断全套高级功能均已接入。
+1. 点击 **List models**。点击 List models 会调用该服务的模型信息工具，不提交生成。先核对返回的模型和[当前价](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)，再把自己选择的精确模型 ID 填入 **Model (choose explicitly)**。插件不默认替换或添加 fallback。
+2. 在 **Prompt** 填写自己的要求。Suno 新面板只提供现有生成工具的基础模型/提示词入口，服务的其他参数与高级能力请查看[服务文档](https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)，不能从基础界面推断全套高级功能均已接入。
 3. 点击 **Generate music** 后，核对一次请求的模型与计费提醒；只有明确同意消耗自己的应用余额才选择 **Submit once**，否则选择 Cancel。插件不会自动生成或自动重试。
 4. 本教程没有让用户照抄固定收费样例，也没有证明新的生产生成。静态模型列表、连接或 HTTP 200 都不能当作生成成功。
 
@@ -76,4 +76,4 @@ Ace Data Cloud 提供的独立 Suno music 集成，并非 Suno 或 JetBrains 官
 
 ## 来源与支持
 
-[现有服务源仓](https://github.com/AceDataCloud/SunoMCP) · [服务说明](https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_quick_start) · [当前价](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_jetbrains_models)。唯一源码为 [AceDataCloud/MCPs](https://github.com/AceDataCloud/MCPs)，由既有 mirror 发布。安装免费不代表 API 免费，试用额度以当前账号展示为准。MIT。
+[现有服务源仓](https://github.com/AceDataCloud/SunoMCP) · [服务说明](https://platform.acedata.cloud/documents/suno-mcp?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen) · [当前价](https://platform.acedata.cloud/models?utm_source=jetbrains_marketplace&utm_medium=referral&utm_campaign=evergreen)。唯一源码为 [AceDataCloud/MCPs](https://github.com/AceDataCloud/MCPs)，由既有 mirror 发布。安装免费不代表 API 免费，试用额度以当前账号展示为准。MIT。

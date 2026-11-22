@@ -6,7 +6,7 @@
     "properties": {
       "apiKey": {
         "type": "string",
-        "description": "Ace Data Cloud application API Token. Get it at https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_api_key. Paste the token only, without Bearer.",
+        "description": "Ace Data Cloud application API Token. Get it at https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen. Paste the token only, without Bearer.",
         "x-from": {
           "header": "x-api-key"
         },

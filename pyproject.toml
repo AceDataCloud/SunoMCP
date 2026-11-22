@@ -75,7 +75,7 @@ mcp-suno = "main:main"
 
 [project.urls]
 Homepage = "https://github.com/AceDataCloud/SunoMCP"
-Documentation = "https://platform.acedata.cloud/documents/suno-mcp?utm_source=pypi&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_mcp_package_quick_start"
+Documentation = "https://platform.acedata.cloud/documents/suno-mcp?utm_source=pypi&utm_medium=referral&utm_campaign=evergreen"
 Repository = "https://github.com/AceDataCloud/SunoMCP"
 Issues = "https://github.com/AceDataCloud/SunoMCP/issues"
 Changelog = "https://github.com/AceDataCloud/SunoMCP/blob/main/CHANGELOG.md"

@@ -1,6 +1,6 @@
 # Suno by Ace Data Cloud for Smithery
 
-[简体中文](README_zh-CN.md) · [API and current pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_pricing)
+[简体中文](README_zh-CN.md) · [API and current pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)
 
 Generate Suno music and lyrics, then retrieve the same audio task through Ace Data Cloud. This is an independent Ace Data Cloud integration, not an official integration from the model vendor. The public entry exists. Authorization and the first successful call still need independent verification as of 2026-10-18. Seeing a listing does not mean connected.
 
@@ -16,9 +16,9 @@ npx -y smithery mcp add acedatacloud-mcp/mcp-suno
 
 ## 2. Register, sign in, and get an application API Token
 
-1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_api_key) and register or sign in. If **General application** does not exist, choose **Initialize General Application** first.
+1. Open [Ace Data Cloud → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen) and register or sign in. If **General application** does not exist, choose **Initialize General Application** first.
 2. Copy its API Key, or open **Manage Keys → Create** for a separate `Smithery Suno` key. A service-specific application's key is limited to that service.
-3. Check expiration, usage limits, Allowed APIs, service access, [current pricing and balance](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_pricing). This flow uses `/suno/audios, /suno/tasks`. Task lookup access does not grant generation access.
+3. Check expiration, usage limits, Allowed APIs, service access, [current pricing and balance](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen). This flow uses `/suno/audios, /suno/tasks`. Task lookup access does not grant generation access.
 4. Copy only the raw token, without `Bearer `, quotes, or whitespace. A `platform-...` account-management token cannot replace this application key.
 
 ![Copy the application key or open Manage Keys](https://raw.githubusercontent.com/AceDataCloud/SunoDify/8d3d03570e73324220f111f7fe343da0792a8071/_assets/tutorial/get-api-key-en.png)
@@ -63,4 +63,4 @@ This is a lookup-argument example, not an executed request. A client success ind
 - **401 / auth_required:** check the existing connection's sign-in, raw token, expiry, and permissions. Publisher scan authorization and consumer connection authorization are separate.
 - **AUTH_TIMEOUT:** the publishing scan timed out waiting for authorization. It is not a generation failure; do not keep republishing to bypass it.
 - **Still pending:** query the original task ID. Count completion only after a successful terminal result and accessible media.
-- **Pricing and support:** use the account's current rate and allowance; no free allowance is promised. See [Ace service documentation](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_smithery_pricing) for limits and support.
+- **Pricing and support:** use the account's current rate and allowance; no free allowance is promised. See [Ace service documentation](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen) for limits and support.

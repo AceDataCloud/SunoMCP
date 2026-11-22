@@ -1,6 +1,6 @@
 # Suno by Ace Data Cloud for LobeHub
 
-[简体中文](README_zh-CN.md) · [Install in the official MCP market](https://lobehub.com/mcp/acedatacloud-mcpsuno) · [Current API/pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_lobehub_readme_pricing)
+[简体中文](README_zh-CN.md) · [Install in the official MCP market](https://lobehub.com/mcp/acedatacloud-mcpsuno) · [Current API/pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)
 
 Music generation, lyrics and audio editing, provided by **Ace Data Cloud**. This is an Ace integration, not an official plugin from the model vendor. It reuses [SunoMCP](https://github.com/AceDataCloud/SunoMCP) and the existing `mcp-suno` server; no duplicate generation backend or new publisher identity is created.
 
@@ -31,7 +31,7 @@ LobeHub stable v2.2.19 quick import reads only the first entry and drops HTTP `h
 
 ## 2. Register/sign in and obtain your API Token
 
-1. Sign in or register at [Ace → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen&utm_content=suno_lobehub_readme_api_key).
+1. Sign in or register at [Ace → Applications](https://platform.acedata.cloud/console/applications?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen).
 2. Initialize **General application** if absent, then open it. Check **Suno** service entitlement, current balance and pricing. A service-specific key can be restricted to that service.
 3. Copy the existing service API Token, or open **Manage Keys** and create a dedicated LobeHub key. Do not use a platform management token or a model vendor's key.
 
@@ -65,4 +65,4 @@ For generation, explicitly select a model supported by the installed schema, con
 
 The owner declaration contains actual `tools/list` schemas from the public package, not invented tool names. It is not a package release or live marketplace receipt. With an existing authorized publisher identity, inspect auth/GitHub state and `plugin list`, then claim the exact existing identifier if necessary and `plugin update --dir /absolute/path/to/this/directory`. Do not `plugin publish` a duplicate or automatically register an M2M identity. Human login/GitHub authorization and any new terms remain human steps. Read [official publisher rules](https://lobehub.com/publish-mcp/skill.md).
 
-Attribution uses the current allowed `opensource/referral/evergreen` contract plus a service-specific `*_lobehub_*` content tag. A source label is not a proven referrer, install, registration or purchase. No global attribution rule changes are made.
+Attribution uses the current allowed `opensource/referral/evergreen` contract. A source label is not a proven referrer, install, registration or purchase. No global attribution rule changes are made.
