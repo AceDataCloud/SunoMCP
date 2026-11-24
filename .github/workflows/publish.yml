@@ -244,48 +244,6 @@ jobs:
         working-directory: vscode
         run: vsce publish --no-git-tag-version -p ${{ secrets.VSCE_PAT }}
 
-  publish-smithery:
-    name: Publish to Smithery
-    timeout-minutes: 10
-    if: github.event_name == 'push'
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "20"
-
-      - name: Update server.json version
-        run: |
-          VERSION="${{ needs.build.outputs.version }}"
-          python3 -c "
-          import json
-          with open('server.json', 'r') as f:
-              data = json.load(f)
-          data['version'] = '$VERSION'
-          for pkg in data.get('packages', []):
-              pkg['version'] = '$VERSION'
-          with open('server.json', 'w') as f:
-              json.dump(data, f, indent=2)
-              f.write('\n')
-          "
-
-      - name: Install Smithery CLI
-        run: npm install -g @smithery/cli@latest
-
-      - name: Publish to Smithery
-        env:
-          SMITHERY_API_KEY: ${{ secrets.SMITHERY_API_KEY }}
-          SMITHERY_NAME: acedatacloud-mcp/mcp-suno
-        run: |
-          set -euo pipefail
-          test -n "$SMITHERY_API_KEY"
-          smithery --json mcp publish "https://suno.mcp.acedata.cloud/mcp" --name "$SMITHERY_NAME" --config-schema '{"type":"object","properties":{"apiKey":{"type":"string","description":"AceDataCloud API Bearer Token (get from https://platform.acedata.cloud)","x-from":{"header":"x-api-key"},"x-to":{"header":"Authorization","prefix":"Bearer "}}},"required":["apiKey"]}' | tee "$RUNNER_TEMP/smithery-publish.log"
-          python3 .github/scripts/verify_smithery_release.py "$SMITHERY_NAME" "$RUNNER_TEMP/smithery-publish.log"
-
   publish-jetbrains:
     name: Publish JetBrains Plugin
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
