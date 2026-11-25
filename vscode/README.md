@@ -60,7 +60,7 @@ Save the key in the client's credential store or the environment variable shown 
 
 ## Tool Reference
 
-**37 tools** available via this server.
+**48 tools** available via this server.
 
 | Tool | Description |
 | --- | --- |
@@ -92,10 +92,21 @@ Save the key in the client's credential store or the environment variable shown 
 | `suno_get_custom_model` | Retrieve one custom music model by ID. |
 | `suno_list_custom_models` | List custom music models for the current Suno application. |
 | `suno_generate_with_custom_model` | Generate a song using a ready custom music model. |
-| `suno_delete_custom_model` | Archive a custom music model so it can no longer be used. |
+| `suno_archive_custom_model` | Archive a custom music model so it can no longer be used. |
 | `suno_optimize_style` | Optimize a music style description for better generation results. |
 | `suno_mashup_lyrics` | Generate mashup lyrics by combining two sets of lyrics. |
 | `suno_upload_audio` | Upload external audio in standard or enhanced mode for subsequent operations. |
+| `suno_add_stem` | Add an instrument or vocal stem to an existing audio. |
+| `suno_adjust_speed` | Change audio playback speed and optionally preserve pitch. |
+| `suno_create_voice` | Create a custom voice persona from authorized audio. |
+| `suno_extract_stem` | Extract a selected stem and its complementary track. |
+| `suno_generate_inspo` | Generate music inspired by one to four reference clips. |
+| `suno_generate_sound` | Generate a one-shot or looping sound effect. |
+| `suno_generate_with_persona_vox` | Generate music using the vocals of a saved artist persona. |
+| `suno_manage_project` | Create and manage music projects, edit their tracks, and render the result. |
+| `suno_overpainting` | Add generated vocals to an instrumental recording. |
+| `suno_samples_music` | Add generated samples to an uploaded recording. |
+| `suno_underpainting` | Add instrumental accompaniment to an uploaded recording. |
 | `suno_get_task` | Query the status and result of a music generation task. |
 | `suno_get_tasks_batch` | Query multiple music generation tasks at once. |
 | `suno_list_models` | List all available Suno models and their capabilities. |
