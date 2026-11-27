@@ -14,6 +14,16 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server for AI 
 
 Generate AI music, lyrics, and manage audio projects directly from Claude, VS Code, or any MCP-compatible client.
 
+## Use in Kiro
+
+[![Add Suno to Kiro](https://kiro.dev/images/add-to-kiro.svg)](https://kiro.dev/launch/mcp/add?name=acedatacloud-suno&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22mcp-suno%3D%3D2026.11.25.0%22%2C%22mcp-suno%22%5D%2C%22env%22%3A%7B%22ACEDATACLOUD_API_TOKEN%22%3A%22%24%7BACEDATACLOUD_API_TOKEN%7D%22%7D%2C%22disabled%22%3Afalse%2C%22autoApprove%22%3A%5B%5D%7D)
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and make `uvx` available to Kiro. Set `ACEDATACLOUD_API_TOKEN` in the environment that launches Kiro using your own [Ace application key](https://platform.acedata.cloud/console/applications?utm_source=github&utm_medium=referral&utm_campaign=evergreen). Open the install link and allow Kiro to expand that variable. Kiro asks for approval before tool calls.
+
+Use `suno_list_models` to inspect the available music models. Generate or extend a track, then extract stems or retrieve the original task with `suno_get_task`. Generation uses Ace credits.
+
+[Privacy policy](https://platform.acedata.cloud/privacy?utm_source=github&utm_medium=referral&utm_campaign=evergreen) · [Support](https://github.com/AceDataCloud/SunoMCP/issues)
+
 ## Use Suno in Glama
 
 Find the Ace-provided [Suno source listing](https://glama.ai/mcp/servers/AceDataCloud/SunoMCP) or [remote connector](https://glama.ai/mcp/connectors/io.github.AceDataCloud/mcp-suno). Follow the [Glama installation, API Token and first-use guide](https://github.com/AceDataCloud/SunoMCP/blob/main/readme/GLAMA.md). Public discovery and a successful personal connection are separate checks; generation uses your Ace account balance.
