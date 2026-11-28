@@ -1,4 +1,4 @@
-# Suno by Ace Data Cloud for Kilo
+# Suno for Kilo
 
 [简体中文](README_zh_Hans.md)
 
@@ -6,7 +6,7 @@ Use Suno from Kilo through your own Ace Data Cloud account. This integration is 
 
 ## 1. Find and install the service
 
-Open Kilo's **Marketplace**, select **MCP**, and search **Suno**. Select **Suno by Ace Data Cloud** and check the author is **Ace Data Cloud**. This catalog contribution is pending review: if that card is not present, the entry has not been published yet. Do not confuse a local configuration with official catalog availability.
+Open Kilo's **Marketplace**, select **MCP**, and search **Suno**. Select **Suno** and check the author is **Ace Data Cloud**. This catalog contribution is pending review: if that card is not present, the entry has not been published yet. Do not confuse a local configuration with official catalog availability.
 
 [Official catalog submission #423](https://github.com/Kilo-Org/kilo-marketplace/pull/423) · [Official Kilo Marketplace instructions](https://kilo.ai/docs/customize/marketplace) · [Canonical server source](https://github.com/AceDataCloud/SunoMCP) · [Published Python package](https://pypi.org/project/mcp-suno/)
 

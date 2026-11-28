@@ -1,4 +1,4 @@
-# Suno by Ace Data Cloud：中文安装与首用指南
+# Suno：中文安装与首用指南
 
 [English](https://github.com/AceDataCloud/SunoMCP/blob/main/README.md)
 

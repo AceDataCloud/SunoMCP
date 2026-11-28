@@ -1,5 +1,5 @@
 {
-  "displayName": "Suno by Ace Data Cloud",
+  "displayName": "Suno",
   "description": "Generate Suno music and lyrics, then retrieve the same audio task through Ace Data Cloud. Independently provided by Ace Data Cloud; not the model vendor's official integration. Connect using the Streamable HTTP URL: https://suno.mcp.acedata.cloud/mcp. Authorize with your MCP client and check your account access and [current pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen) before generating.",
   "homepage": "https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen",
   "repositoryUrl": "https://github.com/AceDataCloud/SunoMCP",

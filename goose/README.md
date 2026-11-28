@@ -1,4 +1,4 @@
-# Suno by Ace Data Cloud for goose
+# Suno for goose
 
 An independent **Suno** plugin maintained by **Ace Data Cloud**. It installs the existing published `mcp-suno` MCP server and the `suno-by-acedatacloud:suno-music` workflow through goose's native Open Plugins support. It is not made or endorsed by the Suno brand, is not bundled with goose, and is not a listing in goose's retired extension directory.
 

@@ -1,4 +1,4 @@
-# Suno by Ace Data Cloud for LobeHub
+# Suno for LobeHub
 
 [简体中文](README_zh-CN.md) · [Install in the official MCP market](https://lobehub.com/mcp/acedatacloud-mcpsuno) · [Current API/pricing](https://platform.acedata.cloud/documents/suno-audios?utm_source=opensource&utm_medium=referral&utm_campaign=evergreen)
 

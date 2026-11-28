@@ -1,4 +1,4 @@
-# goose 的 Suno by Ace Data Cloud 插件
+# goose 的 Suno 插件
 
 这是 **Ace Data Cloud 维护的 Suno 独立集成**，不是 Suno 品牌官方插件，也未内置于 goose。底层复用公开 `mcp-suno==2026.10.19.2`；不会安装其它媒体服务。默认分支尚未同步本 PR 前，以下安装入口是待发布候选，不能宣称已上线。
 

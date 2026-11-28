@@ -1,4 +1,4 @@
-# 在 Kilo 中使用 Suno by Ace Data Cloud
+# 在 Kilo 中使用 Suno
 
 [English](README.md)
 
@@ -6,7 +6,7 @@
 
 ## 1. 找到并安装对应服务
 
-打开 Kilo 的 **Marketplace**，选择 **MCP**，搜索 **Suno**。选择 **Suno by Ace Data Cloud**，确认作者为 **Ace Data Cloud**。本目录投稿仍在审核；如果搜索不到该卡片，说明条目尚未发布。不能把本地配置视为官方市场已经可用。
+打开 Kilo 的 **Marketplace**，选择 **MCP**，搜索 **Suno**。选择 **Suno**，确认作者为 **Ace Data Cloud**。本目录投稿仍在审核；如果搜索不到该卡片，说明条目尚未发布。不能把本地配置视为官方市场已经可用。
 
 [官方目录投稿 #423](https://github.com/Kilo-Org/kilo-marketplace/pull/423) · [Kilo Marketplace 官方说明](https://kilo.ai/docs/customize/marketplace) · [服务源码](https://github.com/AceDataCloud/SunoMCP) · [已发布 Python 包](https://pypi.org/project/mcp-suno/)
 

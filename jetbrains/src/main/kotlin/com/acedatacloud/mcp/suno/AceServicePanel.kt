@@ -22,7 +22,7 @@ class AceServicePanel : JPanel(BorderLayout(8, 8)) {
 
     init {
         val controls = JPanel().apply { layout = BoxLayout(this, BoxLayout.Y_AXIS) }
-        controls.add(JLabel("Suno by Ace Data Cloud · independent integration provided by Ace Data Cloud"))
+        controls.add(JLabel("Suno · independent integration provided by Ace Data Cloud"))
         controls.add(row("Application API Key", apiKey))
         controls.add(row("Model (choose explicitly)", model))
         controls.add(JLabel("Prompt"))

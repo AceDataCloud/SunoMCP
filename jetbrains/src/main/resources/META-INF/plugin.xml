@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.acedatacloud.mcp.suno</id>
-    <name>Suno by Ace Data Cloud</name>
+    <name>Suno</name>
     <vendor email="dev@acedata.cloud" url="https://acedata.cloud">Ace Data Cloud</vendor>
 
     <description><![CDATA[

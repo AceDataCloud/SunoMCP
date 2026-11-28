@@ -4,7 +4,7 @@ description: Use Suno through Ace Data Cloud in goose for Suno music, lyrics and
 license: MIT
 ---
 
-# Suno by Ace Data Cloud
+# Suno
 
 Use the MCP tools installed by this plugin. Match tools by their suffix because goose namespaces them with `suno-by-acedatacloud`.
 

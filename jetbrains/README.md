@@ -1,4 +1,4 @@
-# Suno by Ace Data Cloud
+# Suno
 
 Independent Suno music integration provided by Ace Data Cloud for JetBrains IDEs. Not an official Suno or JetBrains product.
 

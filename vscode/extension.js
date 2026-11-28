@@ -14,7 +14,7 @@
 const vscode = require("vscode");
 
 const PROVIDER_ID = "acedatacloud.suno";
-const SERVER_LABEL = "Suno by Ace Data Cloud";
+const SERVER_LABEL = "Suno";
 const SERVER_URL = "https://suno.mcp.acedata.cloud/mcp";
 const SET_TOKEN_CMD = "acedatacloud.suno.setApiToken";
 const CLEAR_TOKEN_CMD = "acedatacloud.suno.clearApiToken";

@@ -1,8 +1,8 @@
-# Suno in Glama — by Ace Data Cloud
+# Suno in Glama
 
 [简体中文](#中文操作指南) · [Open the service listing](https://glama.ai/mcp/servers/AceDataCloud/SunoMCP) · [Current access and pricing](https://platform.acedata.cloud/models?utm_source=glama&utm_medium=referral&utm_campaign=evergreen)
 
-Use **Suno by Ace Data Cloud** for music generation, lyrics, covers, and task results. Ace provides this integration and bills its API usage; this is not a model developer's official Glama app. It reuses the existing `mcp-suno` server, rather than asking you to install an unrelated Ace bundle.
+Use **Suno** for music generation, lyrics, covers, and task results. Ace provides this integration and bills its API usage; this is not a model developer's official Glama app. It reuses the existing `mcp-suno` server, rather than asking you to install an unrelated Ace bundle.
 
 ## 1. Open the correct official Glama entry
 
